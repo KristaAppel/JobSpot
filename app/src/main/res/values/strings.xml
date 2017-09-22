@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">JobSpot</string>
+    <string name="title_activity_map">MapActivity</string>
+    <string name="search">Search</string>
+    <string name="saved">Saved</string>
+    <string name="applied">Applied</string>
+    <string name="account">Account</string>
 
 
 </resources>

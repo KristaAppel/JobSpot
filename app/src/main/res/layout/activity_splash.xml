@@ -61,7 +61,7 @@
         android:id="@+id/button_getStarted"
         android:layout_width="134dp"
         android:layout_height="48dp"
-        android:layout_marginBottom="119dp"
+        android:layout_marginBottom="121dp"
         android:background="@color/colorPrimary"
         android:text="Get Started"
         android:textColor="@android:color/white"
@@ -70,6 +70,7 @@
         app:layout_constraintRight_toRightOf="parent"
         tools:layout_constraintBottom_creator="1"
         tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1" />
+        tools:layout_constraintRight_creator="1"
+        app:layout_constraintHorizontal_bias="0.501" />
 
 </android.support.constraint.ConstraintLayout>

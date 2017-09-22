@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "47229368689",
+    "firebase_url": "https://jobspot-a0171.firebaseio.com",
+    "project_id": "jobspot-a0171",
+    "storage_bucket": "jobspot-a0171.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:47229368689:android:9db0663236296189",
+        "android_client_info": {
+          "package_name": "com.kristaappel.jobspot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "47229368689-3c4mif45egmda6nbs52etio7mkkj7njj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kristaappel.jobspot",
+            "certificate_hash": "f47a90f715487579c05dc51e7fad0da7efe6b740"
+          }
+        },
+        {
+          "client_id": "47229368689-hki78u69lsjdfukolb6jqu729q0uejkq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kristaappel.jobspot",
+            "certificate_hash": "3ee1e70f30d5526d20bce0d00b9c9a49c5263a40"
+          }
+        },
+        {
+          "client_id": "47229368689-ng0i7b9tftae337fkhpnkh6mpoqbu8k1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAchssGkhNN89KDwHB_2j-t_CAoe762goc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "47229368689-ng0i7b9tftae337fkhpnkh6mpoqbu8k1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
