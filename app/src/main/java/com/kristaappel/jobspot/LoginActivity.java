@@ -35,6 +35,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         Firebase.setAndroidContext(this);
 
+        // Hide actionbar:
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null){
             actionBar.hide();
@@ -62,6 +63,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         };
 
+        // Listen for button clicks:
         Button loginButton = (Button) findViewById(R.id.button_Login);
         loginButton.setOnClickListener(this);
         Button createAccountLink = (Button) findViewById(R.id.button_CreateAccountLink);
@@ -69,11 +71,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
+
     @Override
     public void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
     }
+
 
     @Override
     protected void onResume() {
@@ -84,6 +88,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -91,6 +96,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
+
 
     @Override
     public void onClick(View v) {
@@ -116,6 +122,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             startActivity(createAccountLinkIntent);
         }
     }
+
 
     private void login(){
         mAuth.signInWithEmailAndPassword(username, password)
