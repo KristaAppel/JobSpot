@@ -1,6 +1,5 @@
 package com.kristaappel.jobspot;
 
-import android.app.ListActivity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
@@ -60,7 +59,7 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
                     Log.i("CreateAccountActivity", "onAuthStateChanged:signed_in:" + user.getUid());
                     firebaseUser = user;
                     // The user has signed in.  Go to the map:
-               Intent mapIntent = new Intent(getApplicationContext(), MapActivity.class);
+               Intent mapIntent = new Intent(getApplicationContext(), BottomNavigationActivity.class);
                startActivity(mapIntent);
                 }
             }

@@ -24,7 +24,7 @@
         <activity android:name=".LoginActivity" />
         <activity android:name=".CreateAccountActivity" />
         <activity
-            android:name=".MapActivity"
+            android:name=".BottomNavigationActivity"
             android:label="@string/title_activity_map"></activity>
     </application>
 

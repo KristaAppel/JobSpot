@@ -1,7 +1,5 @@
 package com.kristaappel.jobspot;
 
-import android.app.Activity;
-import android.app.ListActivity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
@@ -55,7 +53,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     // User is signed in
                     Log.d("LoginActivity", "onAuthStateChanged:signed_in:" + user.getUid());
                     // The user has signed in.  Go to the map:
-                Intent mapIntent = new Intent(getApplicationContext(), MapActivity.class);
+                Intent mapIntent = new Intent(getApplicationContext(), BottomNavigationActivity.class);
                 startActivity(mapIntent);
                 } else {
                     // User is signed out
