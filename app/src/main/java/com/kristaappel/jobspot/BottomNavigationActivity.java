@@ -1,13 +1,14 @@
 package com.kristaappel.jobspot;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.os.ResultReceiver;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 
 import com.kristaappel.jobspot.fragments.AppliedJobsFragment;
@@ -18,7 +19,6 @@ import com.kristaappel.jobspot.fragments.SearchBoxFragment;
 import com.kristaappel.jobspot.fragments.SearchResultListFragment;
 import com.kristaappel.jobspot.fragments.SearchScreenFragment;
 
-import static com.kristaappel.jobspot.R.id.container;
 
 public class BottomNavigationActivity extends AppCompatActivity implements SearchBoxFragment.OnFragmentInteractionListener{
 
@@ -110,21 +110,27 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
             // Set buttons to appropriate colors:
             mapButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
             mapButton.setTextColor(getResources().getColor(R.color.colorWhite));
-
             listButton.setBackgroundColor(getResources().getColor(R.color.colorLightGrey));
             listButton.setTextColor(getResources().getColor(R.color.colorPrimary));
         }else if (id == R.id.mapFragToggle2){
             // Create and display a ResultsListFragment in bottom container:
-            // TODO: show list of job search results in the bottom container
             SearchResultListFragment searchResultListFrag = new SearchResultListFragment();
             getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, searchResultListFrag).commit();
             // Set buttons to appropriate colors:
             mapButton.setBackgroundColor(getResources().getColor(R.color.colorLightGrey));
             mapButton.setTextColor(getResources().getColor(R.color.colorPrimary));
-
             listButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
             listButton.setTextColor(getResources().getColor(R.color.colorWhite));
+        }else if (id == R.id.locationButton){
+            // TODO: get current location and find nearby jobs, show them on map.  display location in top search bar
+            Log.i("TAG", "get current location");
+        }else if (id == R.id.filterButton){
+            // TODO: show a list of filter & sort options, use chosen options in job search
+            Log.i("TAG", "show filter/sort options");
         }
 
     }
+
+
+
 }

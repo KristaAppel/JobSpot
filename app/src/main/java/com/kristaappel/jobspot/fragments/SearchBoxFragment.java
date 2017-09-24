@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.kristaappel.jobspot.R;
 
@@ -84,6 +85,12 @@ public class SearchBoxFragment extends android.app.Fragment implements View.OnCl
 
         Button listButton = (Button) view.findViewById(R.id.mapFragToggle2);
         listButton.setOnClickListener(this);
+
+        ImageButton myLocationButton = (ImageButton) view.findViewById(R.id.locationButton);
+        myLocationButton.setOnClickListener(this);
+
+        ImageButton filtersButton = (ImageButton) view.findViewById(R.id.filterButton);
+        filtersButton.setOnClickListener(this);
 
     }
 

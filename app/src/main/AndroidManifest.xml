@@ -18,6 +18,9 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
+    <uses-feature android:glEsVersion="0x00020000"
+        android:required="true"/>
+
 
     <application
         android:allowBackup="true"
@@ -37,7 +40,14 @@
         <activity android:name=".CreateAccountActivity" />
         <activity
             android:name=".BottomNavigationActivity"
-            android:label="@string/title_activity_map"></activity>
+            android:label="@string/title_activity_map"/>
+
+        <meta-data android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"/>
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDd9EcfGH7mgDTaUReERMMHD4zv3Y0JFe8"/>
+
     </application>
+
 
 </manifest>
