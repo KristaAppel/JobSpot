@@ -1,11 +1,9 @@
 package com.kristaappel.jobspot.fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,15 +12,11 @@ import android.widget.ImageButton;
 
 import com.kristaappel.jobspot.R;
 
-import static com.kristaappel.jobspot.R.id.container;
 
 /**
- * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * {@link SearchBoxFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link SearchBoxFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
 public class SearchBoxFragment extends android.app.Fragment implements View.OnClickListener{
     // TODO: Rename parameter arguments, choose names that match
