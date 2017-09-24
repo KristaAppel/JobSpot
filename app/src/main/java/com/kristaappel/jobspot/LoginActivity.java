@@ -83,7 +83,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onResume() {
         super.onResume();
         Intent callingIntent = getIntent();
-        if (callingIntent.hasExtra("LogoutExtra")) { //TODO: implement LogoutExtra
+        if (callingIntent.hasExtra("LogoutExtra")) {
             mAuth.signOut();
         }
     }

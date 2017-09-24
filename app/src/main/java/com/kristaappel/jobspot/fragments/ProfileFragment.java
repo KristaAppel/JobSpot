@@ -1,13 +1,18 @@
 package com.kristaappel.jobspot.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.firebase.client.Firebase;
+import com.kristaappel.jobspot.LoginActivity;
 import com.kristaappel.jobspot.R;
 
 /**
@@ -18,7 +23,10 @@ import com.kristaappel.jobspot.R;
  * Use the {@link ProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ProfileFragment extends android.app.Fragment {
+public class ProfileFragment extends android.app.Fragment implements View.OnClickListener {
+
+    private Firebase firebase;
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -68,6 +76,15 @@ public class ProfileFragment extends android.app.Fragment {
         return inflater.inflate(R.layout.fragment_profile, container, false);
     }
 
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Button logoutButton = (Button) view.findViewById(R.id.button_logout);
+        logoutButton.setOnClickListener(this);
+        firebase = new Firebase("https://jobspot-a0171.firebaseio.com/");
+    }
+
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(View v) {
         if (mListener != null) {
@@ -90,6 +107,17 @@ public class ProfileFragment extends android.app.Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.button_logout){
+            // Logout and go to Login screen:
+            firebase.unauth();
+            Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
+            loginIntent.putExtra("LogoutExtra", "Logout");
+            startActivity(loginIntent);
+        }
     }
 
     /**
