@@ -14,7 +14,7 @@ import com.kristaappel.jobspot.R;
 public class SavedJobsFragment extends ListFragment {
 
     private static final int ID_CONSTANT = 0x01010;
-    private String[] jobtitles = {"iOS Developer", "Android Deeloper", "Mobile Developer"};
+    private String[] jobtitles = {"iOS Developer", "Android Developer", "Mobile Developer"};
     private String[] companies = {"Apple", "Chase", "TechData"};
 
     public static SavedJobsFragment newInstance(){

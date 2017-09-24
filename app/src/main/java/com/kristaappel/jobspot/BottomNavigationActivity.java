@@ -5,14 +5,22 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import com.kristaappel.jobspot.fragments.AppliedJobsFragment;
 import com.kristaappel.jobspot.fragments.MapFragment;
 import com.kristaappel.jobspot.fragments.ProfileFragment;
 import com.kristaappel.jobspot.fragments.SavedJobsFragment;
+import com.kristaappel.jobspot.fragments.SearchBoxFragment;
+import com.kristaappel.jobspot.fragments.SearchResultListFragment;
+import com.kristaappel.jobspot.fragments.SearchScreenFragment;
 
-public class BottomNavigationActivity extends AppCompatActivity {
+import static com.kristaappel.jobspot.R.id.container;
+
+public class BottomNavigationActivity extends AppCompatActivity implements SearchBoxFragment.OnFragmentInteractionListener{
 
     ActionBar actionBar;
 
@@ -24,9 +32,9 @@ public class BottomNavigationActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_search:
-                    // Create and display a MapFragment:
-                    MapFragment mapFrag = new MapFragment();
-                    getFragmentManager().beginTransaction().replace(R.id.content, mapFrag).commit();
+                    // Create and display a SearchScreenFragment:
+                    SearchScreenFragment searchScreenFrag = new SearchScreenFragment();
+                    getFragmentManager().beginTransaction().replace(R.id.content, searchScreenFrag).commit();
                     // Hide actionbar:
                     if (actionBar != null){
                         actionBar.hide();
@@ -83,10 +91,40 @@ public class BottomNavigationActivity extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        // Create and display a MapFragment:
-        MapFragment mapFrag = new MapFragment();
-        getFragmentManager().beginTransaction().replace(R.id.content, mapFrag).commit();
+        // Create and display a SearchScreenFragment:
+        SearchScreenFragment searchScreenFrag = new SearchScreenFragment();
+        getFragmentManager().beginTransaction().replace(R.id.content, searchScreenFrag).commit();
+
     }
 
 
+    @Override
+    public void onFragmentInteraction(int id) {
+        Button mapButton = (Button) findViewById(R.id.mapFragToggle1);
+        Button listButton = (Button) findViewById(R.id.mapFragToggle2);
+
+        if (id == R.id.mapFragToggle1){
+            // Create and display a MapFragment in bottom container:
+            MapFragment mapFrag = new MapFragment();
+            getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, mapFrag).commit();
+            // Set buttons to appropriate colors:
+            mapButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            mapButton.setTextColor(getResources().getColor(R.color.colorWhite));
+
+            listButton.setBackgroundColor(getResources().getColor(R.color.colorLightGrey));
+            listButton.setTextColor(getResources().getColor(R.color.colorPrimary));
+        }else if (id == R.id.mapFragToggle2){
+            // Create and display a ResultsListFragment in bottom container:
+            // TODO: show list of job search results in the bottom container
+            SearchResultListFragment searchResultListFrag = new SearchResultListFragment();
+            getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, searchResultListFrag).commit();
+            // Set buttons to appropriate colors:
+            mapButton.setBackgroundColor(getResources().getColor(R.color.colorLightGrey));
+            mapButton.setTextColor(getResources().getColor(R.color.colorPrimary));
+
+            listButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            listButton.setTextColor(getResources().getColor(R.color.colorWhite));
+        }
+
+    }
 }

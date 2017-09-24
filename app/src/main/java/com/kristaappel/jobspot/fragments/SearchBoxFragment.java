@@ -1,25 +1,29 @@
 package com.kristaappel.jobspot.fragments;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SearchView;
+import android.widget.Button;
 
 import com.kristaappel.jobspot.R;
+
+import static com.kristaappel.jobspot.R.id.container;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link MapFragment.OnFragmentInteractionListener} interface
+ * {@link SearchBoxFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link MapFragment#newInstance} factory method to
+ * Use the {@link SearchBoxFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MapFragment extends Fragment {
+public class SearchBoxFragment extends android.app.Fragment implements View.OnClickListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -31,7 +35,7 @@ public class MapFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public MapFragment() {
+    public SearchBoxFragment() {
         // Required empty public constructor
     }
 
@@ -41,11 +45,11 @@ public class MapFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment MapFragment.
+     * @return A new instance of fragment SearchBoxFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static MapFragment newInstance(String param1, String param2) {
-        MapFragment fragment = new MapFragment();
+    public static SearchBoxFragment newInstance(String param1, String param2) {
+        SearchBoxFragment fragment = new SearchBoxFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -65,16 +69,31 @@ public class MapFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_map, container, false);
+        return inflater.inflate(R.layout.fragment_search_box, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Set click listeners:
+        Button mapButton = (Button) view.findViewById(R.id.mapFragToggle1);
+        mapButton.setOnClickListener(this);
+
+        Button listButton = (Button) view.findViewById(R.id.mapFragToggle2);
+        listButton.setOnClickListener(this);
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(View v) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(v);
+            mListener.onFragmentInteraction(v.getId());
         }
     }
+
 
     @Override
     public void onAttach(Context context) {
@@ -85,6 +104,7 @@ public class MapFragment extends Fragment {
 //            throw new RuntimeException(context.toString()
 //                    + " must implement OnFragmentInteractionListener");
         }
+
     }
 
     @Override
@@ -105,6 +125,12 @@ public class MapFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(View v);
+        void onFragmentInteraction(int id);
     }
+
+    @Override
+    public void onClick(View v) {
+        mListener.onFragmentInteraction(v.getId());
+    }
+
 }

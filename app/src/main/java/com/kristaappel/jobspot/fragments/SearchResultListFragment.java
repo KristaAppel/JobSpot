@@ -12,14 +12,14 @@ import android.widget.TextView;
 import com.kristaappel.jobspot.R;
 
 
-public class AppliedJobsFragment extends ListFragment {
+public class SearchResultListFragment extends ListFragment {
 
     private static final int ID_CONSTANT = 0x01010;
-    private String[] jobtitles = {"Android Developer", "Mobile Developer"};
-    private String[] companies = {"Chase", "TechData"};
+    private String[] jobtitles = {"Android Developer", "Mobile Developer", "Junior iOS Developer", "Cashier"};
+    private String[] companies = {"Chase", "TechData", "Sparxoo", "Target"};
 
-    public static AppliedJobsFragment newInstance(){
-        return new AppliedJobsFragment();
+    public static SearchResultListFragment newInstance(){
+        return new SearchResultListFragment();
     }
 
 
@@ -66,7 +66,7 @@ public class AppliedJobsFragment extends ListFragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null){
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.applied_list_item, parent, false);
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.searchresult_list_item, parent, false);
             }
 
             TextView textTitle = (TextView) convertView.findViewById(R.id.textView_applied_title);

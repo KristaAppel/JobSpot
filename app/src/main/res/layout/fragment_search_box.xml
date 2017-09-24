@@ -1,0 +1,98 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context="com.kristaappel.jobspot.fragments.SearchBoxFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignEnd="@+id/searchView2"
+            android:layout_alignStart="@+id/searchView2"
+            android:layout_below="@+id/searchView2"
+            android:layout_marginBottom="8dp">
+
+            <Button
+                android:id="@+id/mapFragToggle1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:background="@color/colorPrimary"
+                android:text="Map"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/mapFragToggle2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:background="?attr/colorControlHighlight"
+                android:text="List"
+                android:textColor="@color/colorPrimary" />
+
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/locationButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:tint="@color/colorPrimary"
+            app:srcCompat="@android:drawable/ic_menu_mylocation"
+            android:layout_marginTop="8dp"
+            android:layout_alignTop="@+id/searchView"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="8dp" />
+
+        <SearchView
+            android:id="@+id/searchView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_toEndOf="@+id/locationButton"
+            android:background="@android:color/white"
+            android:iconifiedByDefault="false"
+            android:queryHint="Enter Location"></SearchView>
+
+        <ImageButton
+            android:id="@+id/filterButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignTop="@+id/searchView2"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/transparent"
+            android:tint="@color/colorPrimary"
+            app:srcCompat="@android:drawable/ic_menu_sort_by_size" />
+
+        <SearchView
+            android:id="@+id/searchView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_marginStart="8dp"
+            android:layout_below="@+id/searchView"
+            android:layout_toEndOf="@+id/locationButton"
+            android:background="@android:color/white"
+            android:iconifiedByDefault="false"
+            android:queryHint="Enter Keyword(s)"></SearchView>
+
+
+
+
+    </RelativeLayout>
+
+</FrameLayout>
