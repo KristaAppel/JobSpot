@@ -3,7 +3,6 @@ package com.kristaappel.jobspot.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,7 @@ import com.kristaappel.jobspot.R;
 
 /**
  * Activities that contain this fragment must implement the
- * {@link SearchBoxFragment.OnFragmentInteractionListener} interface
+ * {@link OnSearchBoxFragmentInteractionListener} interface
  * to handle interaction events.
  */
 public class SearchBoxFragment extends android.app.Fragment implements View.OnClickListener{
@@ -28,7 +27,7 @@ public class SearchBoxFragment extends android.app.Fragment implements View.OnCl
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+    private OnSearchBoxFragmentInteractionListener mListener;
 
     public SearchBoxFragment() {
         // Required empty public constructor
@@ -86,12 +85,15 @@ public class SearchBoxFragment extends android.app.Fragment implements View.OnCl
         ImageButton filtersButton = (ImageButton) view.findViewById(R.id.filterButton);
         filtersButton.setOnClickListener(this);
 
+        ImageButton searchButton = (ImageButton) view.findViewById(R.id.searchButton);
+        searchButton.setOnClickListener(this);
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(View v) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(v.getId());
+            mListener.onSearchBoxFragmentInteraction(v.getId());
         }
     }
 
@@ -99,11 +101,11 @@ public class SearchBoxFragment extends android.app.Fragment implements View.OnCl
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnSearchBoxFragmentInteractionListener) {
+            mListener = (OnSearchBoxFragmentInteractionListener) context;
         } else {
 //            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
+//                    + " must implement OnSearchBoxFragmentInteractionListener");
         }
 
     }
@@ -124,14 +126,14 @@ public class SearchBoxFragment extends android.app.Fragment implements View.OnCl
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface OnSearchBoxFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(int id);
+        void onSearchBoxFragmentInteraction(int id);
     }
 
     @Override
     public void onClick(View v) {
-        mListener.onFragmentInteraction(v.getId());
+        mListener.onSearchBoxFragmentInteraction(v.getId());
     }
 
 }

@@ -1,21 +1,19 @@
 package com.kristaappel.jobspot;
 
-import android.*;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.os.ResultReceiver;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.kristaappel.jobspot.fragments.AppliedJobsFragment;
 import com.kristaappel.jobspot.fragments.MapFragment;
@@ -26,11 +24,13 @@ import com.kristaappel.jobspot.fragments.SearchResultListFragment;
 import com.kristaappel.jobspot.fragments.SearchScreenFragment;
 
 
-public class BottomNavigationActivity extends AppCompatActivity implements SearchBoxFragment.OnFragmentInteractionListener{
+public class BottomNavigationActivity extends AppCompatActivity implements SearchBoxFragment.OnSearchBoxFragmentInteractionListener {
 
     ActionBar actionBar;
     Button mapButton;
     Button listButton;
+    EditText et_location;
+    EditText et_keywords;
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -107,40 +107,58 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
 
 
     @Override
-    public void onFragmentInteraction(int id) {
+    public void onSearchBoxFragmentInteraction(int id) {
         mapButton = (Button) findViewById(R.id.mapFragToggle1);
         listButton = (Button) findViewById(R.id.mapFragToggle2);
+        et_keywords = (EditText) findViewById(R.id.et_keywords);
+        et_location= (EditText) findViewById(R.id.et_location);
 
-        if (id == R.id.mapFragToggle1){
-            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0x01001);
-            }else{
-                // Create and display a MapFragment in bottom container:
-                MapFragment mapFrag = new MapFragment();
-                getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, mapFrag).commit();
+        switch (id){
+            case R.id.mapFragToggle1:
+                if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0x01001);
+                }else{
+                    // Create and display a MapFragment in bottom container:
+                    MapFragment mapFrag = new MapFragment();
+                    getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, mapFrag).commit();
+                    // Set buttons to appropriate colors:
+                    mapButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                    mapButton.setTextColor(getResources().getColor(R.color.colorWhite));
+                    listButton.setBackgroundColor(getResources().getColor(R.color.colorLightGrey));
+                    listButton.setTextColor(getResources().getColor(R.color.colorPrimary));
+                }
+                break;
+            case R.id.mapFragToggle2:
+                // Create and display a ResultsListFragment in bottom container:
+                SearchResultListFragment searchResultListFrag = new SearchResultListFragment();
+                getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, searchResultListFrag).commit();
                 // Set buttons to appropriate colors:
-                mapButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                mapButton.setTextColor(getResources().getColor(R.color.colorWhite));
-                listButton.setBackgroundColor(getResources().getColor(R.color.colorLightGrey));
-                listButton.setTextColor(getResources().getColor(R.color.colorPrimary));
-            }
-
-        }else if (id == R.id.mapFragToggle2){
-            // Create and display a ResultsListFragment in bottom container:
-            SearchResultListFragment searchResultListFrag = new SearchResultListFragment();
-            getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, searchResultListFrag).commit();
-            // Set buttons to appropriate colors:
-            mapButton.setBackgroundColor(getResources().getColor(R.color.colorLightGrey));
-            mapButton.setTextColor(getResources().getColor(R.color.colorPrimary));
-            listButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-            listButton.setTextColor(getResources().getColor(R.color.colorWhite));
-        }else if (id == R.id.locationButton){
-            // TODO: get current location and find nearby jobs, show them on map.  display location in top search bar
-            Log.i("TAG", "get current location");
-        }else if (id == R.id.filterButton){
-            // TODO: show a list of filter & sort options, use chosen options in job search
-            Log.i("TAG", "show filter/sort options");
+                mapButton.setBackgroundColor(getResources().getColor(R.color.colorLightGrey));
+                mapButton.setTextColor(getResources().getColor(R.color.colorPrimary));
+                listButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                listButton.setTextColor(getResources().getColor(R.color.colorWhite));
+                break;
+            case R.id.locationButton:
+                // TODO: get current location and find nearby jobs, show them on map.  display location in top search bar
+                Log.i("TAG", "get current location");
+                break;
+            case R.id.filterButton:
+                // TODO: show a list of filter & sort options, use chosen options in job search
+                Log.i("TAG", "show filter/sort options");
+                break;
+            case R.id.searchButton:
+                // TODO: search for & display jobs
+                String location = "";
+                String keywords = "";
+                if (et_location.getText().toString().length() >0){
+                    location = et_location.getText().toString();
+                }
+                if (et_keywords.getText().toString().length() >0){
+                    keywords = et_keywords.getText().toString();
+                }
+                Log.i("BottomNavActivity", "Entered location: " + location + " Entered keywords: " + keywords);
         }
+
 
     }
 

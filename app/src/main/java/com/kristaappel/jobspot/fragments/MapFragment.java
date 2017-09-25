@@ -2,6 +2,8 @@ package com.kristaappel.jobspot.fragments;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -10,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -19,8 +22,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.kristaappel.jobspot.Manifest;
+import com.kristaappel.jobspot.R;
+import com.kristaappel.jobspot.objects.LocationHelper;
+
+import java.io.IOException;
+import java.util.List;
 
 import static android.content.Context.LOCATION_SERVICE;
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 
 /**
  * Activities that contain this fragment must implement the
@@ -29,10 +38,10 @@ import static android.content.Context.LOCATION_SERVICE;
  */
 public class MapFragment extends com.google.android.gms.maps.MapFragment implements OnMapReadyCallback, LocationListener, GoogleMap.OnInfoWindowClickListener{
 
-    private boolean requestingUpdates;
     private GoogleMap googleMap;
+    private Geocoder geocoder;
+    private Address currentAddress;
     private Location currentLocation;
-    private LatLng currentLatLng;
     private final double jobLat = 28.590647; //TODO: change to job location's latitude
     private final double jobLong = -81.304510; //TODO: change to job location's longitude
 
@@ -76,11 +85,6 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-//        if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 0x01001);
-//
-//        }
     }
 
 
@@ -93,6 +97,7 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
 
         }
 
+        geocoder = new Geocoder(getContext());
         getMapAsync(this);
     }
 
@@ -122,24 +127,16 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
             mListener = (OnFragmentInteractionListener) context;
         } else {
 //            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
+//                    + " must implement OnSearchBoxFragmentInteractionListener");
         }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        stopLocationUpdates();
+        LocationHelper.stopRequestingLocationUpdates(getContext(), this);
     }
 
-//    @SuppressWarnings({"MissingPermission"}) // This Fragment isn't created until permission is given
-    private void stopLocationUpdates(){
-        if (requestingUpdates) {
-            requestingUpdates = false;
-            LocationManager locationManager = (LocationManager)getActivity().getSystemService(LOCATION_SERVICE);
-            locationManager.removeUpdates(this);
-        }
-    }
 
     @Override
     public void onDetach() {
@@ -152,37 +149,30 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
         googleMap = map;
         googleMap.setOnInfoWindowClickListener(this);
 
+        currentLocation = LocationHelper.getCurrentLocation(getContext(), this);
+        if (currentLocation == null){
+            // No last known location.  Begin requesting location updates:
+            LocationHelper.requestLocationUpdates(getContext(), this);
+        }else{
+            // Get current address:
+            currentAddress = LocationHelper.getCurrentAddress(currentLocation, getContext());
+            // Display current address in the location box:
+            EditText et_location = (EditText) getActivity().findViewById(R.id.et_location);
+            et_location.setText(currentAddress.getAddressLine(0)); // This shows full address
+            //et_location.setText(currentAddress.getLocality() + ", " + currentAddress.getAdminArea()); // This shows city, state
 
-
-
-        // Check for permission
-        if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            // Get last known location:
-            LocationManager locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
-            currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            if (currentLocation != null) {
-                currentLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-//                chosenLocationListener.handleChosenLocation(currentLocation.getLatitude(), currentLocation.getLongitude());
-                // Zoom in to current location and load map markers:
-                zoomInCamera();
-                googleMap.clear();
-                addMapMarkers();
-            }else{
-                // No last known location.  Begin requesting location updates:
-                requestingUpdates = true;
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 10.0f, this);
-            }
+            // Update map:
+            zoomInCamera();
+            googleMap.clear();
+            addMapMarkers();
         }
-
-
-
-
-
     }
+
 
     private void zoomInCamera(){
         if (googleMap != null){
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(currentLatLng, 14);
+            LatLng zoomToLatLong = new LatLng(currentAddress.getLatitude(), currentAddress.getLongitude());
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(zoomToLatLong, 14);
             googleMap.animateCamera(cameraUpdate);
         }
 
@@ -212,11 +202,17 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
     @Override
     public void onLocationChanged(Location location) {
         currentLocation = location;
-        currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+        currentAddress = LocationHelper.getCurrentAddress(location, getContext());
+        Log.i("MapFragment", "onLocationChanged: " + currentAddress);
+        // Display current address in the location box:
+        EditText et_location = (EditText) getActivity().findViewById(R.id.et_location);
+        et_location.setText(currentAddress.getAddressLine(0)); // This shows full address
+        //et_location.setText(currentAddress.getLocality() + ", " + currentAddress.getAdminArea()); // This shows city, state
+
 //        chosenLocationListener.handleChosenLocation(currentLocation.getLatitude(), currentLocation.getLongitude());
 
         zoomInCamera();
-        stopLocationUpdates();
+        LocationHelper.stopRequestingLocationUpdates(getContext(), this);
     }
 
     @Override

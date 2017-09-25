@@ -99,7 +99,7 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
             mListener = (OnFragmentInteractionListener) context;
         } else {
 //            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
+//                    + " must implement OnSearchBoxFragmentInteractionListener");
         }
     }
 
