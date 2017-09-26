@@ -158,14 +158,26 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
             currentAddress = LocationHelper.getCurrentAddress(currentLocation, getContext());
             // Display current address in the location box:
             EditText et_location = (EditText) getActivity().findViewById(R.id.et_location);
-            et_location.setText(currentAddress.getAddressLine(0)); // This shows full address
-            //et_location.setText(currentAddress.getLocality() + ", " + currentAddress.getAdminArea()); // This shows city, state
+            //et_location.setText(currentAddress.getAddressLine(0)); // This shows full address
+            et_location.setText(currentAddress.getLocality() + ", " + currentAddress.getAdminArea()); // This shows city, state
 
             // Update map:
             zoomInCamera();
             googleMap.clear();
             addMapMarkers();
         }
+        // test code starts here:
+        Geocoder gc = new Geocoder(getContext());
+        try {
+            List<Address> address = gc.getFromLocationName("lowry park zoo tampa fl", 1);
+            Address place = address.get(0);
+            Log.i("MapFragment", "the place's address is: " + place.toString());
+            Log.i("MapFragment", "the place's latitude is: " + place.getLatitude());
+            Log.i("MapFragment", "the place's longtiide is: " + place.getLongitude());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } // end of test code
+
     }
 
 

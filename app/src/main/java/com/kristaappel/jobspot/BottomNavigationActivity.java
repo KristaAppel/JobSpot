@@ -2,6 +2,10 @@ package com.kristaappel.jobspot;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteClosable;
+import android.location.Address;
+import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -15,6 +19,13 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.kristaappel.jobspot.fragments.AppliedJobsFragment;
 import com.kristaappel.jobspot.fragments.MapFragment;
 import com.kristaappel.jobspot.fragments.ProfileFragment;
@@ -22,6 +33,10 @@ import com.kristaappel.jobspot.fragments.SavedJobsFragment;
 import com.kristaappel.jobspot.fragments.SearchBoxFragment;
 import com.kristaappel.jobspot.fragments.SearchResultListFragment;
 import com.kristaappel.jobspot.fragments.SearchScreenFragment;
+import com.kristaappel.jobspot.objects.LocationHelper;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class BottomNavigationActivity extends AppCompatActivity implements SearchBoxFragment.OnSearchBoxFragmentInteractionListener {
@@ -31,6 +46,8 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     Button listButton;
     EditText et_location;
     EditText et_keywords;
+    String keywords;
+    String location;
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -139,8 +156,10 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 listButton.setTextColor(getResources().getColor(R.color.colorWhite));
                 break;
             case R.id.locationButton:
-                // TODO: get current location and find nearby jobs, show them on map.  display location in top search bar
-                Log.i("TAG", "get current location");
+                // TODO: find nearby jobs for the location, show them on map/list.
+                Location currentLocation = LocationHelper.getCurrentLocation(getApplicationContext(), new MapFragment());
+                Address currentAddress = LocationHelper.getCurrentAddress(currentLocation, getApplicationContext());
+                et_location.setText(currentAddress.getLocality() + ", " + currentAddress.getAdminArea()); // This shows city, state
                 break;
             case R.id.filterButton:
                 // TODO: show a list of filter & sort options, use chosen options in job search
@@ -148,8 +167,6 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 break;
             case R.id.searchButton:
                 // TODO: search for & display jobs
-                String location = "";
-                String keywords = "";
                 if (et_location.getText().toString().length() >0){
                     location = et_location.getText().toString();
                 }
@@ -157,10 +174,39 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                     keywords = et_keywords.getText().toString();
                 }
                 Log.i("BottomNavActivity", "Entered location: " + location + " Entered keywords: " + keywords);
+                searchForJobs(keywords, location);
         }
 
-
     }
+
+
+    private void searchForJobs(String keywords, String location){
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        //TODO: get the distance, sort type, etc from user and put it into the url
+        String url = "https://api.careeronestop.org/v1/jobsearch/TZ1zgEyKTNm69nF/"+keywords+"/"+location+"/25/accquisitiondate/desc/0/10/30";
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("BottomNavigationActvty", "response: " + response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("BottomNavigationActvty", "That didn't work!!!!!!!");
+            }
+        })
+        {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("Content-Type", "application/json");
+                params.put("Authorization", "Bearer imXBBrutJKGqrj6NHkLNPA41F8H/dbvQDiYjpaLrQWmYzJb+PNAZ7dg8D6Gv7onpkZl1mccgSRygH+xiE7AZrQ==");
+                return params;
+            }
+        };
+        requestQueue.add(stringRequest);
+    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
