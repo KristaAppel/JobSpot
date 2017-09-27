@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -32,13 +33,16 @@ import com.kristaappel.jobspot.fragments.SavedJobsFragment;
 import com.kristaappel.jobspot.fragments.SearchBoxFragment;
 import com.kristaappel.jobspot.fragments.SearchResultListFragment;
 import com.kristaappel.jobspot.fragments.SearchScreenFragment;
+import com.kristaappel.jobspot.objects.Job;
 import com.kristaappel.jobspot.objects.LocationHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -52,6 +56,16 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     EditText et_keywords;
     String keywords;
     String location;
+    static Double jobLat;
+    static Double jobLng;
+    static String jobid;
+    static String jobtitle;
+    static String companyname;
+    static String dateposted;
+    static String joburl;
+    static String jobcitystate;
+    static LatLng joblatLng;
+    static ArrayList<Job> jobList = new ArrayList<>();
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -170,7 +184,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 Log.i("TAG", "show filter/sort options");
                 break;
             case R.id.searchButton:
-                // TODO: search for & display jobs
+                // Get user's input data & make sure it's not empty:
                 if (et_location.getText().toString().length() >0){
                     location = et_location.getText().toString();
                 }
@@ -178,8 +192,14 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                     keywords = et_keywords.getText().toString();
                 }
                 Log.i("BottomNavActivity", "Entered location: " + location + " Entered keywords: " + keywords);
-                searchForJobs(keywords, location);
-                LocationHelper.lookUpCompany(getApplicationContext(), "walmart ", "tampa ", "fl"); //TODO: use real company names & locations from search results
+                if (location==null || location.equals("")){
+                    Toast.makeText(this, "Enter a location", Toast.LENGTH_SHORT).show();
+                }else if  (keywords==null || (keywords.equals(""))){
+                    Toast.makeText(this, "Enter keywords", Toast.LENGTH_SHORT).show();
+                }else{
+                    searchForJobs(keywords, location);
+                    //TODO: display jobs on map & list
+                }
 
         }
 
@@ -188,19 +208,25 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     public static LatLng getCoordsForCompany(String response){
         LatLng coords = null;
         try {
-            // Parse JSON results from company look-up:
+            // Parse JSON results from company look-up to get coordinates:
             JSONObject responseObject = new JSONObject(response);
             JSONArray resultArray = responseObject.getJSONArray("results");
             JSONObject resultObj = resultArray.getJSONObject(0);
             JSONObject geometryObject = resultObj.getJSONObject("geometry");
             JSONObject locationObject = geometryObject.getJSONObject("location");
-            Double lat = locationObject.getDouble("lat");
-            Double lng = locationObject.getDouble("lng");
-            coords = new LatLng(lat, lng);
-            Log.i("LocHelp", "coords: " + coords);
+            jobLat = locationObject.getDouble("lat");
+            jobLng = locationObject.getDouble("lng");
+            coords = new LatLng(jobLat, jobLng);
+            Log.i("BottomNavigActivity:220", "coords: " + coords);
         }catch (JSONException e){
             e.printStackTrace();
         }
+        joblatLng = coords;
+
+        // Use coords with job data that was already retrieved to create a Job object:
+        Job newJob = new Job(jobid, jobtitle, companyname, dateposted, joburl, jobcitystate, joblatLng);
+        jobList.add(newJob);
+        Log.i("BottomNavActivity:229", "joblistcount:" + jobList.size());
         return coords;
     }
 
@@ -213,6 +239,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
             @Override
             public void onResponse(String response) {
                 Log.i("BottomNavigationActvty", "response: " + response);
+                makeJobList(response);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -230,6 +257,28 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
             }
         };
         requestQueue.add(stringRequest);
+    }
+
+    public void makeJobList(String searchResponse){
+        // Parse JSON to make a list of Job objects:
+        try {
+            JSONObject responseObj = new JSONObject(searchResponse);
+            JSONArray jobsArray = responseObj.getJSONArray("Jobs");
+            for (int i = 0; i<jobsArray.length(); i++){
+                JSONObject jobObj = jobsArray.getJSONObject(i);
+                jobid = jobObj.getString("JvId");
+                jobtitle = jobObj.getString("JobTitle");
+                companyname = jobObj.getString("Company");
+                dateposted = jobObj.getString("AccquisitionDate");
+                joburl = jobObj.getString("URL");
+                jobcitystate = jobObj.getString("Location");
+                // Get the coordinates:
+                LocationHelper.lookUpCompany(this, companyname, jobcitystate);
+            }
+            Log.i("BottomNavActivity:278", "jobs count: " + jobsArray.length());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 

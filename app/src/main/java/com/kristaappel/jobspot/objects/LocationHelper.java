@@ -74,15 +74,14 @@ public class LocationHelper {
         return theAddress;
     }
 
-    public static void lookUpCompany(Context context, String companyName, String city, String state){
+    public static void lookUpCompany(Context context, String companyName, String cityState){
         // This will look up a company by name, city, & state and get additional information about it.
         // This will be used (in the BottomNavigationActivity) to get the company's coordinates so it can be pinned on the map.
         RequestQueue requestQueue = Volley.newRequestQueue(context);
-        String url = "https://maps.googleapis.com/maps/api/geocode/json?address="+companyName+city+state+"&key=AIzaSyC7q_VhmcurOkyz4wwIc0UkK7L0o1bUK-0\n";
+        String url = "https://maps.googleapis.com/maps/api/geocode/json?address="+companyName+cityState+"&key=AIzaSyC7q_VhmcurOkyz4wwIc0UkK7L0o1bUK-0\n";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.i("LocationHelper", "response: " + response);
                 // Send the response back to the activity to be parsed & used:
                 BottomNavigationActivity.getCoordsForCompany(response);
             }
