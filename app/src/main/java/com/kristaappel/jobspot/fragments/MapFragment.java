@@ -6,7 +6,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -21,15 +20,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.kristaappel.jobspot.Manifest;
 import com.kristaappel.jobspot.R;
 import com.kristaappel.jobspot.objects.LocationHelper;
 
 import java.io.IOException;
 import java.util.List;
-
-import static android.content.Context.LOCATION_SERVICE;
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 
 /**
  * Activities that contain this fragment must implement the
@@ -155,7 +150,7 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
             LocationHelper.requestLocationUpdates(getContext(), this);
         }else{
             // Get current address:
-            currentAddress = LocationHelper.getCurrentAddress(currentLocation, getContext());
+            currentAddress = LocationHelper.getCurrentAddressFromLocation(currentLocation, getContext());
             // Display current address in the location box:
             EditText et_location = (EditText) getActivity().findViewById(R.id.et_location);
             //et_location.setText(currentAddress.getAddressLine(0)); // This shows full address
@@ -214,7 +209,7 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
     @Override
     public void onLocationChanged(Location location) {
         currentLocation = location;
-        currentAddress = LocationHelper.getCurrentAddress(location, getContext());
+        currentAddress = LocationHelper.getCurrentAddressFromLocation(location, getContext());
         Log.i("MapFragment", "onLocationChanged: " + currentAddress);
         // Display current address in the location box:
         EditText et_location = (EditText) getActivity().findViewById(R.id.et_location);

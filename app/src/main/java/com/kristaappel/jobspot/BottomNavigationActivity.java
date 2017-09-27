@@ -2,10 +2,8 @@ package com.kristaappel.jobspot;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.database.sqlite.SQLiteClosable;
 import android.location.Address;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -26,6 +24,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.maps.model.LatLng;
 import com.kristaappel.jobspot.fragments.AppliedJobsFragment;
 import com.kristaappel.jobspot.fragments.MapFragment;
 import com.kristaappel.jobspot.fragments.ProfileFragment;
@@ -35,8 +34,13 @@ import com.kristaappel.jobspot.fragments.SearchResultListFragment;
 import com.kristaappel.jobspot.fragments.SearchScreenFragment;
 import com.kristaappel.jobspot.objects.LocationHelper;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
+
 
 
 public class BottomNavigationActivity extends AppCompatActivity implements SearchBoxFragment.OnSearchBoxFragmentInteractionListener {
@@ -158,7 +162,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
             case R.id.locationButton:
                 // TODO: find nearby jobs for the location, show them on map/list.
                 Location currentLocation = LocationHelper.getCurrentLocation(getApplicationContext(), new MapFragment());
-                Address currentAddress = LocationHelper.getCurrentAddress(currentLocation, getApplicationContext());
+                Address currentAddress = LocationHelper.getCurrentAddressFromLocation(currentLocation, getApplicationContext());
                 et_location.setText(currentAddress.getLocality() + ", " + currentAddress.getAdminArea()); // This shows city, state
                 break;
             case R.id.filterButton:
@@ -175,8 +179,29 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 }
                 Log.i("BottomNavActivity", "Entered location: " + location + " Entered keywords: " + keywords);
                 searchForJobs(keywords, location);
+                LocationHelper.lookUpCompany(getApplicationContext(), "walmart ", "tampa ", "fl"); //TODO: use real company names & locations from search results
+
         }
 
+    }
+
+    public static LatLng getCoordsForCompany(String response){
+        LatLng coords = null;
+        try {
+            // Parse JSON results from company look-up:
+            JSONObject responseObject = new JSONObject(response);
+            JSONArray resultArray = responseObject.getJSONArray("results");
+            JSONObject resultObj = resultArray.getJSONObject(0);
+            JSONObject geometryObject = resultObj.getJSONObject("geometry");
+            JSONObject locationObject = geometryObject.getJSONObject("location");
+            Double lat = locationObject.getDouble("lat");
+            Double lng = locationObject.getDouble("lng");
+            coords = new LatLng(lat, lng);
+            Log.i("LocHelp", "coords: " + coords);
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        return coords;
     }
 
 
