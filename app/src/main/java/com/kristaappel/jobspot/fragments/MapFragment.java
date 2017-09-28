@@ -21,9 +21,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.kristaappel.jobspot.R;
+import com.kristaappel.jobspot.objects.Job;
 import com.kristaappel.jobspot.objects.LocationHelper;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,17 +39,9 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
     private Geocoder geocoder;
     private Address currentAddress;
     private Location currentLocation;
-    private final double jobLat = 28.590647; //TODO: change to job location's latitude
-    private final double jobLong = -81.304510; //TODO: change to job location's longitude
+    private ArrayList<Job> jobs;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private OnFragmentInteractionListener mListener;
 
@@ -59,16 +53,13 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment MapFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static MapFragment newInstance(String param1, String param2) {
+    public static MapFragment newInstance(ArrayList<Job> joblist) {
         MapFragment fragment = new MapFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putParcelableArrayList(ARG_PARAM1, joblist);
         fragment.setArguments(args);
         return fragment;
     }
@@ -77,8 +68,7 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            jobs = getArguments().getParcelableArrayList(ARG_PARAM1);
         }
     }
 
@@ -108,12 +98,6 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
         }
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(View v) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(v);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -123,6 +107,9 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
         } else {
 //            throw new RuntimeException(context.toString()
 //                    + " must implement OnSearchBoxFragmentInteractionListener");
+        }
+        if (getArguments() != null) {
+            jobs = getArguments().getParcelableArrayList(ARG_PARAM1);
         }
     }
 
@@ -154,32 +141,51 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
             // Display current address in the location box:
             EditText et_location = (EditText) getActivity().findViewById(R.id.et_location);
             //et_location.setText(currentAddress.getAddressLine(0)); // This shows full address
-            et_location.setText(currentAddress.getLocality() + ", " + currentAddress.getAdminArea()); // This shows city, state
+            if (et_location.getText().toString().equals("") || et_location.getText()==null){
+                if (jobs==null){
+                    // If there are no searched jobs, show the current location in the location box:
+                    et_location.setText(currentAddress.getLocality() + ", " + currentAddress.getAdminArea()); // This shows city, state
+                }else{
+                    // If there are job search results, show the location of the searched jobs in the location box:
+                    et_location.setText(jobs.get(0).getJobCityState());
+                }
+
+            }
 
             // Update map:
             zoomInCamera();
             googleMap.clear();
             addMapMarkers();
         }
-        // test code starts here:
-        Geocoder gc = new Geocoder(getContext());
-        try {
-            List<Address> address = gc.getFromLocationName("lowry park zoo tampa fl", 1);
-            Address place = address.get(0);
-            Log.i("MapFragment", "the place's address is: " + place.toString());
-            Log.i("MapFragment", "the place's latitude is: " + place.getLatitude());
-            Log.i("MapFragment", "the place's longtiide is: " + place.getLongitude());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } // end of test code
 
     }
 
 
     private void zoomInCamera(){
         if (googleMap != null){
-            LatLng zoomToLatLong = new LatLng(currentAddress.getLatitude(), currentAddress.getLongitude());
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(zoomToLatLong, 14);
+            LatLng zoomToLatLong = null;
+            String enteredLocation = "";
+            EditText et_location = (EditText) getActivity().findViewById(R.id.et_location);
+            enteredLocation = et_location.getText().toString();
+            if (!enteredLocation.equals("")){
+                // Zoom to entered location:
+                Geocoder gc = new Geocoder(getContext());
+                try {
+                    List<Address> address = gc.getFromLocationName(enteredLocation, 1);
+                    Address place = address.get(0);
+                    Log.i("MapFragment", "the place's address is: " + place.toString());
+                    Log.i("MapFragment", "the place's latitude is: " + place.getLatitude());
+                    Log.i("MapFragment", "the place's longtiide is: " + place.getLongitude());
+                    zoomToLatLong = new LatLng(place.getLatitude(), place.getLongitude());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }else{
+                // Zoom to current location:
+                zoomToLatLong = new LatLng(currentAddress.getLatitude(), currentAddress.getLongitude());
+            }
+
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(zoomToLatLong, 13);
             googleMap.animateCamera(cameraUpdate);
         }
 
@@ -187,13 +193,21 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
 
     private void addMapMarkers(){
         if (googleMap != null){
-            // TODO: add a marker for each job in the area:
-            MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.title("Company Name");
-            markerOptions.snippet("Job Title");
-            LatLng jobLocation = new LatLng(jobLat, jobLong); //TODO: change to the job's location
-            markerOptions.position(jobLocation);
-            googleMap.addMarker(markerOptions);
+//            MarkerOptions markerOptions = new MarkerOptions();
+            // Add a marker for each job in the area:
+            if (jobs != null){
+                for (Job job : jobs){
+                    Log.i("MapFragment", "coords in mapfrag: " + job.getJobLatLng());
+                    if (job.getJobLatLng() != null && job.getCompanyName() != null && job.getJobTitle() != null){
+                        MarkerOptions markerOptions = new MarkerOptions();
+                        markerOptions.title(job.getJobTitle());
+                        markerOptions.snippet(job.getCompanyName());
+                        markerOptions.position(job.getJobLatLng());
+                        googleMap.addMarker(markerOptions);
+                    }
+                }
+            }
+
         }
     }
 
@@ -215,8 +229,6 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
         EditText et_location = (EditText) getActivity().findViewById(R.id.et_location);
         et_location.setText(currentAddress.getAddressLine(0)); // This shows full address
         //et_location.setText(currentAddress.getLocality() + ", " + currentAddress.getAdminArea()); // This shows city, state
-
-//        chosenLocationListener.handleChosenLocation(currentLocation.getLatitude(), currentLocation.getLongitude());
 
         zoomInCamera();
         LocationHelper.stopRequestingLocationUpdates(getContext(), this);

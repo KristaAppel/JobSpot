@@ -1,6 +1,8 @@
 package com.kristaappel.jobspot;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Location;
@@ -14,6 +16,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -35,14 +38,11 @@ import com.kristaappel.jobspot.fragments.SearchResultListFragment;
 import com.kristaappel.jobspot.fragments.SearchScreenFragment;
 import com.kristaappel.jobspot.objects.Job;
 import com.kristaappel.jobspot.objects.LocationHelper;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -66,6 +66,8 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     static String jobcitystate;
     static LatLng joblatLng;
     static ArrayList<Job> jobList = new ArrayList<>();
+    static boolean mapIsShowing = true;
+    static boolean listIsShowing = false;
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -76,7 +78,12 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
             switch (item.getItemId()) {
                 case R.id.navigation_search:
                     // Create and display a SearchScreenFragment:
-                    SearchScreenFragment searchScreenFrag = new SearchScreenFragment();
+                    SearchScreenFragment searchScreenFrag = null;
+                    if (jobList == null){
+                        searchScreenFrag = new SearchScreenFragment();
+                    }else{
+                        searchScreenFrag = SearchScreenFragment.newInstance(jobList);
+                    }
                     getFragmentManager().beginTransaction().replace(R.id.content, searchScreenFrag).commit();
                     // Hide actionbar:
                     if (actionBar != null){
@@ -154,8 +161,15 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                     ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0x01001);
                 }else{
                     // Create and display a MapFragment in bottom container:
-                    MapFragment mapFrag = new MapFragment();
+                    MapFragment mapFrag = null;
+                    if (jobList != null){
+                        mapFrag = MapFragment.newInstance(jobList);
+                    }else{
+                        mapFrag = new MapFragment();
+                    }
                     getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, mapFrag).commit();
+                    mapIsShowing = true;
+                    listIsShowing = false;
                     // Set buttons to appropriate colors:
                     mapButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                     mapButton.setTextColor(getResources().getColor(R.color.colorWhite));
@@ -165,8 +179,10 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 break;
             case R.id.mapFragToggle2:
                 // Create and display a ResultsListFragment in bottom container:
-                SearchResultListFragment searchResultListFrag = new SearchResultListFragment();
+                SearchResultListFragment searchResultListFrag = SearchResultListFragment.newInstance(jobList);
                 getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, searchResultListFrag).commit();
+                mapIsShowing = false;
+                listIsShowing = true;
                 // Set buttons to appropriate colors:
                 mapButton.setBackgroundColor(getResources().getColor(R.color.colorLightGrey));
                 mapButton.setTextColor(getResources().getColor(R.color.colorPrimary));
@@ -174,7 +190,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 listButton.setTextColor(getResources().getColor(R.color.colorWhite));
                 break;
             case R.id.locationButton:
-                // TODO: find nearby jobs for the location, show them on map/list.
+                // Get the user's current location and enter it into the location box:
                 Location currentLocation = LocationHelper.getCurrentLocation(getApplicationContext(), new MapFragment());
                 Address currentAddress = LocationHelper.getCurrentAddressFromLocation(currentLocation, getApplicationContext());
                 et_location.setText(currentAddress.getLocality() + ", " + currentAddress.getAdminArea()); // This shows city, state
@@ -184,6 +200,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 Log.i("TAG", "show filter/sort options");
                 break;
             case R.id.searchButton:
+                jobList.clear();
                 // Get user's input data & make sure it's not empty:
                 if (et_location.getText().toString().length() >0){
                     location = et_location.getText().toString();
@@ -198,14 +215,15 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                     Toast.makeText(this, "Enter keywords", Toast.LENGTH_SHORT).show();
                 }else{
                     searchForJobs(keywords, location);
-                    //TODO: display jobs on map & list
                 }
-
+                InputMethodManager inputMethodManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(et_keywords.getWindowToken(), 0);
+                break;
         }
-
     }
 
-    public static LatLng getCoordsForCompany(String response){
+
+    public static LatLng getCoordsForCompany(Activity activity, String response, Job foundJob){
         LatLng coords = null;
         try {
             // Parse JSON results from company look-up to get coordinates:
@@ -224,9 +242,30 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         joblatLng = coords;
 
         // Use coords with job data that was already retrieved to create a Job object:
-        Job newJob = new Job(jobid, jobtitle, companyname, dateposted, joburl, jobcitystate, joblatLng);
+        Job newJob = new Job(foundJob.getJobID(), foundJob.getJobTitle(), foundJob.getCompanyName(), foundJob.getDatePosted(), foundJob.getJobURL(), foundJob.getJobCityState(), joblatLng);
+        // Add new job to the list of jobs:
         jobList.add(newJob);
         Log.i("BottomNavActivity:229", "joblistcount:" + jobList.size());
+
+        if (mapIsShowing){
+            // Create and display a MapFragment in bottom container:
+            MapFragment mapFrag;
+            if (jobList != null){
+                mapFrag = MapFragment.newInstance(jobList);
+            }else{
+                mapFrag = new MapFragment();
+            }
+            activity.getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, mapFrag).commit();
+        }else if (listIsShowing){
+            // Create and display a SearchResultListFragment in bottom container:
+            SearchResultListFragment listfrag;
+            if (jobList != null){
+                listfrag = SearchResultListFragment.newInstance(jobList);
+            }else{
+                listfrag = new SearchResultListFragment();
+            }
+            activity.getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, listfrag).commit();
+        }
         return coords;
     }
 
@@ -234,7 +273,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     private void searchForJobs(String keywords, String location){
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         //TODO: get the distance, sort type, etc from user and put it into the url
-        String url = "https://api.careeronestop.org/v1/jobsearch/TZ1zgEyKTNm69nF/"+keywords+"/"+location+"/25/accquisitiondate/desc/0/10/30";
+        String url = "https://api.careeronestop.org/v1/jobsearch/TZ1zgEyKTNm69nF/"+keywords+"/"+location+"/20/accquisitiondate/desc/0/200/15";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -245,6 +284,9 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.i("BottomNavigationActvty", "That didn't work!!!!!!!");
+                if (error.networkResponse.statusCode == 404){
+                    Toast.makeText(BottomNavigationActivity.this, "No jobs available.", Toast.LENGTH_SHORT).show();
+                }
             }
         })
         {
@@ -272,8 +314,9 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 dateposted = jobObj.getString("AccquisitionDate");
                 joburl = jobObj.getString("URL");
                 jobcitystate = jobObj.getString("Location");
+                Job foundJob = new Job(jobid, jobtitle, companyname, dateposted, joburl, jobcitystate, null);
                 // Get the coordinates:
-                LocationHelper.lookUpCompany(this, companyname, jobcitystate);
+                LocationHelper.lookUpCompany(this, foundJob);
             }
             Log.i("BottomNavActivity:278", "jobs count: " + jobsArray.length());
         } catch (JSONException e) {

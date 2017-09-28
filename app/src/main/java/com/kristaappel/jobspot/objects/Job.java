@@ -1,10 +1,13 @@
 package com.kristaappel.jobspot.objects;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.Serializable;
 
-public class Job implements Serializable {
+public class Job implements Serializable, Parcelable{
 
     private String jobID;
     private String jobTitle;
@@ -64,6 +67,15 @@ public class Job implements Serializable {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+    }
 }
 
 

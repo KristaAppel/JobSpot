@@ -10,6 +10,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.kristaappel.jobspot.R;
+import com.kristaappel.jobspot.objects.Job;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -20,16 +23,12 @@ import com.kristaappel.jobspot.R;
  * create an instance of this fragment.
  */
 public class SearchScreenFragment extends android.app.Fragment {
-    // TODO: Rename parameter arguments, choose names that match
+
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
+    private ArrayList<Job> jobs;
     private OnFragmentInteractionListener mListener;
+
 
     public SearchScreenFragment() {
         // Required empty public constructor
@@ -38,17 +37,13 @@ public class SearchScreenFragment extends android.app.Fragment {
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+
      * @return A new instance of fragment SearchScreenFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static SearchScreenFragment newInstance(String param1, String param2) {
+    public static SearchScreenFragment newInstance(ArrayList<Job> joblist) {
         SearchScreenFragment fragment = new SearchScreenFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putParcelableArrayList(ARG_PARAM1, joblist);
         fragment.setArguments(args);
         return fragment;
     }
@@ -57,8 +52,7 @@ public class SearchScreenFragment extends android.app.Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            jobs = getArguments().getParcelableArrayList(ARG_PARAM1);
         }
 
         // Create and display a SearchBoxFragment:
@@ -66,7 +60,13 @@ public class SearchScreenFragment extends android.app.Fragment {
         getFragmentManager().beginTransaction().replace(R.id.searchScreen_topContainer, searchBoxFrag).commit();
 
         // Create and display a MapFragment:
-        MapFragment mapFrag = new MapFragment();
+        MapFragment mapFrag = null;
+        if (jobs != null){
+            mapFrag = MapFragment.newInstance(jobs);
+        }else{
+            mapFrag = new MapFragment();
+        }
+
         getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, mapFrag).commit();
 
     }
@@ -80,12 +80,6 @@ public class SearchScreenFragment extends android.app.Fragment {
 
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(View v) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(v);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {

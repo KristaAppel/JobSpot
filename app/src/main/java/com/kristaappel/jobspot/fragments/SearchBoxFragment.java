@@ -90,12 +90,6 @@ public class SearchBoxFragment extends android.app.Fragment implements View.OnCl
 
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(View v) {
-        if (mListener != null) {
-            mListener.onSearchBoxFragmentInteraction(v.getId());
-        }
-    }
 
 
     @Override
