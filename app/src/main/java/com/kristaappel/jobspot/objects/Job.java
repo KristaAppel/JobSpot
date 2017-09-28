@@ -74,8 +74,9 @@ public class Job implements Serializable, Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
     }
+
+
 }
 
 

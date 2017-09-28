@@ -2,7 +2,9 @@ package com.kristaappel.jobspot.fragments;
 
 import android.app.ListFragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +12,11 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.kristaappel.jobspot.JobInfoActivity;
 import com.kristaappel.jobspot.R;
 import com.kristaappel.jobspot.objects.Job;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
@@ -59,10 +63,19 @@ public class SearchResultListFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
-        //TODO: Go to the job info screen for the chosen job:
-//        Intent powerWordScreenIntent = new Intent(getActivity(), PowerWordActivity.class);
-//        powerWordScreenIntent.putExtra(EXTRA_IRLA_LEVEL_INDEX, position);
-//        startActivity(powerWordScreenIntent);
+         //Create and display a JobInfoFragment for the selected job:
+        JobInfoFragment jobInfoFragment = JobInfoFragment.newInstance(jobs.get(position));
+        getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, jobInfoFragment).commit();
+
+
+//        // Create and display a JobInfoActivity for the selected job:
+//        Intent jobInfoIntent = new Intent(getActivity(), JobInfoActivity.class);
+//        Job job = jobs.get(position);
+//        Bundle jobBundle = new Bundle();
+//        jobBundle.putSerializable("extra_job", job);
+//        jobInfoIntent.putExtra("job_bundle", jobBundle);
+//        //jobInfoIntent.putExtra("extra_job", (Serializable) job);
+//        startActivity(jobInfoIntent);
     }
 
 

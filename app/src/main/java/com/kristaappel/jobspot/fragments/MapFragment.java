@@ -131,6 +131,10 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
         googleMap = map;
         googleMap.setOnInfoWindowClickListener(this);
 
+        if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            googleMap.setMyLocationEnabled(true);
+        }
+
         currentLocation = LocationHelper.getCurrentLocation(getContext(), this);
         if (currentLocation == null){
             // No last known location.  Begin requesting location updates:
@@ -213,8 +217,22 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        //TODO: Go  to the job detail page for the clicked job
         Log.i("MapFragment", "Clicked on " + marker.getTitle());
+
+        // Find the selected job in the jobs list:
+        Job selectedJob = null;
+        for (Job job : jobs){
+            if (job.getJobTitle().equals(marker.getTitle())){
+                selectedJob = job;
+            }
+        }
+
+        if (selectedJob != null){
+            //Create and display a JobInfoFragment for the selected job:
+            JobInfoFragment jobInfoFragment = JobInfoFragment.newInstance(selectedJob);
+            getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, jobInfoFragment).commit();
+        }
+
     }
 
 
