@@ -4,16 +4,18 @@ import android.content.Context;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+<<<<<<< HEAD
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageButton;
+=======
+>>>>>>> origin/master
 
 import com.kristaappel.jobspot.R;
 import com.kristaappel.jobspot.objects.Job;
@@ -71,6 +73,7 @@ public class JobInfoFragment extends android.app.Fragment implements View.OnClic
         return inflater.inflate(R.layout.fragment_job_info, container, false);
     }
 
+<<<<<<< HEAD
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -86,6 +89,13 @@ public class JobInfoFragment extends android.app.Fragment implements View.OnClic
         sharebutton.setOnClickListener(this);
         saveButton.setOnClickListener(this);
         appliedButton.setOnClickListener(this);
+=======
+    // TODO: Rename method, update argument and hook method into UI event
+    public void onButtonPressed(Uri uri) {
+        if (mListener != null) {
+            mListener.onFragmentInteraction(uri);
+        }
+>>>>>>> origin/master
     }
 
 
