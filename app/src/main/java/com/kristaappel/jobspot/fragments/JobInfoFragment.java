@@ -1,6 +1,7 @@
 package com.kristaappel.jobspot.fragments;
 
 import android.content.Context;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageButton;
 
 import com.kristaappel.jobspot.R;
 import com.kristaappel.jobspot.objects.Job;
@@ -24,7 +26,7 @@ import com.kristaappel.jobspot.objects.Job;
  * Use the {@link JobInfoFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class JobInfoFragment extends android.app.Fragment {
+public class JobInfoFragment extends android.app.Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -77,14 +79,15 @@ public class JobInfoFragment extends android.app.Fragment {
         webSettings.setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient());
         webView.loadUrl(job.getJobURL());
+
+        ImageButton sharebutton = (ImageButton)view.findViewById(R.id.jobInfo_button_share);
+        ImageButton saveButton = (ImageButton)view.findViewById(R.id.jobInfo_button_save);
+        ImageButton appliedButton = (ImageButton)view.findViewById(R.id.jobInfo_button_applied);
+        sharebutton.setOnClickListener(this);
+        saveButton.setOnClickListener(this);
+        appliedButton.setOnClickListener(this);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -101,6 +104,24 @@ public class JobInfoFragment extends android.app.Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.jobInfo_button_share:
+                //TODO: share
+                Log.i("JobInfoFragment", "share the job");
+                break;
+            case R.id.jobInfo_button_save:
+                //TODO: save job to device & firebase, change icon to red star
+                Log.i("JobInfoFragment", "save the job");
+                break;
+            case R.id.jobInfo_button_applied:
+                //TODO: save to applied list, then hide icon or change its color?
+                Log.i("JobInfoFragment", "mark the job as applied");
+                break;
+        }
     }
 
     /**
