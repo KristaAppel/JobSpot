@@ -1,29 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants">
 
     <TextView
-        android:id="@+id/textView_applied_title"
+        android:id="@+id/textView_searchResult_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:layout_marginEnd="54dp"
         android:layout_marginStart="14dp"
         android:layout_marginTop="16dp"
         android:text="title"
         android:textAlignment="textStart"
+        android:textColor="@color/colorBlack"
         android:textSize="20sp"
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/textView_applied_company"
+        android:id="@+id/textView_searchResult_company"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textView_searchResult_title"
+        android:layout_below="@+id/textView_searchResult_title"
+        android:layout_marginEnd="54dp"
         android:text="company"
         android:textAlignment="textEnd"
-        android:textSize="18sp"
-        android:layout_below="@+id/textView_applied_title"
-        android:layout_alignStart="@+id/textView_applied_title" />
+        android:textColor="@color/common_google_signin_btn_text_light_focused"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textView_searchResult_datePosted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textView_searchResult_title"
+        android:layout_below="@+id/textView_searchResult_company"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="54dp"
+        android:text="date"
+        android:textAlignment="textEnd"
+        android:textColor="?android:attr/textColorSecondaryInverseNoDisable"
+        android:textSize="14sp" />
+
+    <ImageButton
+        android:id="@+id/searchResult_favorite_button"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/ic_star_unsaved"
+        android:layout_alignTop="@+id/textView_searchResult_title"
+        android:layout_marginEnd="14dp"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
