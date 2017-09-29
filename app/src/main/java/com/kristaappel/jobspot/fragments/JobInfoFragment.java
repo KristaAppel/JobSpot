@@ -9,14 +9,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-<<<<<<< HEAD
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageButton;
-=======
->>>>>>> origin/master
-
 import com.kristaappel.jobspot.R;
 import com.kristaappel.jobspot.objects.Job;
 
@@ -73,9 +69,9 @@ public class JobInfoFragment extends android.app.Fragment implements View.OnClic
         return inflater.inflate(R.layout.fragment_job_info, container, false);
     }
 
-<<<<<<< HEAD
+
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         WebView webView = (WebView) getActivity().findViewById(R.id.webView);
         WebSettings webSettings = webView.getSettings();
@@ -83,19 +79,20 @@ public class JobInfoFragment extends android.app.Fragment implements View.OnClic
         webView.setWebViewClient(new WebViewClient());
         webView.loadUrl(job.getJobURL());
 
-        ImageButton sharebutton = (ImageButton)view.findViewById(R.id.jobInfo_button_share);
-        ImageButton saveButton = (ImageButton)view.findViewById(R.id.jobInfo_button_save);
-        ImageButton appliedButton = (ImageButton)view.findViewById(R.id.jobInfo_button_applied);
+        ImageButton sharebutton = (ImageButton) view.findViewById(R.id.jobInfo_button_share);
+        ImageButton saveButton = (ImageButton) view.findViewById(R.id.jobInfo_button_save);
+        ImageButton appliedButton = (ImageButton) view.findViewById(R.id.jobInfo_button_applied);
         sharebutton.setOnClickListener(this);
         saveButton.setOnClickListener(this);
         appliedButton.setOnClickListener(this);
-=======
+    }
+
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
->>>>>>> origin/master
+
     }
 
 
