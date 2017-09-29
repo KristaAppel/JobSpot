@@ -5,11 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.kristaappel.jobspot.JobInfoActivity;
@@ -80,7 +82,6 @@ public class SearchResultListFragment extends ListFragment {
 
 
     private class AppliedListAdapter extends BaseAdapter {
-
         @Override
         public int getCount() {
             return jobs.size();
@@ -107,8 +108,6 @@ public class SearchResultListFragment extends ListFragment {
 
             TextView textTitle = (TextView) convertView.findViewById(R.id.textView_applied_title);
             TextView textCompany = (TextView) convertView.findViewById(R.id.textView_applied_company);
-
-
 
             // Set text:
             textTitle.setText(jobs.get(position).getJobTitle());
