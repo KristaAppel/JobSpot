@@ -113,7 +113,6 @@ public class SearchResultListFragment extends ListFragment {
             String jobDate = "Posted on: " + jobs.get(position).getDatePosted();
             textDate.setText(jobDate);
 
-
             // Get ImageButton and set appropriate image:
             final ImageButton favoriteButton = (ImageButton) convertView.findViewById(R.id.searchResult_favorite_button);
             favoriteButton.setImageResource(R.drawable.ic_star_unsaved);
@@ -158,7 +157,7 @@ public class SearchResultListFragment extends ListFragment {
                         // Unsave the job from the device:
                         ArrayList<Job> savedJobs = FileUtil.readSavedJobs(getActivity());
                         ArrayList<Job> jobsToRemove = new ArrayList<Job>();
-                        for (Job savedJob : savedJobs){//////////////
+                        for (Job savedJob : savedJobs){
                             if (savedJob.getJobID().equals(jobs.get(position).getJobID())){
                                 jobsToRemove.add(savedJob);
                             }

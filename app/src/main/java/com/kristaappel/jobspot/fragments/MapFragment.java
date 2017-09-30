@@ -12,8 +12,6 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ProgressBar;
-
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -37,7 +35,6 @@ import java.util.List;
 public class MapFragment extends com.google.android.gms.maps.MapFragment implements OnMapReadyCallback, LocationListener, GoogleMap.OnInfoWindowClickListener{
 
     private GoogleMap googleMap;
-    private Geocoder geocoder;
     private Address currentAddress;
     private Location currentLocation;
     private ArrayList<Job> jobs;
@@ -82,8 +79,6 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
             ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 0x01001);
 
         }
-
-        geocoder = new Geocoder(getContext());
         getMapAsync(this);
     }
 
@@ -237,7 +232,6 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
             JobInfoFragment jobInfoFragment = JobInfoFragment.newInstance(selectedJob);
             getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, jobInfoFragment).commit();
         }
-
     }
 
 
