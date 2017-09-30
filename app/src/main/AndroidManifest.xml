@@ -56,7 +56,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDd9EcfGH7mgDTaUReERMMHD4zv3Y0JFe8" />
 
-        <activity android:name=".JobInfoActivity"></activity>
     </application>
 
 </manifest>

@@ -147,12 +147,15 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
             EditText et_location = (EditText) getActivity().findViewById(R.id.et_location);
             //et_location.setText(currentAddress.getAddressLine(0)); // This shows full address
             if (et_location.getText().toString().equals("") || et_location.getText()==null){
-                if (jobs==null){
+                if (jobs==null || jobs.size()<1){
                     // If there are no searched jobs, show the current location in the location box:
                     et_location.setText(currentAddress.getLocality() + ", " + currentAddress.getAdminArea()); // This shows city, state
                 }else{
                     // If there are job search results, show the location of the searched jobs in the location box:
-                    et_location.setText(jobs.get(0).getJobCityState());
+                    if (jobs.size()>1){
+                        et_location.setText(jobs.get(0).getJobCityState());
+                    }
+
                 }
 
             }
@@ -202,12 +205,13 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
             // Add a marker for each job in the area:
             if (jobs != null){
                 for (Job job : jobs){
-                    Log.i("MapFragment", "coords in mapfrag: " + job.getJobLatLng());
-                    if (job.getJobLatLng() != null && job.getCompanyName() != null && job.getJobTitle() != null){
+                    Log.i("MapFragment", "coords in mapfrag: " + job.getJobLat() + ", " + job.getJobLng());
+                    if (job.getJobLat() != 0 && job.getJobLng() != 0 && job.getCompanyName() != null && job.getJobTitle() != null){
+                        LatLng jobPosition = new LatLng(job.getJobLat(), job.getJobLng());
                         MarkerOptions markerOptions = new MarkerOptions();
                         markerOptions.title(job.getJobTitle());
                         markerOptions.snippet(job.getCompanyName());
-                        markerOptions.position(job.getJobLatLng());
+                        markerOptions.position(jobPosition);
                         googleMap.addMarker(markerOptions);
                     }
                 }

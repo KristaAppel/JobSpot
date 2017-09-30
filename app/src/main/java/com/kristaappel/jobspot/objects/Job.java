@@ -15,17 +15,19 @@ public class Job implements Serializable, Parcelable{
     private String datePosted;
     private String jobURL;
     private String jobCityState;
-    private LatLng jobLatLng;
+    private double jobLat;
+    private double jobLng;
 
 
-    public Job(String jobid, String jobtitle, String companyname, String dateposted, String joburl, String jobcitystate, LatLng joblatlng){
+    public Job(String jobid, String jobtitle, String companyname, String dateposted, String joburl, String jobcitystate, double joblat, double joblng){
         jobID = jobid;
         jobTitle = jobtitle;
         companyName = companyname;
         datePosted = dateposted;
         jobURL = joburl;
         jobCityState = jobcitystate;
-        jobLatLng = joblatlng;
+        jobLat = joblat;
+        jobLng = joblng;
     }
 
 
@@ -53,8 +55,12 @@ public class Job implements Serializable, Parcelable{
         return jobCityState;
     }
 
-    public LatLng getJobLatLng() {
-        return jobLatLng;
+    public double getJobLat() {
+        return jobLat;
+    }
+
+    public double getJobLng(){
+        return jobLng;
     }
     
     @Override

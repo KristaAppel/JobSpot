@@ -67,7 +67,6 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     static String dateposted;
     static String joburl;
     static String jobcitystate;
-    static LatLng joblatLng;
     static ArrayList<Job> jobList = new ArrayList<>();
     static boolean mapIsShowing = true;
     static boolean listIsShowing = false;
@@ -237,15 +236,13 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
             JSONObject locationObject = geometryObject.getJSONObject("location");
             jobLat = locationObject.getDouble("lat");
             jobLng = locationObject.getDouble("lng");
-            coords = new LatLng(jobLat, jobLng);
             Log.i("BottomNavigActivity:220", "coords: " + coords);
         }catch (JSONException e){
             e.printStackTrace();
         }
-        joblatLng = coords;
 
         // Use coords with job data that was already retrieved to create a Job object:
-        Job newJob = new Job(foundJob.getJobID(), foundJob.getJobTitle(), foundJob.getCompanyName(), foundJob.getDatePosted(), foundJob.getJobURL(), foundJob.getJobCityState(), joblatLng);
+        Job newJob = new Job(foundJob.getJobID(), foundJob.getJobTitle(), foundJob.getCompanyName(), foundJob.getDatePosted(), foundJob.getJobURL(), foundJob.getJobCityState(), jobLat, jobLng);
         // Add new job to the list of jobs:
         jobList.add(newJob);
         Log.i("BottomNavActivity:229", "joblistcount:" + jobList.size());
@@ -323,7 +320,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 dateposted = jobObj.getString("AccquisitionDate");
                 joburl = jobObj.getString("URL");
                 jobcitystate = jobObj.getString("Location");
-                Job foundJob = new Job(jobid, jobtitle, companyname, dateposted, joburl, jobcitystate, null);
+                Job foundJob = new Job(jobid, jobtitle, companyname, dateposted, joburl, jobcitystate, 0, 0);
                 // Get the coordinates:
                 LocationHelper.lookUpCompany(this, foundJob);
             }
