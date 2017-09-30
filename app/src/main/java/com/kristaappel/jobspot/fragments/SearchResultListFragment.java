@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -27,8 +29,7 @@ public class SearchResultListFragment extends ListFragment {
     private static final int ID_CONSTANT = 0x01010;
     private ArrayList<Job> jobs;
     private static final String ARG_PARAM1 = "param1";
-    private String[] jobtitles = {"Android Developer", "Mobile Developer", "Junior iOS Developer", "Cashier"};
-    private String[] companies = {"Chase", "TechData", "Sparxoo", "Target"};
+
 
     public SearchResultListFragment() {
         // empty public constructor
@@ -59,6 +60,12 @@ public class SearchResultListFragment extends ListFragment {
         super.onAttach(context);
         setListAdapter(new AppliedListAdapter() {
         });
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setEmptyText("No Jobs to Display");
     }
 
     @Override
@@ -106,12 +113,42 @@ public class SearchResultListFragment extends ListFragment {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.searchresult_list_item, parent, false);
             }
 
-            TextView textTitle = (TextView) convertView.findViewById(R.id.textView_applied_title);
-            TextView textCompany = (TextView) convertView.findViewById(R.id.textView_applied_company);
+            // Get TextViews:
+            TextView textTitle = (TextView) convertView.findViewById(R.id.textView_searchResult_title);
+            TextView textCompany = (TextView) convertView.findViewById(R.id.textView_searchResult_company);
+            TextView textDate = (TextView) convertView.findViewById(R.id.textView_searchResult_datePosted);
 
             // Set text:
             textTitle.setText(jobs.get(position).getJobTitle());
             textCompany.setText(jobs.get(position).getCompanyName());
+            String jobDate = "Posted on: " + jobs.get(position).getDatePosted();
+            textDate.setText(jobDate);
+
+            // Get ImageButton and set appropriate image:
+            final ImageButton favoriteButton = (ImageButton) convertView.findViewById(R.id.searchResult_favorite_button);
+            //TODO: if the job is not saved:
+            favoriteButton.setImageResource(R.drawable.ic_star_unsaved);
+            favoriteButton.setTag(R.drawable.ic_star_unsaved);
+            //TODO: else if job is saved, favoriteButton.setImageResource(R.drawable.ic_star_saved); favoriteButton.setTag(R.drawable.ic_star_saved);
+
+            favoriteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i("SearchResultListFrag", "tapped a star!");
+                    if ((Integer)favoriteButton.getTag() == R.drawable.ic_star_unsaved){
+                        Log.i("SearchResultListFrag", "it's not saved");
+                        favoriteButton.setImageResource(R.drawable.ic_star_saved);
+                        favoriteButton.setTag(R.drawable.ic_star_saved);
+                        //TODO: save the job to the device & Firebase
+                    }else if ((Integer)favoriteButton.getTag() == R.drawable.ic_star_saved){
+                        Log.i("SearchResultListFrag", "it's saved");
+                        favoriteButton.setImageResource(R.drawable.ic_star_unsaved);
+                        favoriteButton.setTag(R.drawable.ic_star_unsaved);
+                        //TODO: unsave the job from the device and Firebase
+                    }
+
+                }
+            });
 
             return convertView;
         }
