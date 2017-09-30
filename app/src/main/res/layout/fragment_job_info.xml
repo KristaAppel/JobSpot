@@ -42,11 +42,10 @@
                 android:id="@+id/jobInfo_button_applied"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:layout_marginStart="4dp"
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
-                android:layout_marginStart="4dp"
-                android:tint="@color/colorAccent"
-                app:srcCompat="@drawable/ic_check" />
+                app:srcCompat="@drawable/ic_check_unchecked" />
 
         </LinearLayout>
 

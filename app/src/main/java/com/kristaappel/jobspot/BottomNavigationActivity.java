@@ -243,21 +243,24 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
 
         // Use coords with job data that was already retrieved to create a Job object:
         Job newJob = null;
-        if (foundJob != null) {
+        if (foundJob != null && jobLat != null && jobLng != null) {
             Log.i("nottomnav", "foundjob: " + foundJob.getJobID());
             Log.i("nottomnav", "foundjob: " + foundJob.getJobTitle());
             Log.i("nottomnav", "foundjob: " + foundJob.getCompanyName());
             Log.i("nottomnav", "foundjob: " + foundJob.getJobCityState());
             Log.i("nottomnav", "foundjob: " + foundJob.getDatePosted());
             Log.i("nottomnav", "foundjob: " + foundJob.getJobURL());
-            Log.i("nottomnav", "foundjob: " + foundJob.getJobLat());
-            Log.i("nottomnav", "foundjob: " + foundJob.getJobLng());
+            Log.i("nottomnav", "foundjob: " + jobLat);
+            Log.i("nottomnav", "foundjob: " + jobLng);
             newJob = new Job(foundJob.getJobID(), foundJob.getJobTitle(), foundJob.getCompanyName(), foundJob.getDatePosted(), foundJob.getJobURL(), foundJob.getJobCityState(), jobLat, jobLng);
         }else{
             Log.i("bottomnav", "foundjob is nul!!!!!!!!!!");
         }
         // Add new job to the list of jobs:
-        jobList.add(newJob);
+        if (newJob != null){
+            jobList.add(newJob);
+        }
+        
         Log.i("BottomNavActivity:229", "joblistcount:" + jobList.size());
 
         if (mapIsShowing){

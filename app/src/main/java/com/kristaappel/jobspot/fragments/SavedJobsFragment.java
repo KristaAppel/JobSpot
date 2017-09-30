@@ -58,13 +58,7 @@ public class SavedJobsFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
-        //TODO: Go to the job info screen for the chosen job:
-//        Intent powerWordScreenIntent = new Intent(getActivity(), PowerWordActivity.class);
-//        powerWordScreenIntent.putExtra(EXTRA_IRLA_LEVEL_INDEX, position);
-//        startActivity(powerWordScreenIntent);
-
         //Create and display a JobInfoFragment for the selected job:
-
         JobInfoFragment jobInfoFragment = JobInfoFragment.newInstance(savedJobs.get(position));
         getFragmentManager().beginTransaction().replace(R.id.content, jobInfoFragment).commit();
 

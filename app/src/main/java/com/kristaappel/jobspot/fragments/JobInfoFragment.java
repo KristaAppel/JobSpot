@@ -1,7 +1,6 @@
 package com.kristaappel.jobspot.fragments;
 
 import android.content.Context;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -94,6 +93,8 @@ public class JobInfoFragment extends android.app.Fragment implements View.OnClic
         saveButton.setOnClickListener(this);
         appliedButton.setOnClickListener(this);
 
+        appliedButton.setTag(R.drawable.ic_check_unchecked);
+
         // Find out if job is saved:
         ArrayList<Job> savedJobs = FileUtil.readSavedJobs(getActivity());
         for (Job savedJob : savedJobs){
@@ -101,6 +102,15 @@ public class JobInfoFragment extends android.app.Fragment implements View.OnClic
                 // The job is saved, so display filled star:
                 saveButton.setImageResource(R.drawable.ic_star_saved);
                 saveButton.setTag(R.drawable.ic_star_saved);
+            }
+        }
+        // Find out if a job was save as applied:
+        ArrayList<Job> appliedJobs = FileUtil.readAppliedJobs(getActivity());
+        for (Job appliedJob : appliedJobs){
+            if (appliedJob.getJobID().equals(job.getJobID())){
+                // The job is saved as applied, so display a red check:
+                appliedButton.setImageResource(R.drawable.ic_check_checked);
+                appliedButton.setTag(R.drawable.ic_check_checked);
             }
         }
     }
@@ -133,15 +143,15 @@ public class JobInfoFragment extends android.app.Fragment implements View.OnClic
 
     @Override
     public void onClick(View v) {
+        Firebase firebase = new Firebase("https://jobspot-a0171.firebaseio.com/");
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
         switch (v.getId()){
             case R.id.jobInfo_button_share:
                 //TODO: share
                 Log.i("JobInfoFragment", "share the job");
                 break;
             case R.id.jobInfo_button_save:
-                Firebase firebase = new Firebase("https://jobspot-a0171.firebaseio.com/");
-                FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                FirebaseUser firebaseUser = mAuth.getCurrentUser();
                 ImageButton saveButton = (ImageButton) v.findViewById(R.id.jobInfo_button_save);
 
                 // If the job is not saved, then save it:
@@ -178,13 +188,24 @@ public class JobInfoFragment extends android.app.Fragment implements View.OnClic
                     }
                     Toast.makeText(getActivity(), "Job has been removed.", Toast.LENGTH_SHORT).show();
                 }
-
-                //TODO: save job to device & firebase, change icon to red star
-                Log.i("JobInfoFragment", "save the job");
                 break;
             case R.id.jobInfo_button_applied:
-                //TODO: save to applied list, then hide icon or change its color?
-                Log.i("JobInfoFragment", "mark the job as applied");
+                ImageButton appliedButton = (ImageButton) v.findViewById(R.id.jobInfo_button_applied);
+
+                // If the job is not saved as applied, then save it:
+                if ((Integer)appliedButton.getTag() == R.drawable.ic_check_unchecked){
+                    appliedButton.setImageResource(R.drawable.ic_check_checked);
+                    appliedButton.setTag(R.drawable.ic_check_checked);
+                    // Save the job to the device:
+                    ArrayList appliedJobs = FileUtil.readAppliedJobs(getActivity());
+                    appliedJobs.add(job);
+                    FileUtil.writeAppliedJob(getActivity(), appliedJobs);
+                    // Save the job to Firebase:
+                    if (firebaseUser != null){
+                        firebase.child("users").child(firebaseUser.getUid()).child("appliedjobs").child(job.getJobID()).setValue(job);
+                    }
+                    Toast.makeText(getActivity(), "Job added to Applied Jobs.", Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
     }
