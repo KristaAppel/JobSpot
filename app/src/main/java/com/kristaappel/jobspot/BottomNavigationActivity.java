@@ -225,24 +225,37 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     }
 
 
-    public static LatLng getCoordsForCompany(Activity activity, String response, Job foundJob){
-        LatLng coords = null;
+    public static void getCoordsForCompany(Activity activity, String response, Job foundJob){
         try {
             // Parse JSON results from company look-up to get coordinates:
             JSONObject responseObject = new JSONObject(response);
             JSONArray resultArray = responseObject.getJSONArray("results");
-            JSONObject resultObj = resultArray.getJSONObject(0);
-            JSONObject geometryObject = resultObj.getJSONObject("geometry");
-            JSONObject locationObject = geometryObject.getJSONObject("location");
-            jobLat = locationObject.getDouble("lat");
-            jobLng = locationObject.getDouble("lng");
-            Log.i("BottomNavigActivity:220", "coords: " + coords);
+            if (resultArray.length()>0){
+                JSONObject resultObj = resultArray.getJSONObject(0);
+                JSONObject geometryObject = resultObj.getJSONObject("geometry");
+                JSONObject locationObject = geometryObject.getJSONObject("location");
+                jobLat = locationObject.getDouble("lat");
+                jobLng = locationObject.getDouble("lng");
+            }
         }catch (JSONException e){
             e.printStackTrace();
         }
 
         // Use coords with job data that was already retrieved to create a Job object:
-        Job newJob = new Job(foundJob.getJobID(), foundJob.getJobTitle(), foundJob.getCompanyName(), foundJob.getDatePosted(), foundJob.getJobURL(), foundJob.getJobCityState(), jobLat, jobLng);
+        Job newJob = null;
+        if (foundJob != null) {
+            Log.i("nottomnav", "foundjob: " + foundJob.getJobID());
+            Log.i("nottomnav", "foundjob: " + foundJob.getJobTitle());
+            Log.i("nottomnav", "foundjob: " + foundJob.getCompanyName());
+            Log.i("nottomnav", "foundjob: " + foundJob.getJobCityState());
+            Log.i("nottomnav", "foundjob: " + foundJob.getDatePosted());
+            Log.i("nottomnav", "foundjob: " + foundJob.getJobURL());
+            Log.i("nottomnav", "foundjob: " + foundJob.getJobLat());
+            Log.i("nottomnav", "foundjob: " + foundJob.getJobLng());
+            newJob = new Job(foundJob.getJobID(), foundJob.getJobTitle(), foundJob.getCompanyName(), foundJob.getDatePosted(), foundJob.getJobURL(), foundJob.getJobCityState(), jobLat, jobLng);
+        }else{
+            Log.i("bottomnav", "foundjob is nul!!!!!!!!!!");
+        }
         // Add new job to the list of jobs:
         jobList.add(newJob);
         Log.i("BottomNavActivity:229", "joblistcount:" + jobList.size());
@@ -269,8 +282,6 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
 
         ProgressBar progressBar = (ProgressBar)activity.findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
-
-        return coords;
     }
 
 

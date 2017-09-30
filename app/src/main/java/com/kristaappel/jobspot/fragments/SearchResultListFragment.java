@@ -13,13 +13,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.Firebase;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.kristaappel.jobspot.R;
 import com.kristaappel.jobspot.objects.FileUtil;
 import com.kristaappel.jobspot.objects.Job;
-
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 
 public class SearchResultListFragment extends ListFragment {
@@ -27,6 +27,8 @@ public class SearchResultListFragment extends ListFragment {
     private static final int ID_CONSTANT = 0x01010;
     private ArrayList<Job> jobs;
     private static final String ARG_PARAM1 = "param1";
+    Firebase firebase;
+    FirebaseUser firebaseUser;
 
 
     public SearchResultListFragment() {
@@ -131,21 +133,28 @@ public class SearchResultListFragment extends ListFragment {
             favoriteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.i("SearchResultListFrag", "tapped a star!");
+                    Firebase firebase = new Firebase("https://jobspot-a0171.firebaseio.com/");
+                    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                    FirebaseUser firebaseUser = mAuth.getCurrentUser();
+
+                    // If the job is not saved, then save it:
                     if ((Integer)favoriteButton.getTag() == R.drawable.ic_star_unsaved){
                         favoriteButton.setImageResource(R.drawable.ic_star_saved);
                         favoriteButton.setTag(R.drawable.ic_star_saved);
-                        //TODO: save the job to Firebase
                         // Save the job to the device:
                         ArrayList<Job> savedJobs = FileUtil.readSavedJobs(getActivity());
                         savedJobs.add(jobs.get(position));
                         FileUtil.writeSavedJob(getActivity(), savedJobs);
+                        // Save the job to Firebase:
+                        if (firebaseUser != null) {
+                            firebase.child("users").child(firebaseUser.getUid()).child("savedjobs").child(jobs.get(position).getJobID()).setValue(jobs.get(position));
+                        }
                         Toast.makeText(getActivity(), "Job has been saved.", Toast.LENGTH_SHORT).show();
 
+                        // If the job is saved, then unsave it:
                     }else if ((Integer)favoriteButton.getTag() == R.drawable.ic_star_saved){
                         favoriteButton.setImageResource(R.drawable.ic_star_unsaved);
                         favoriteButton.setTag(R.drawable.ic_star_unsaved);
-                        //TODO: unsave the job from Firebase
                         // Unsave the job from the device:
                         ArrayList<Job> savedJobs = FileUtil.readSavedJobs(getActivity());
                         ArrayList<Job> jobsToRemove = new ArrayList<Job>();
@@ -155,8 +164,12 @@ public class SearchResultListFragment extends ListFragment {
                             }
                         }
                         savedJobs.removeAll(jobsToRemove);
-                        Toast.makeText(getActivity(), "Job has been removed.", Toast.LENGTH_SHORT).show();
                         FileUtil.writeSavedJob(getActivity(), savedJobs);
+                        // Unsave the job from Firebase:
+                        if (firebaseUser != null) {
+                            firebase.child("users").child(firebaseUser.getUid()).child("savedjobs").child(jobs.get(position).getJobID()).removeValue();
+                        }
+                        Toast.makeText(getActivity(), "Job has been removed.", Toast.LENGTH_SHORT).show();
                     }
 
                 }
