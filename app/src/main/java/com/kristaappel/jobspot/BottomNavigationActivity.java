@@ -3,6 +3,7 @@ package com.kristaappel.jobspot;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Location;
@@ -50,7 +51,7 @@ import java.util.Map;
 
 
 
-public class BottomNavigationActivity extends AppCompatActivity implements SearchBoxFragment.OnSearchBoxFragmentInteractionListener {
+public class BottomNavigationActivity extends AppCompatActivity implements SearchBoxFragment.OnSearchBoxFragmentInteractionListener, SortFilterFragment.OnSortFilterInteractionListener {
 
     ActionBar actionBar;
     Button mapButton;
@@ -200,6 +201,9 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
             case R.id.filterButton:
                 // TODO: show a list of filter & sort options, use chosen options in job search
                 Log.i("TAG", "show filter/sort options");
+                SortFilterFragment sortFilterFragment = new SortFilterFragment();
+                getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, sortFilterFragment).commit();
+
                 break;
             case R.id.searchButton:
                 jobList.clear();
@@ -361,6 +365,22 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                     .setPositiveButton("OK", null)
                     .show();
         }
+
+    }
+
+    @Override
+    public void onSortFilterInteraction() {
+        Log.i("BottomNavigationActvty", "pressed OK");
+        // TODO: get user inputs from radio buttons and apply them to search
+        // Go back to MapFragment
+        if (mapIsShowing){
+            MapFragment mapFrag = new MapFragment();
+            getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, mapFrag).commit();
+        }else if (listIsShowing){
+            SearchResultListFragment searchListFrag = new SearchResultListFragment();
+            getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, searchListFrag).commit();
+        }
+
 
     }
 }

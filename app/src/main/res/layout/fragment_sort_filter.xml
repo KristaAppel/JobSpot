@@ -1,0 +1,133 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.kristaappel.jobspot.SortFilterFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Choose search radius:"
+            android:textColor="@color/colorBlack"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <RadioGroup
+            android:id="@+id/radioGroup_radius"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="@dimen/activity_vertical_margin">
+            <RadioButton
+                android:id="@+id/radioButton_radius_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0-10 miles"/>
+            <RadioButton
+                android:id="@+id/radioButton_radius_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0-20 miles"/>
+            <RadioButton
+                android:id="@+id/radioButton_radius_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0-30 miles"/>
+            <RadioButton
+                android:id="@+id/radioButton_radius_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0-40 miles"/>
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show jobs posted:"
+            android:textColor="@color/colorBlack"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+        <RadioGroup
+            android:id="@+id/radioGroup_posted"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="@dimen/activity_vertical_margin">
+            <RadioButton
+                android:id="@+id/radioButton_posted_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Within the past 7 days"/>
+            <RadioButton
+                android:id="@+id/radioButton_posted_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Within the past 14 days"/>
+            <RadioButton
+                android:id="@+id/radioButton_posted_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Within the past 30 days"/>
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sort jobs by:"
+            android:textColor="@color/colorBlack"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+        <RadioGroup
+            android:id="@+id/radioGroup_sortby"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="8dp">
+            <RadioButton
+                android:id="@+id/radioButton_sortby_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Date posted"/>
+            <RadioButton
+                android:id="@+id/radioButton_sortby_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Location"/>
+            <RadioButton
+                android:id="@+id/radioButton_sortby_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Company"/>
+            <RadioButton
+                android:id="@+id/radioButton_sortby_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Job Title"/>
+            <RadioButton
+                android:id="@+id/radioButton_sortby_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Relevance"/>
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/sortFilter_ok_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            android:text="OK"
+            android:textColor="@color/colorWhite" />
+
+    </LinearLayout>
+
+
+</FrameLayout>
