@@ -53,7 +53,7 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
      *
      * @return A new instance of fragment MapFragment.
      */
-    // TODO: Rename and change types and number of parameters
+
     public static MapFragment newInstance(ArrayList<Job> joblist) {
         MapFragment fragment = new MapFragment();
         Bundle args = new Bundle();
@@ -150,9 +150,7 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
                     if (jobs.size()>1){
                         et_location.setText(jobs.get(0).getJobCityState());
                     }
-
                 }
-
             }
 
             // Update map:
@@ -176,9 +174,6 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
                 try {
                     List<Address> address = gc.getFromLocationName(enteredLocation, 1);
                     Address place = address.get(0);
-                    Log.i("MapFragment", "the place's address is: " + place.toString());
-                    Log.i("MapFragment", "the place's latitude is: " + place.getLatitude());
-                    Log.i("MapFragment", "the place's longtiide is: " + place.getLongitude());
                     zoomToLatLong = new LatLng(place.getLatitude(), place.getLongitude());
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -200,7 +195,6 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
             // Add a marker for each job in the area:
             if (jobs != null){
                 for (Job job : jobs){
-                    Log.i("MapFragment", "coords in mapfrag: " + job.getJobLat() + ", " + job.getJobLng());
                     if (job.getJobLat() != 0 && job.getJobLng() != 0 && job.getCompanyName() != null && job.getJobTitle() != null){
                         LatLng jobPosition = new LatLng(job.getJobLat(), job.getJobLng());
                         MarkerOptions markerOptions = new MarkerOptions();

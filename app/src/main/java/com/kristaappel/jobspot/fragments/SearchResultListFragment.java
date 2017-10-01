@@ -101,7 +101,7 @@ public class SearchResultListFragment extends ListFragment {
             if (convertView == null){
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.searchresult_list_item, parent, false);
             }
-            Log.i("SearchResultslistfrag", "title: " + jobs.get(position).getJobTitle() + " job id: " + jobs.get(position).getJobID());
+
             // Get TextViews:
             TextView textTitle = (TextView) convertView.findViewById(R.id.textView_searchResult_title);
             TextView textCompany = (TextView) convertView.findViewById(R.id.textView_searchResult_company);

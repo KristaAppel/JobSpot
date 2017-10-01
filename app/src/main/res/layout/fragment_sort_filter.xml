@@ -16,7 +16,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Choose search radius:"
+            android:text="Show jobs within:"
             android:textColor="@color/colorBlack"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -26,27 +26,32 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="@dimen/activity_vertical_margin">
+            android:layout_marginBottom="8dp">
             <RadioButton
                 android:id="@+id/radioButton_radius_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0-10 miles"/>
+                android:text="10 miles"
+                android:layout_marginEnd="8dp"/>
             <RadioButton
                 android:id="@+id/radioButton_radius_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0-20 miles"/>
+                android:text="20 miles"
+                android:layout_marginEnd="8dp"
+                android:checked="true"/>
             <RadioButton
                 android:id="@+id/radioButton_radius_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0-30 miles"/>
+                android:text="30 miles"
+                android:layout_marginEnd="8dp"/>
             <RadioButton
                 android:id="@+id/radioButton_radius_4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0-40 miles"/>
+                android:text="40 miles"
+                android:layout_marginEnd="8dp"/>
         </RadioGroup>
 
         <TextView
@@ -61,7 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginBottom="@dimen/activity_vertical_margin">
+            android:layout_marginBottom="8dp">
             <RadioButton
                 android:id="@+id/radioButton_posted_1"
                 android:layout_width="wrap_content"
@@ -76,7 +81,8 @@
                 android:id="@+id/radioButton_posted_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Within the past 30 days"/>
+                android:text="Within the past 30 days"
+                android:checked="true"/>
         </RadioGroup>
 
         <TextView
@@ -96,7 +102,8 @@
                 android:id="@+id/radioButton_sortby_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Date posted"/>
+                android:text="Date posted"
+                android:checked="true"/>
             <RadioButton
                 android:id="@+id/radioButton_sortby_2"
                 android:layout_width="wrap_content"
@@ -106,17 +113,7 @@
                 android:id="@+id/radioButton_sortby_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Company"/>
-            <RadioButton
-                android:id="@+id/radioButton_sortby_4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Job Title"/>
-            <RadioButton
-                android:id="@+id/radioButton_sortby_5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Relevance"/>
+                android:text="Relevance" />
         </RadioGroup>
 
         <Button

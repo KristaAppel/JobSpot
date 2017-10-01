@@ -3,12 +3,15 @@ package com.kristaappel.jobspot;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RadioGroup;
 
 
 /**
@@ -19,11 +22,18 @@ import android.widget.Button;
  * Use the {@link SortFilterFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SortFilterFragment extends android.app.Fragment {
+public class SortFilterFragment extends android.app.Fragment implements RadioGroup.OnCheckedChangeListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    RadioGroup radioGroupRadius;
+    RadioGroup radioGroupPosted;
+    RadioGroup radioGroupSortBy;
+    String radius = "20";
+    String posted = "30";
+    String sortBy = "accquisitiondate";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -69,12 +79,6 @@ public class SortFilterFragment extends android.app.Fragment {
         return inflater.inflate(R.layout.fragment_sort_filter, container, false);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onSortFilterInteraction();
-        }
-    }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -83,9 +87,16 @@ public class SortFilterFragment extends android.app.Fragment {
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onSortFilterInteraction();
+                mListener.onSortFilterInteraction(radius, posted, sortBy);
             }
         });
+        radioGroupRadius = (RadioGroup) view.findViewById(R.id.radioGroup_radius);
+        radioGroupPosted = (RadioGroup) view.findViewById(R.id.radioGroup_posted);
+        radioGroupSortBy = (RadioGroup) view.findViewById(R.id.radioGroup_sortby);
+
+        radioGroupRadius.setOnCheckedChangeListener(this);
+        radioGroupPosted.setOnCheckedChangeListener(this);
+        radioGroupSortBy.setOnCheckedChangeListener(this);
     }
 
     @Override
@@ -107,6 +118,57 @@ public class SortFilterFragment extends android.app.Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+        switch (group.getId()){
+            // Get search radius:
+            case R.id.radioGroup_radius:
+                switch (checkedId){
+                    case R.id.radioButton_radius_1:
+                        radius = "10";
+                        break;
+                    case R.id.radioButton_radius_2:
+                        radius = "20";
+                        break;
+                    case R.id.radioButton_radius_3:
+                        radius = "30";
+                        break;
+                    case R.id.radioButton_radius_4:
+                        radius = "40";
+                        break;
+                }
+                break;
+            // Get date range:
+            case R.id.radioGroup_posted:
+                switch (checkedId){
+                    case R.id.radioButton_posted_1:
+                        posted = "7";
+                        break;
+                    case R.id.radioButton_posted_2:
+                        posted = "14";
+                        break;
+                    case R.id.radioButton_posted_3:
+                        posted = "30";
+                        break;
+                }
+                break;
+            // Get sort type:
+            case R.id.radioGroup_sortby:
+                switch (checkedId){
+                    case R.id.radioButton_sortby_1:
+                        sortBy = "accqusitiondate";
+                        break;
+                    case R.id.radioButton_sortby_2:
+                        sortBy = "location";
+                        break;
+                    case R.id.radioButton_sortby_3:
+                        sortBy = "relevance";
+                        break;
+                }
+                break;
+        }
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -118,7 +180,7 @@ public class SortFilterFragment extends android.app.Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnSortFilterInteractionListener {
-        // TODO: Update argument type and name
-        void onSortFilterInteraction();
+        // Send the radio button input back:
+        void onSortFilterInteraction(String radius, String posted, String sortBy);
     }
 }

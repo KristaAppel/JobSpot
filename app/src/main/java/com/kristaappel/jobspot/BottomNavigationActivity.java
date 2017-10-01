@@ -49,6 +49,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static android.R.attr.filter;
+import static com.kristaappel.jobspot.R.string.search;
 
 
 public class BottomNavigationActivity extends AppCompatActivity implements SearchBoxFragment.OnSearchBoxFragmentInteractionListener, SortFilterFragment.OnSortFilterInteractionListener {
@@ -71,6 +73,9 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     static ArrayList<Job> jobList = new ArrayList<>();
     static boolean mapIsShowing = true;
     static boolean listIsShowing = false;
+    String radius = "20";
+    String posted = "30";
+    String sortBy = "accquisitiondate";
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -199,11 +204,11 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 et_location.setText(currentAddress.getLocality() + ", " + currentAddress.getAdminArea()); // This shows city, state
                 break;
             case R.id.filterButton:
-                // TODO: show a list of filter & sort options, use chosen options in job search
-                Log.i("TAG", "show filter/sort options");
+                //Show a list of filter & sort options, use chosen options in job search
                 SortFilterFragment sortFilterFragment = new SortFilterFragment();
                 getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, sortFilterFragment).commit();
-
+                InputMethodManager inputMethodManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(et_keywords.getWindowToken(), 0);
                 break;
             case R.id.searchButton:
                 jobList.clear();
@@ -222,8 +227,8 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 }else{
                     searchForJobs(keywords, location);
                 }
-                InputMethodManager inputMethodManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(et_keywords.getWindowToken(), 0);
+                InputMethodManager inputMethodManager2 = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager2.hideSoftInputFromWindow(et_keywords.getWindowToken(), 0);
                 break;
         }
     }
@@ -248,14 +253,6 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         // Use coords with job data that was already retrieved to create a Job object:
         Job newJob = null;
         if (foundJob != null && jobLat != null && jobLng != null) {
-            Log.i("nottomnav", "foundjob: " + foundJob.getJobID());
-            Log.i("nottomnav", "foundjob: " + foundJob.getJobTitle());
-            Log.i("nottomnav", "foundjob: " + foundJob.getCompanyName());
-            Log.i("nottomnav", "foundjob: " + foundJob.getJobCityState());
-            Log.i("nottomnav", "foundjob: " + foundJob.getDatePosted());
-            Log.i("nottomnav", "foundjob: " + foundJob.getJobURL());
-            Log.i("nottomnav", "foundjob: " + jobLat);
-            Log.i("nottomnav", "foundjob: " + jobLng);
             newJob = new Job(foundJob.getJobID(), foundJob.getJobTitle(), foundJob.getCompanyName(), foundJob.getDatePosted(), foundJob.getJobURL(), foundJob.getJobCityState(), jobLat, jobLng);
         }else{
             Log.i("bottomnav", "foundjob is nul!!!!!!!!!!");
@@ -296,8 +293,8 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         ProgressBar progressBar = (ProgressBar)findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
-        //TODO: get the distance, sort type, etc from user and put it into the url
-        String url = "https://api.careeronestop.org/v1/jobsearch/TZ1zgEyKTNm69nF/"+keywords+"/"+location+"/20/accquisitiondate/desc/0/200/15";
+        //Get the search radius, sort type, & number of days from user and put it into the job search url:
+        String url = "https://api.careeronestop.org/v1/jobsearch/TZ1zgEyKTNm69nF/"+keywords+"/"+location+"/"+radius+"/"+sortBy+"/desc/0/200/"+posted;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -369,16 +366,22 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     }
 
     @Override
-    public void onSortFilterInteraction() {
+    public void onSortFilterInteraction(String _radius, String _posted, String _sortBy) {
         Log.i("BottomNavigationActvty", "pressed OK");
-        // TODO: get user inputs from radio buttons and apply them to search
+        // Get user inputs from radio buttons and apply them to search:
+        radius = _radius;
+        posted = _posted;
+        sortBy = _sortBy;
+
         // Go back to MapFragment
         if (mapIsShowing){
             MapFragment mapFrag = new MapFragment();
             getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, mapFrag).commit();
+            onSearchBoxFragmentInteraction(R.id.searchButton);
         }else if (listIsShowing){
             SearchResultListFragment searchListFrag = new SearchResultListFragment();
             getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, searchListFrag).commit();
+            onSearchBoxFragmentInteraction(R.id.searchButton);
         }
 
 
