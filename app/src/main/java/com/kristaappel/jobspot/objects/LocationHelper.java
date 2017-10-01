@@ -19,7 +19,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.maps.model.LatLng;
 import com.kristaappel.jobspot.BottomNavigationActivity;
 import java.io.IOException;
 import java.util.List;
@@ -28,9 +27,6 @@ import static android.content.Context.LOCATION_SERVICE;
 public class LocationHelper {
 
     private static LocationManager locationManager;
-    static Double lat;
-    static Double lng;
-    static LatLng coords;
 
 
     public static Location getCurrentLocation(Context context, LocationListener locationListener) {

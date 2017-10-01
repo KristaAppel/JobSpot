@@ -21,8 +21,8 @@ import com.kristaappel.jobspot.objects.NetworkMonitor;
 
 public class CreateAccountActivity extends AppCompatActivity implements View.OnClickListener{
 
-    EditText editText_username;
-    EditText editText_password;
+    private EditText editText_username;
+    private EditText editText_password;
     private Firebase firebase;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;

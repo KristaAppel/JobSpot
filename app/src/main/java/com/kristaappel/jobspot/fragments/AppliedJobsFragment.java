@@ -23,17 +23,18 @@ public class AppliedJobsFragment extends ListFragment {
     private static final int ID_CONSTANT = 0x01010;
 
 
-    public static AppliedJobsFragment newInstance(){
-        return new AppliedJobsFragment();
-    }
-
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         appliedJobs = FileUtil.readAppliedJobs(context);
         setListAdapter(new AppliedListAdapter() {
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        appliedJobs = FileUtil.readAppliedJobs(getActivity());
     }
 
     @Override
@@ -78,10 +79,9 @@ public class AppliedJobsFragment extends ListFragment {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.applied_list_item, parent, false);
             }
 
+            // Get text views:
             TextView textTitle = (TextView) convertView.findViewById(R.id.textView_applied_title);
             TextView textCompany = (TextView) convertView.findViewById(R.id.textView_applied_company);
-
-
 
             // Set text:
             textTitle.setText(appliedJobs.get(position).getJobTitle());

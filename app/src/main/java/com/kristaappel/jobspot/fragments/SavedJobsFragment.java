@@ -2,7 +2,6 @@ package com.kristaappel.jobspot.fragments;
 
 import android.app.ListFragment;
 import android.content.Context;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,6 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.firebase.client.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,11 +25,6 @@ public class SavedJobsFragment extends ListFragment {
 
     private ArrayList<Job> savedJobs;
     private static final int ID_CONSTANT = 0x01010;
-
-
-    public static SavedJobsFragment newInstance(){
-        return new SavedJobsFragment();
-    }
 
 
     @Override
@@ -111,7 +104,7 @@ public class SavedJobsFragment extends ListFragment {
                         firebase.child("users").child(firebaseUser.getUid()).child("savedjobs").child(savedJobs.get(position).getJobID()).removeValue();
                     }
                     // Unsave the job from the device:
-                    ArrayList<Job> jobsToRemove = new ArrayList<Job>();
+                    ArrayList<Job> jobsToRemove = new ArrayList<>();
                     for (Job savedJob : savedJobs){
                         if (savedJob.getJobID().equals(savedJobs.get(position).getJobID())){
                             jobsToRemove.add(savedJob);

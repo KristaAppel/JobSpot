@@ -3,7 +3,6 @@ package com.kristaappel.jobspot.fragments;
 import android.app.ListFragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,6 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.firebase.client.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,8 +25,8 @@ public class SearchResultListFragment extends ListFragment {
     private static final int ID_CONSTANT = 0x01010;
     private ArrayList<Job> jobs;
     private static final String ARG_PARAM1 = "param1";
-    Firebase firebase;
-    FirebaseUser firebaseUser;
+    private Firebase firebase;
+    private FirebaseUser firebaseUser;
 
 
     public SearchResultListFragment() {
@@ -132,9 +130,9 @@ public class SearchResultListFragment extends ListFragment {
             favoriteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Firebase firebase = new Firebase("https://jobspot-a0171.firebaseio.com/");
+                    firebase = new Firebase("https://jobspot-a0171.firebaseio.com/");
                     FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                    FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                    firebaseUser = mAuth.getCurrentUser();
 
                     // If the job is not saved, then save it:
                     if ((Integer)favoriteButton.getTag() == R.drawable.ic_star_unsaved){
@@ -156,7 +154,7 @@ public class SearchResultListFragment extends ListFragment {
                         favoriteButton.setTag(R.drawable.ic_star_unsaved);
                         // Unsave the job from the device:
                         ArrayList<Job> savedJobs = FileUtil.readSavedJobs(getActivity());
-                        ArrayList<Job> jobsToRemove = new ArrayList<Job>();
+                        ArrayList<Job> jobsToRemove = new ArrayList<>();
                         for (Job savedJob : savedJobs){
                             if (savedJob.getJobID().equals(jobs.get(position).getJobID())){
                                 jobsToRemove.add(savedJob);

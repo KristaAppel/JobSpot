@@ -2,9 +2,6 @@ package com.kristaappel.jobspot.objects;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import com.google.android.gms.maps.model.LatLng;
-
 import java.io.Serializable;
 
 public class Job implements Serializable, Parcelable{
@@ -30,6 +27,29 @@ public class Job implements Serializable, Parcelable{
         jobLng = joblng;
     }
 
+
+    private Job(Parcel in) {
+        jobID = in.readString();
+        jobTitle = in.readString();
+        companyName = in.readString();
+        datePosted = in.readString();
+        jobURL = in.readString();
+        jobCityState = in.readString();
+        jobLat = in.readDouble();
+        jobLng = in.readDouble();
+    }
+
+    public static final Creator<Job> CREATOR = new Creator<Job>() {
+        @Override
+        public Job createFromParcel(Parcel in) {
+            return new Job(in);
+        }
+
+        @Override
+        public Job[] newArray(int size) {
+            return new Job[size];
+        }
+    };
 
     public String getJobID() {
         return jobID;
@@ -80,6 +100,14 @@ public class Job implements Serializable, Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(jobID);
+        dest.writeString(jobTitle);
+        dest.writeString(companyName);
+        dest.writeString(datePosted);
+        dest.writeString(jobURL);
+        dest.writeString(jobCityState);
+        dest.writeDouble(jobLat);
+        dest.writeDouble(jobLng);
     }
 
 

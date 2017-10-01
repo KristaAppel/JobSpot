@@ -3,7 +3,6 @@ package com.kristaappel.jobspot;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Location;
@@ -31,8 +30,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
 import com.kristaappel.jobspot.fragments.AppliedJobsFragment;
 import com.kristaappel.jobspot.fragments.MapFragment;
 import com.kristaappel.jobspot.fragments.ProfileFragment;
@@ -40,6 +37,7 @@ import com.kristaappel.jobspot.fragments.SavedJobsFragment;
 import com.kristaappel.jobspot.fragments.SearchBoxFragment;
 import com.kristaappel.jobspot.fragments.SearchResultListFragment;
 import com.kristaappel.jobspot.fragments.SearchScreenFragment;
+import com.kristaappel.jobspot.fragments.SortFilterFragment;
 import com.kristaappel.jobspot.objects.Job;
 import com.kristaappel.jobspot.objects.LocationHelper;
 import org.json.JSONArray;
@@ -49,33 +47,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static android.R.attr.filter;
-import static com.kristaappel.jobspot.R.string.search;
-
 
 public class BottomNavigationActivity extends AppCompatActivity implements SearchBoxFragment.OnSearchBoxFragmentInteractionListener, SortFilterFragment.OnSortFilterInteractionListener {
 
-    ActionBar actionBar;
-    Button mapButton;
-    Button listButton;
-    EditText et_location;
-    EditText et_keywords;
-    String keywords;
-    String location;
-    static Double jobLat;
-    static Double jobLng;
-    static String jobid;
-    static String jobtitle;
-    static String companyname;
-    static String dateposted;
-    static String joburl;
-    static String jobcitystate;
-    static ArrayList<Job> jobList = new ArrayList<>();
-    static boolean mapIsShowing = true;
-    static boolean listIsShowing = false;
-    String radius = "20";
-    String posted = "30";
-    String sortBy = "accquisitiondate";
+    private ActionBar actionBar;
+    private String keywords;
+    private String location;
+    private static Double jobLat;
+    private static Double jobLng;
+    private static ArrayList<Job> jobList = new ArrayList<>();
+    private static boolean mapIsShowing = true;
+    private static boolean listIsShowing = false;
+    private String radius = "20";
+    private String posted = "30";
+    private String sortBy = "accquisitiondate";
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -86,7 +71,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
             switch (item.getItemId()) {
                 case R.id.navigation_search:
                     // Create and display a SearchScreenFragment:
-                    SearchScreenFragment searchScreenFrag = null;
+                    SearchScreenFragment searchScreenFrag;
                     if (jobList == null){
                         searchScreenFrag = new SearchScreenFragment();
                     }else{
@@ -158,10 +143,10 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
 
     @Override
     public void onSearchBoxFragmentInteraction(int id) {
-        mapButton = (Button) findViewById(R.id.mapFragToggle1);
-        listButton = (Button) findViewById(R.id.mapFragToggle2);
-        et_keywords = (EditText) findViewById(R.id.et_keywords);
-        et_location= (EditText) findViewById(R.id.et_location);
+        Button mapButton = (Button) findViewById(R.id.mapFragToggle1);
+        Button listButton = (Button) findViewById(R.id.mapFragToggle2);
+        EditText et_keywords = (EditText) findViewById(R.id.et_keywords);
+        EditText et_location = (EditText) findViewById(R.id.et_location);
 
         switch (id){
             case R.id.mapFragToggle1:
@@ -169,7 +154,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                     ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0x01001);
                 }else{
                     // Create and display a MapFragment in bottom container:
-                    MapFragment mapFrag = null;
+                    MapFragment mapFrag;
                     if (jobList != null){
                         mapFrag = MapFragment.newInstance(jobList);
                     }else{
@@ -322,19 +307,19 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         requestQueue.add(stringRequest);
     }
 
-    public void makeJobList(String searchResponse){
+    private void makeJobList(String searchResponse){
         // Parse JSON to make a list of Job objects:
         try {
             JSONObject responseObj = new JSONObject(searchResponse);
             JSONArray jobsArray = responseObj.getJSONArray("Jobs");
             for (int i = 0; i<jobsArray.length(); i++){
                 JSONObject jobObj = jobsArray.getJSONObject(i);
-                jobid = jobObj.getString("JvId");
-                jobtitle = jobObj.getString("JobTitle");
-                companyname = jobObj.getString("Company");
-                dateposted = jobObj.getString("AccquisitionDate");
-                joburl = jobObj.getString("URL");
-                jobcitystate = jobObj.getString("Location");
+                String jobid = jobObj.getString("JvId");
+                String jobtitle = jobObj.getString("JobTitle");
+                String companyname = jobObj.getString("Company");
+                String dateposted = jobObj.getString("AccquisitionDate");
+                String joburl = jobObj.getString("URL");
+                String jobcitystate = jobObj.getString("Location");
                 Job foundJob = new Job(jobid, jobtitle, companyname, dateposted, joburl, jobcitystate, 0, 0);
                 // Get the coordinates:
                 LocationHelper.lookUpCompany(this, foundJob);

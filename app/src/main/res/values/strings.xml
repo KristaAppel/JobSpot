@@ -8,6 +8,41 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="email_address">Email address</string>
+    <string name="create_account">Create Account</string>
+    <string name="opportunities_are_everywhere_let_us_help_you_find_them">Opportunities are everywhere. Let us help you find them.</string>
+    <string name="password">Password</string>
+    <string name="get_started">Get Started</string>
+    <string name="title">title</string>
+    <string name="company">company</string>
+    <string name="welcome">Welcome</string>
+    <string name="jobspot">JobSpot</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="login">Login</string>
+    <string name="powered_bycareeronestop">Powered byCareerOneStop</string>
+    <string name="share">share</string>
+    <string name="save">save</string>
+    <string name="enter_location">Enter Location</string>
+    <string name="enter_keyword_s">Enter Keyword(s)</string>
+    <string name="map">Map</string>
+    <string name="list">List</string>
+    <string name="date_posted">Date posted</string>
+    <string name="location">Location</string>
+    <string name="relevance">Relevance</string>
+    <string name="ok">OK</string>
+    <string name="sort_jobs_by">Sort jobs by:</string>
+    <string name="within_the_past_14_days">Within the past 14 days</string>
+    <string name="within_the_past_30_days">Within the past 30 days</string>
+    <string name="within_the_past_7_days">Within the past 7 days</string>
+    <string name="_40_miles">40 miles</string>
+    <string name="show_jobs_posted">Show jobs posted:</string>
+    <string name="_20_miles">20 miles</string>
+    <string name="_30_miles">30 miles</string>
+    <string name="_10_miles">10 miles</string>
+    <string name="show_jobs_within">Show jobs within:</string>
+    <string name="date">date</string>
+    <string name="favorite">favorite</string>
+    <string name="logout">Logout</string>
 
 
 </resources>

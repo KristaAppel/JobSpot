@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -27,21 +26,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Activities that contain this fragment must implement the
- * {@link MapFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- */
+
 public class MapFragment extends com.google.android.gms.maps.MapFragment implements OnMapReadyCallback, LocationListener, GoogleMap.OnInfoWindowClickListener{
 
     private GoogleMap googleMap;
     private Address currentAddress;
     private Location currentLocation;
     private ArrayList<Job> jobs;
-
     private static final String ARG_PARAM1 = "param1";
 
-    private OnFragmentInteractionListener mListener;
 
     public MapFragment() {
         // Required empty public constructor
@@ -98,12 +91,7 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnSearchBoxFragmentInteractionListener");
-        }
+
         if (getArguments() != null) {
             jobs = getArguments().getParcelableArrayList(ARG_PARAM1);
         }
@@ -119,7 +107,6 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     @Override
@@ -165,7 +152,7 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
     private void zoomInCamera(){
         if (googleMap != null){
             LatLng zoomToLatLong = null;
-            String enteredLocation = "";
+            String enteredLocation;
             EditText et_location = (EditText) getActivity().findViewById(R.id.et_location);
             enteredLocation = et_location.getText().toString();
             if (!enteredLocation.equals("")){
@@ -260,19 +247,4 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
 
     }
 
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(View v);
-    }
 }

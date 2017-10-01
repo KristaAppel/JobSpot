@@ -26,7 +26,8 @@
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
                 android:tint="@color/colorAccent"
-                app:srcCompat="?attr/actionModeShareDrawable" />
+                app:srcCompat="?attr/actionModeShareDrawable"
+                android:contentDescription="@string/share" />
 
             <ImageButton
                 android:id="@+id/jobInfo_button_save"
@@ -36,7 +37,8 @@
                 android:scaleType="fitCenter"
                 android:layout_marginStart="4dp"
                 android:tint="@color/colorAccent"
-                app:srcCompat="@drawable/ic_star_unsaved" />
+                app:srcCompat="@drawable/ic_star_unsaved"
+                android:contentDescription="@string/save" />
 
             <ImageButton
                 android:id="@+id/jobInfo_button_applied"
@@ -45,7 +47,8 @@
                 android:layout_marginStart="4dp"
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/ic_check_unchecked" />
+                app:srcCompat="@drawable/ic_check_unchecked"
+                android:contentDescription="@string/applied" />
 
         </LinearLayout>
 
@@ -60,7 +63,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="bottom|end"
-            android:text="Powered byCareerOneStop"
+            android:text="@string/powered_bycareeronestop"
             android:textSize="8sp" />
 
     </LinearLayout>
