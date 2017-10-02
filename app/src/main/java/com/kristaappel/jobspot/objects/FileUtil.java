@@ -3,24 +3,15 @@ package com.kristaappel.jobspot.objects;
 
 import android.content.Context;
 import android.util.Log;
-
-import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import org.json.JSONObject;
-
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 
 public class FileUtil {
 
