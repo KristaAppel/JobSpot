@@ -6,6 +6,38 @@ import java.io.Serializable;
 
 public class Job implements Serializable, Parcelable{
 
+    public void setJobID(String jobID) {
+        this.jobID = jobID;
+    }
+
+    public void setJobTitle(String jobTitle) {
+        this.jobTitle = jobTitle;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public void setDatePosted(String datePosted) {
+        this.datePosted = datePosted;
+    }
+
+    public void setJobURL(String jobURL) {
+        this.jobURL = jobURL;
+    }
+
+    public void setJobCityState(String jobCityState) {
+        this.jobCityState = jobCityState;
+    }
+
+    public void setJobLat(double jobLat) {
+        this.jobLat = jobLat;
+    }
+
+    public void setJobLng(double jobLng) {
+        this.jobLng = jobLng;
+    }
+
     private String jobID;
     private String jobTitle;
     private String companyName;

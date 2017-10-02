@@ -2,16 +2,25 @@ package com.kristaappel.jobspot.objects;
 
 
 import android.content.Context;
+import android.util.Log;
 
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import org.json.JSONObject;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 
 public class FileUtil {
 
@@ -22,8 +31,12 @@ public class FileUtil {
         Firebase firebase = new Firebase("https://jobspot-a0171.firebaseio.com/");
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
-        String savedJobsFile = "savedjobs" + firebaseUser.getUid() + ".txt";
-        String appliedJobsFile = "appliedjobs" + firebaseUser.getUid() + ".txt";
+        String savedJobsFile = null;
+        String appliedJobsFile = null;
+        if (firebaseUser != null) {
+            savedJobsFile = "savedjobs" + firebaseUser.getUid() + ".txt";
+            appliedJobsFile = "appliedjobs" + firebaseUser.getUid() + ".txt";
+        }
         if (fileType.equals(fileTypeSaved)){
             return savedJobsFile;
         }else if (fileType.equals(fileTypeApplied)){
@@ -60,32 +73,37 @@ public class FileUtil {
     }
 
     public static ArrayList<Job> readSavedJobs(Context context) {
-        ArrayList<Job> savedJobs = new ArrayList<>();
-        try {
-            // Read from local storage:
-            String fileName = getFileName(fileTypeSaved);
-            FileInputStream fileInputStream = context.openFileInput(fileName);
-            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-            Object readObject = objectInputStream.readObject();
+        final ArrayList<Job> savedJobs = new ArrayList<>();
 
-            // Get objects; add them to arraylist to be returned:
-            if (readObject instanceof ArrayList<?>) {
-                ArrayList<?> arrayList = (ArrayList<?>) readObject;
-                if (arrayList.size() > 0) {
-                    for (int i = 0; i < arrayList.size(); i++) {
-                        Object arrayListItem = arrayList.get(i);
-                        if (arrayListItem instanceof Job) {
-                            Job savedJob = (Job) arrayListItem;
-                            savedJobs.add(savedJob);
+            try {
+                // Read from local storage:
+                String fileName = getFileName(fileTypeSaved);
+                FileInputStream fileInputStream = context.openFileInput(fileName);
+                ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+                Object readObject = objectInputStream.readObject();
+
+                // Get objects; add them to arraylist to be returned:
+                if (readObject instanceof ArrayList<?>) {
+                    ArrayList<?> arrayList = (ArrayList<?>) readObject;
+                    if (arrayList.size() > 0) {
+                        for (int i = 0; i < arrayList.size(); i++) {
+                            Object arrayListItem = arrayList.get(i);
+                            if (arrayListItem instanceof Job) {
+                                Job savedJob = (Job) arrayListItem;
+                                savedJobs.add(savedJob);
+                            }
                         }
                     }
                 }
+                objectInputStream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            objectInputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return savedJobs;
+            Log.i("FileUtil", "savedjobs count: " + savedJobs.size());
+            return savedJobs;
+
+
+
     }
 
     public static ArrayList<Job> readAppliedJobs(Context context) {

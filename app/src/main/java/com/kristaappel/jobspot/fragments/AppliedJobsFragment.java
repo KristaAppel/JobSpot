@@ -3,6 +3,7 @@ package com.kristaappel.jobspot.fragments;
 import android.app.ListFragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,31 +11,83 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.kristaappel.jobspot.R;
 import com.kristaappel.jobspot.objects.FileUtil;
 import com.kristaappel.jobspot.objects.Job;
+import com.kristaappel.jobspot.objects.NetworkMonitor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class AppliedJobsFragment extends ListFragment {
 
     private ArrayList<Job> appliedJobs;
     private static final int ID_CONSTANT = 0x01010;
+    AppliedListAdapter listAdapter;
 
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         appliedJobs = FileUtil.readAppliedJobs(context);
-        setListAdapter(new AppliedListAdapter() {
-        });
+        listAdapter = new AppliedListAdapter();
+        setListAdapter(listAdapter);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        appliedJobs = FileUtil.readAppliedJobs(getActivity());
+
+        if (NetworkMonitor.deviceIsConnected(getActivity())){
+            // We're online.  Get list from Firebase:
+            Firebase firebase = new Firebase("https://jobspot-a0171.firebaseio.com/");
+            FirebaseAuth mAuth = FirebaseAuth.getInstance();
+            FirebaseUser firebaseUser = mAuth.getCurrentUser();
+            if (firebaseUser != null) {
+                Firebase firebaseSavedRef = firebase.child("users").child(firebaseUser.getUid()).child("appliedjobs");
+                firebaseSavedRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        appliedJobs.clear();
+                        for (DataSnapshot userSnapshot : dataSnapshot.getChildren()){
+                            Log.i("FileUtil", "snapshot: " + userSnapshot.getValue());
+
+                            HashMap snapshotJob = (HashMap) userSnapshot.getValue();
+                            String jobID = snapshotJob.get("jobID").toString();
+                            String jobTitle = snapshotJob.get("jobTitle").toString();
+                            String companyName = snapshotJob.get("companyName").toString();
+                            String datePosted = snapshotJob.get("datePosted").toString();
+                            String jobURL = snapshotJob.get("jobURL").toString();
+                            String jobCityState = snapshotJob.get("jobCityState").toString();
+                            Double jobLat = (Double) snapshotJob.get("jobLat");
+                            Double jobLng = (Double) snapshotJob.get("jobLng");
+
+                            Job appliedJob = new Job(jobID, jobTitle, companyName, datePosted, jobURL, jobCityState, jobLat, jobLng);
+
+                            appliedJobs.add(appliedJob);
+                            listAdapter.notifyDataSetChanged();
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+
+            }
+        }else{
+            appliedJobs = FileUtil.readSavedJobs(getActivity());
+        }
+
     }
 
     @Override

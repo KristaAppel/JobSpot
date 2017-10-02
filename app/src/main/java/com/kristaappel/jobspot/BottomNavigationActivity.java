@@ -30,6 +30,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.kristaappel.jobspot.fragments.AppliedJobsFragment;
 import com.kristaappel.jobspot.fragments.MapFragment;
 import com.kristaappel.jobspot.fragments.ProfileFragment;
@@ -40,6 +46,8 @@ import com.kristaappel.jobspot.fragments.SearchScreenFragment;
 import com.kristaappel.jobspot.fragments.SortFilterFragment;
 import com.kristaappel.jobspot.objects.Job;
 import com.kristaappel.jobspot.objects.LocationHelper;
+import com.kristaappel.jobspot.objects.NetworkMonitor;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -141,6 +149,8 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     }
 
 
+
+
     @Override
     public void onSearchBoxFragmentInteraction(int id) {
         Button mapButton = (Button) findViewById(R.id.mapFragToggle1);
@@ -194,6 +204,10 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, sortFilterFragment).commit();
                 InputMethodManager inputMethodManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(et_keywords.getWindowToken(), 0);
+                break;
+            case R.id.recentButton:
+                //TODO: show recent searches and let user pick one to search
+                Log.i("BottomNavactivity", "show recent searches");
                 break;
             case R.id.searchButton:
                 jobList.clear();
@@ -371,4 +385,5 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
 
 
     }
+
 }

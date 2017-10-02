@@ -43,6 +43,7 @@
     <string name="date">date</string>
     <string name="favorite">favorite</string>
     <string name="logout">Logout</string>
+    <string name="recent_searches">Recent Searches</string>
 
 
 </resources>
