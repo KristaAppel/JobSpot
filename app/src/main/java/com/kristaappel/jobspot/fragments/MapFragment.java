@@ -33,6 +33,8 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
     private Address currentAddress;
     private Location currentLocation;
     private ArrayList<Job> jobs;
+    static String displayLocation;
+    static String displayKeywords;
     private static final String ARG_PARAM1 = "param1";
 
 
@@ -52,6 +54,13 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
         Bundle args = new Bundle();
         args.putParcelableArrayList(ARG_PARAM1, joblist);
         fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static MapFragment newInstance(String _location, String _keywords){
+        MapFragment fragment = new MapFragment();
+        displayLocation = _location;
+        displayKeywords = _keywords;
         return fragment;
     }
 
@@ -117,34 +126,44 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
         if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             googleMap.setMyLocationEnabled(true);
         }
-
-        currentLocation = LocationHelper.getCurrentLocation(getContext(), this);
-        if (currentLocation == null){
-            // No last known location.  Begin requesting location updates:
-            LocationHelper.requestLocationUpdates(getContext(), this);
-        }else{
-            // Get current address:
-            currentAddress = LocationHelper.getCurrentAddressFromLocation(currentLocation, getContext());
-            // Display current address in the location box:
-            EditText et_location = (EditText) getActivity().findViewById(R.id.et_location);
-            //et_location.setText(currentAddress.getAddressLine(0)); // This shows full address
-            if (et_location.getText().toString().equals("") || et_location.getText()==null){
-                if (jobs==null || jobs.size()<1){
-                    // If there are no searched jobs, show the current location in the location box:
-                    et_location.setText(currentAddress.getLocality() + ", " + currentAddress.getAdminArea()); // This shows city, state
-                }else{
-                    // If there are job search results, show the location of the searched jobs in the location box:
-                    if (jobs.size()>1){
-                        et_location.setText(jobs.get(0).getJobCityState());
-                    }
-                }
-            }
+        if (displayLocation != null){
+            //TODO: get location of displaylocation and set it to currentlocation & currentaddress
 
             // Update map:
             zoomInCamera();
             googleMap.clear();
             addMapMarkers();
+        }else{
+            currentLocation = LocationHelper.getCurrentLocation(getContext(), this);
+            if (currentLocation == null){
+                // No last known location.  Begin requesting location updates:
+                LocationHelper.requestLocationUpdates(getContext(), this);
+            }else{
+                // Get current address:
+                currentAddress = LocationHelper.getCurrentAddressFromLocation(currentLocation, getContext());
+                // Display current address in the location box:
+                EditText et_location = (EditText) getActivity().findViewById(R.id.et_location);
+                //et_location.setText(currentAddress.getAddressLine(0)); // This shows full address
+                if (et_location.getText().toString().length()<1){
+                    if (jobs==null || jobs.size()<1){
+                        // If there are no searched jobs, show the current location in the location box:
+                        et_location.setText(currentAddress.getLocality() + ", " + currentAddress.getAdminArea()); // This shows city, state
+                    }else{
+                        // If there are job search results, show the location of the searched jobs in the location box:
+                        if (jobs.size()>1){
+                            et_location.setText(jobs.get(0).getJobCityState());
+                        }
+                    }
+                }
+
+                // Update map:
+                zoomInCamera();
+                googleMap.clear();
+                addMapMarkers();
+            }
         }
+
+
 
     }
 
@@ -170,7 +189,7 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
                 zoomToLatLong = new LatLng(currentAddress.getLatitude(), currentAddress.getLongitude());
             }
 
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(zoomToLatLong, 13);
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(zoomToLatLong, 9);
             googleMap.animateCamera(cameraUpdate);
         }
 

@@ -6,6 +6,28 @@ import java.io.Serializable;
 
 public class Job implements Serializable, Parcelable{
 
+    private String jobID;
+    private String jobTitle;
+    private String companyName;
+    private String datePosted;
+    private String jobURL;
+    private String jobCityState;
+    private double jobLat;
+    private double jobLng;
+
+
+    public Job(String jobid, String jobtitle, String companyname, String dateposted, String joburl, String jobcitystate, double joblat, double joblng){
+        jobID = jobid;
+        jobTitle = jobtitle;
+        companyName = companyname;
+        datePosted = dateposted;
+        jobURL = joburl;
+        jobCityState = jobcitystate;
+        jobLat = joblat;
+        jobLng = joblng;
+    }
+
+
     public void setJobID(String jobID) {
         this.jobID = jobID;
     }
@@ -37,28 +59,6 @@ public class Job implements Serializable, Parcelable{
     public void setJobLng(double jobLng) {
         this.jobLng = jobLng;
     }
-
-    private String jobID;
-    private String jobTitle;
-    private String companyName;
-    private String datePosted;
-    private String jobURL;
-    private String jobCityState;
-    private double jobLat;
-    private double jobLng;
-
-
-    public Job(String jobid, String jobtitle, String companyname, String dateposted, String joburl, String jobcitystate, double joblat, double joblng){
-        jobID = jobid;
-        jobTitle = jobtitle;
-        companyName = companyname;
-        datePosted = dateposted;
-        jobURL = joburl;
-        jobCityState = jobcitystate;
-        jobLat = joblat;
-        jobLng = joblng;
-    }
-
 
     private Job(Parcel in) {
         jobID = in.readString();

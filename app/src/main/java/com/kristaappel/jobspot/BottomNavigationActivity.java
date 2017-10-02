@@ -40,13 +40,16 @@ import com.kristaappel.jobspot.fragments.AppliedJobsFragment;
 import com.kristaappel.jobspot.fragments.MapFragment;
 import com.kristaappel.jobspot.fragments.ProfileFragment;
 import com.kristaappel.jobspot.fragments.SavedJobsFragment;
+import com.kristaappel.jobspot.fragments.SavedSearchListFragment;
 import com.kristaappel.jobspot.fragments.SearchBoxFragment;
 import com.kristaappel.jobspot.fragments.SearchResultListFragment;
 import com.kristaappel.jobspot.fragments.SearchScreenFragment;
 import com.kristaappel.jobspot.fragments.SortFilterFragment;
+import com.kristaappel.jobspot.objects.FileUtil;
 import com.kristaappel.jobspot.objects.Job;
 import com.kristaappel.jobspot.objects.LocationHelper;
 import com.kristaappel.jobspot.objects.NetworkMonitor;
+import com.kristaappel.jobspot.objects.SavedSearch;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,8 +58,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.kristaappel.jobspot.R.string.saved;
 
-public class BottomNavigationActivity extends AppCompatActivity implements SearchBoxFragment.OnSearchBoxFragmentInteractionListener, SortFilterFragment.OnSortFilterInteractionListener {
+
+public class BottomNavigationActivity extends AppCompatActivity implements SearchBoxFragment.OnSearchBoxFragmentInteractionListener, SortFilterFragment.OnSortFilterInteractionListener, SavedSearchListFragment.OnSavedSearchInteractionListener {
 
     private ActionBar actionBar;
     private String keywords;
@@ -69,6 +74,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     private String radius = "20";
     private String posted = "30";
     private String sortBy = "accquisitiondate";
+    static SavedSearch savedSearch;
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -206,8 +212,9 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 inputMethodManager.hideSoftInputFromWindow(et_keywords.getWindowToken(), 0);
                 break;
             case R.id.recentButton:
-                //TODO: show recent searches and let user pick one to search
-                Log.i("BottomNavactivity", "show recent searches");
+                // Show recent searches and let user pick one to search
+                SavedSearchListFragment savedSearchListFragment = new SavedSearchListFragment();
+                getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, savedSearchListFragment).commit();
                 break;
             case R.id.searchButton:
                 jobList.clear();
@@ -269,7 +276,12 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
             if (jobList != null){
                 mapFrag = MapFragment.newInstance(jobList);
             }else{
-                mapFrag = new MapFragment();
+                if (savedSearch != null){
+                    mapFrag = MapFragment.newInstance(savedSearch.getLocation(), savedSearch.getKeywords());
+                }else{
+                    mapFrag = new MapFragment();
+                }
+
             }
             activity.getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, mapFrag).commit();
         }else if (listIsShowing){
@@ -288,7 +300,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     }
 
 
-    private void searchForJobs(String keywords, String location){
+    public void searchForJobs(String keywords, String location){
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         ProgressBar progressBar = (ProgressBar)findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
@@ -318,6 +330,33 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 return params;
             }
         };
+        String time = String.valueOf(System.currentTimeMillis());
+        SavedSearch aSavedSearch = new SavedSearch(keywords, radius, location, posted, time);
+
+        // Get saved searches from device:
+        ArrayList<SavedSearch> savedSearches = FileUtil.readSavedSearches(this);
+        // Find out if the search is already saved:
+        boolean foundMatch = false;
+        for (SavedSearch ss : savedSearches){
+            if (ss.equals(aSavedSearch)){
+                foundMatch = true;
+            }
+        }
+        // If the search isn't saved, then save it:
+        if (!foundMatch){
+            savedSearches.add(aSavedSearch);
+            // Save savedSearch to device:
+            FileUtil.writeSavedSearch(this, savedSearches);
+
+            // Save the search to Firebase:
+            Firebase firebase = new Firebase("https://jobspot-a0171.firebaseio.com/");
+            FirebaseAuth mAuth = FirebaseAuth.getInstance();
+            FirebaseUser firebaseUser = mAuth.getCurrentUser();
+            if (firebaseUser != null) {
+                firebase.child("users").child(firebaseUser.getUid()).child("savedsearches").child(time).setValue(savedSearch);
+            }
+        }
+
         requestQueue.add(stringRequest);
     }
 
@@ -366,7 +405,6 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
 
     @Override
     public void onSortFilterInteraction(String _radius, String _posted, String _sortBy) {
-        Log.i("BottomNavigationActvty", "pressed OK");
         // Get user inputs from radio buttons and apply them to search:
         radius = _radius;
         posted = _posted;
@@ -382,8 +420,23 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
             getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, searchListFrag).commit();
             onSearchBoxFragmentInteraction(R.id.searchButton);
         }
-
-
     }
 
+    @Override
+    public void onsavedSearchInteraction(SavedSearch savedSearch) {
+        this.savedSearch = savedSearch;
+
+        keywords = savedSearch.getKeywords();
+        radius = savedSearch.getRadius();
+        location = savedSearch.getLocation();
+        posted = savedSearch.getDays();
+
+        EditText et_loc = (EditText) findViewById(R.id.et_location);
+        EditText et_kw = (EditText) findViewById(R.id.et_keywords);
+
+        et_loc.setText(location);
+        et_kw.setText(keywords);
+
+        onSearchBoxFragmentInteraction(R.id.searchButton);
+    }
 }

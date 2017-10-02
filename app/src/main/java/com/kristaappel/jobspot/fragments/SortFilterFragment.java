@@ -19,8 +19,6 @@ public class SortFilterFragment extends android.app.Fragment implements RadioGro
     private String radius = "20";
     private String posted = "30";
     private String sortBy = "accquisitiondate";
-
-
     private OnSortFilterInteractionListener mListener;
 
     public SortFilterFragment() {
