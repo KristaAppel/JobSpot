@@ -120,7 +120,10 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
 
     @Override
     public void onMapReady(GoogleMap map) {
-        googleMap = map;
+        if (googleMap == null){
+            googleMap = map;
+        }
+
         googleMap.setOnInfoWindowClickListener(this);
 
         if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {

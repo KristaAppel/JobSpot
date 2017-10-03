@@ -110,8 +110,9 @@ public class SavedSearchListFragment extends ListFragment {
         super.onListItemClick(l, v, position, id);
 
         //Create and display a SearchScreenFragment:
-        SearchScreenFragment searchScreenFragment = SearchScreenFragment.newInstance(savedSearches.get(position).getLocation(), savedSearches.get(position).getKeywords());
-        getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, searchScreenFragment).commit();
+   //     SearchScreenFragment searchScreenFragment = SearchScreenFragment.newInstance(savedSearches.get(position).getLocation(), savedSearches.get(position).getKeywords());
+   //     getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, searchScreenFragment).commit();
+
         // Use the chosen saved search to run a job search!
         mListener.onsavedSearchInteraction(savedSearches.get(position));
 
