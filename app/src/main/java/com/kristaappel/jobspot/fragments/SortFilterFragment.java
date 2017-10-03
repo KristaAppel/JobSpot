@@ -71,6 +71,7 @@ public class SortFilterFragment extends android.app.Fragment implements RadioGro
     @Override
     public void onDetach() {
         super.onDetach();
+        mListener.onSortFilterInteraction(radius, posted, sortBy);
         mListener = null;
     }
 

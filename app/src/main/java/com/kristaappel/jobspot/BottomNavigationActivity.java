@@ -156,7 +156,6 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
 
 
 
-
     @Override
     public void onSearchBoxFragmentInteraction(int id) {
         Button mapButton = (Button) findViewById(R.id.mapFragToggle1);
@@ -218,6 +217,17 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 break;
             case R.id.searchButton:
                 jobList.clear();
+                if (mapIsShowing){
+                    mapButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                    mapButton.setTextColor(getResources().getColor(R.color.colorWhite));
+                    listButton.setBackgroundColor(getResources().getColor(R.color.colorLightGrey));
+                    listButton.setTextColor(getResources().getColor(R.color.colorPrimary));
+                }else{
+                    mapButton.setBackgroundColor(getResources().getColor(R.color.colorLightGrey));
+                    mapButton.setTextColor(getResources().getColor(R.color.colorPrimary));
+                    listButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                    listButton.setTextColor(getResources().getColor(R.color.colorWhite));
+                }
                 // Get user's input data & make sure it's not empty:
                 if (et_location.getText().toString().length() >0){
                     location = et_location.getText().toString();
@@ -300,12 +310,12 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     }
 
 
-    public void searchForJobs(String keywords, String location){
+    public void searchForJobs(String _keywords, String _location){
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         ProgressBar progressBar = (ProgressBar)findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
         //Get the search radius, sort type, & number of days from user and put it into the job search url:
-        String url = "https://api.careeronestop.org/v1/jobsearch/TZ1zgEyKTNm69nF/"+keywords+"/"+location+"/"+radius+"/"+sortBy+"/desc/0/200/"+posted;
+        String url = "https://api.careeronestop.org/v1/jobsearch/TZ1zgEyKTNm69nF/"+_keywords+"/"+_location+"/"+radius+"/"+sortBy+"/desc/0/200/"+posted;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -331,20 +341,20 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
             }
         };
         String time = String.valueOf(System.currentTimeMillis());
-        SavedSearch aSavedSearch = new SavedSearch(keywords, radius, location, posted, time);
+        SavedSearch newSavedSearch = new SavedSearch(_keywords, radius, _location, posted, time);
 
         // Get saved searches from device:
         ArrayList<SavedSearch> savedSearches = FileUtil.readSavedSearches(this);
         // Find out if the search is already saved:
         boolean foundMatch = false;
         for (SavedSearch ss : savedSearches){
-            if (ss.equals(aSavedSearch)){
+            if (ss.equals(newSavedSearch)){
                 foundMatch = true;
             }
         }
         // If the search isn't saved, then save it:
         if (!foundMatch){
-            savedSearches.add(aSavedSearch);
+            savedSearches.add(newSavedSearch);
             // Save savedSearch to device:
             FileUtil.writeSavedSearch(this, savedSearches);
 
@@ -353,7 +363,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
             FirebaseAuth mAuth = FirebaseAuth.getInstance();
             FirebaseUser firebaseUser = mAuth.getCurrentUser();
             if (firebaseUser != null) {
-                firebase.child("users").child(firebaseUser.getUid()).child("savedsearches").child(time).setValue(savedSearch);
+                firebase.child("users").child(firebaseUser.getUid()).child("savedsearches").child(time).setValue(newSavedSearch);
             }
         }
 
@@ -410,11 +420,12 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         posted = _posted;
         sortBy = _sortBy;
 
-        // Go back to MapFragment
+        // Go to MapFragment
         if (mapIsShowing){
             MapFragment mapFrag = new MapFragment();
             getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, mapFrag).commit();
             onSearchBoxFragmentInteraction(R.id.searchButton);
+            // Go to SearchResultListFragment:
         }else if (listIsShowing){
             SearchResultListFragment searchListFrag = new SearchResultListFragment();
             getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, searchListFrag).commit();
@@ -424,7 +435,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
 
     @Override
     public void onsavedSearchInteraction(SavedSearch savedSearch) {
-        this.savedSearch = savedSearch;
+        BottomNavigationActivity.savedSearch = savedSearch;
 
         keywords = savedSearch.getKeywords();
         radius = savedSearch.getRadius();
