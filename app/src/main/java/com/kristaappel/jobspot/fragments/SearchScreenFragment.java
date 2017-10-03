@@ -15,6 +15,8 @@ public class SearchScreenFragment extends android.app.Fragment {
 
     private static final String ARG_PARAM1 = "param1";
     private ArrayList<Job> jobs;
+    static String locationText;
+    static String keywordsText;
 
 
     public SearchScreenFragment() {
@@ -26,6 +28,13 @@ public class SearchScreenFragment extends android.app.Fragment {
         Bundle args = new Bundle();
         args.putParcelableArrayList(ARG_PARAM1, joblist);
         fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static SearchScreenFragment newInstance(String _location, String _keywords){
+        SearchScreenFragment fragment = new SearchScreenFragment();
+        locationText = _location;
+        keywordsText = _keywords;
         return fragment;
     }
 
@@ -42,8 +51,10 @@ public class SearchScreenFragment extends android.app.Fragment {
 
         // Create and display a MapFragment:
         MapFragment mapFrag;
-        if (jobs != null){
+        if (jobs != null) {
             mapFrag = MapFragment.newInstance(jobs);
+        }else if (locationText != null && keywordsText != null){
+            mapFrag = MapFragment.newInstance(locationText, keywordsText);
         }else{
             mapFrag = new MapFragment();
         }

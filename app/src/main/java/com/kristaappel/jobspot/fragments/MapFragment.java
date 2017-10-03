@@ -127,7 +127,11 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
             googleMap.setMyLocationEnabled(true);
         }
         if (displayLocation != null){
-            //TODO: get location of displaylocation and set it to currentlocation & currentaddress
+            // Display the location and leywords from the search in the editTexts:
+            EditText et_loc = (EditText) getActivity().findViewById(R.id.et_location);
+            EditText et_kw = (EditText) getActivity().findViewById(R.id.et_keywords);
+            et_loc.setText(displayLocation);
+            et_kw.setText(displayKeywords);
 
             // Update map:
             zoomInCamera();
@@ -155,16 +159,12 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
                         }
                     }
                 }
-
                 // Update map:
                 zoomInCamera();
                 googleMap.clear();
                 addMapMarkers();
             }
         }
-
-
-
     }
 
 
@@ -189,7 +189,7 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
                 zoomToLatLong = new LatLng(currentAddress.getLatitude(), currentAddress.getLongitude());
             }
 
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(zoomToLatLong, 9);
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(zoomToLatLong, 12);
             googleMap.animateCamera(cameraUpdate);
         }
 
@@ -197,7 +197,6 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
 
     private void addMapMarkers(){
         if (googleMap != null){
-//            MarkerOptions markerOptions = new MarkerOptions();
             // Add a marker for each job in the area:
             if (jobs != null){
                 for (Job job : jobs){
