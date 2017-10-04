@@ -2,6 +2,7 @@ package com.kristaappel.jobspot.fragments;
 
 import android.app.ListFragment;
 import android.content.Context;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.kristaappel.jobspot.R;
 import com.kristaappel.jobspot.objects.FileUtil;
 import com.kristaappel.jobspot.objects.Job;
+import com.kristaappel.jobspot.objects.LocationHelper;
+
 import java.util.ArrayList;
 
 
@@ -104,12 +107,15 @@ public class SearchResultListFragment extends ListFragment {
             TextView textTitle = (TextView) convertView.findViewById(R.id.textView_searchResult_title);
             TextView textCompany = (TextView) convertView.findViewById(R.id.textView_searchResult_company);
             TextView textDate = (TextView) convertView.findViewById(R.id.textView_searchResult_datePosted);
+            TextView textDistance = (TextView) convertView.findViewById(R.id.searchResult_distance);
 
             // Set text:
             textTitle.setText(jobs.get(position).getJobTitle());
             textCompany.setText(jobs.get(position).getCompanyName());
             String jobDate = "Posted on: " + jobs.get(position).getDatePosted();
             textDate.setText(jobDate);
+            String distanceString = jobs.get(position).getDistance(getActivity(), jobs.get(position)) + " miles away";
+            textDistance.setText(distanceString);
 
             // Get ImageButton and set appropriate image:
             final ImageButton favoriteButton = (ImageButton) convertView.findViewById(R.id.searchResult_favorite_button);

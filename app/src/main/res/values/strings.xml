@@ -44,6 +44,7 @@
     <string name="favorite">favorite</string>
     <string name="logout">Logout</string>
     <string name="recent_searches">Recent Searches</string>
+    <string name="distance">distance</string>
 
 
 </resources>

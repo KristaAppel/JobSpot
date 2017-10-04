@@ -54,8 +54,15 @@ import com.kristaappel.jobspot.objects.SavedSearch;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import static com.kristaappel.jobspot.R.string.saved;
@@ -73,7 +80,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     private static boolean listIsShowing = false;
     private String radius = "20";
     private String posted = "30";
-    private String sortBy = "accquisitiondate";
+    public static String sortBy = "accquisitiondate";
     static SavedSearch savedSearch;
 
 
@@ -235,7 +242,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 if (et_keywords.getText().toString().length() >0){
                     keywords = et_keywords.getText().toString();
                 }
-                Log.i("BottomNavActivity", "Entered location: " + location + " Entered keywords: " + keywords);
+                Log.i("BottomNavActivity:240", "Entered location: " + location + " Entered keywords: " + keywords);
                 if (location==null || location.equals("")){
                     Toast.makeText(this, "Enter a location", Toast.LENGTH_SHORT).show();
                 }else if  (keywords==null || (keywords.equals(""))){
@@ -250,7 +257,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     }
 
 
-    public static void getCoordsForCompany(Activity activity, String response, Job foundJob){
+    public static void getCoordsForCompany(final Activity activity, String response, Job foundJob){
         try {
             // Parse JSON results from company look-up to get coordinates:
             JSONObject responseObject = new JSONObject(response);
@@ -271,14 +278,46 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         if (foundJob != null && jobLat != null && jobLng != null) {
             newJob = new Job(foundJob.getJobID(), foundJob.getJobTitle(), foundJob.getCompanyName(), foundJob.getDatePosted(), foundJob.getJobURL(), foundJob.getJobCityState(), jobLat, jobLng);
         }else{
-            Log.i("bottomnav", "foundjob is nul!!!!!!!!!!");
+            Log.i("BottomNav:276", "foundjob is nul!!!!!!!!!!");
         }
         // Add new job to the list of jobs:
         if (newJob != null){
             jobList.add(newJob);
         }
         
-        Log.i("BottomNavActivity:229", "joblistcount:" + jobList.size());
+        Log.i("BottomNavActivity:283", "joblistcount:" + jobList.size());
+
+        // Sort jobs appropriately:
+        if (sortBy.equals("location") || sortBy.equals("accquisitiondate")){
+            Collections.sort(jobList, new Comparator<Job>() {
+                @Override
+                public int compare(Job job1, Job job2) {
+                    if (sortBy.equals("location")){
+                        // Sort by distance:
+                        return job1.getDistance(activity, job1).compareTo(job2.getDistance(activity, job2));
+                    }else if (sortBy.equals("accquisitiondate")){
+                        // Sort by date:
+                        return job2.getDatePosted().compareToIgnoreCase(job1.getDatePosted());
+                    }
+                    return 0;
+                }
+            });
+        }
+
+        if (sortBy.equals("accquisitiondate")){
+            Collections.sort(jobList, new Comparator<Job>() {
+                DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.US);
+                @Override
+                public int compare(Job job1, Job job2) {
+                    try{
+                        return dateTimeFormat.parse(job2.getDatePosted()).compareTo(dateTimeFormat.parse(job1.getDatePosted()));
+                    }catch (ParseException e){
+                        throw new IllegalArgumentException(e);
+                    }
+                }
+            });
+        }
+
 
         if (mapIsShowing){
             // Create and display a MapFragment in bottom container:
@@ -319,13 +358,13 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.i("BottomNavigationActvty", "response: " + response);
+                Log.i("BottomNavActvty:344", "response: " + response);
                 makeJobList(response);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i("BottomNavigationActvty", "That didn't work!!!!!!!");
+                Log.i("BottomNav:350", "That didn't work!!!!!!!");
                 if (error.networkResponse.statusCode == 404){
                     Toast.makeText(BottomNavigationActivity.this, "No jobs available.", Toast.LENGTH_SHORT).show();
                 }
@@ -387,7 +426,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 // Get the coordinates:
                 LocationHelper.lookUpCompany(this, foundJob);
             }
-            Log.i("BottomNavActivity:278", "jobs count: " + jobsArray.length());
+            Log.i("BottomNavActivity:412", "jobs count: " + jobsArray.length());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -420,17 +459,19 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         posted = _posted;
         sortBy = _sortBy;
 
-        // Go to MapFragment
-        if (mapIsShowing){
-            MapFragment mapFrag = new MapFragment();
-            getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, mapFrag).commit();
-            onSearchBoxFragmentInteraction(R.id.searchButton);
-            // Go to SearchResultListFragment:
-        }else if (listIsShowing){
-            SearchResultListFragment searchListFrag = new SearchResultListFragment();
-            getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, searchListFrag).commit();
-            onSearchBoxFragmentInteraction(R.id.searchButton);
-        }
+//        // Go to MapFragment
+//        if (mapIsShowing){
+//            MapFragment mapFrag = new MapFragment();
+//            getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, mapFrag).commit();
+//            onSearchBoxFragmentInteraction(R.id.searchButton);
+//            // Go to SearchResultListFragment:
+//        }else if (listIsShowing){
+//            SearchResultListFragment searchListFrag = new SearchResultListFragment();
+//            getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, searchListFrag).commit();
+//            onSearchBoxFragmentInteraction(R.id.searchButton);
+//        }
+
+        onSearchBoxFragmentInteraction(R.id.searchButton);
     }
 
     @Override

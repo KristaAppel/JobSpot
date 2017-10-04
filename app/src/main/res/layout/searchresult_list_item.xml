@@ -5,57 +5,74 @@
     android:layout_height="match_parent"
     android:descendantFocusability="blocksDescendants">
 
-    <TextView
-        android:id="@+id/textView_searchResult_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginEnd="54dp"
-        android:layout_marginStart="14dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/title"
-        android:textAlignment="textStart"
-        android:textColor="@color/colorBlack"
-        android:textSize="20sp"
-        android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/textView_searchResult_company"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/textView_searchResult_title"
-        android:layout_below="@+id/textView_searchResult_title"
-        android:layout_marginEnd="54dp"
-        android:text="@string/company"
-        android:textAlignment="textEnd"
-        android:textColor="@color/common_google_signin_btn_text_light_focused"
-        android:textSize="18sp" />
 
-    <TextView
-        android:id="@+id/textView_searchResult_datePosted"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/textView_searchResult_title"
-        android:layout_below="@+id/textView_searchResult_company"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="54dp"
-        android:text="@string/date"
-        android:textAlignment="textEnd"
-        android:textColor="?android:attr/textColorSecondaryInverseNoDisable"
-        android:textSize="14sp" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="56dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:id="@+id/linearLayout2">
 
-    <ImageButton
-        android:id="@+id/searchResult_favorite_button"
-        android:layout_width="52dp"
-        android:layout_height="52dp"
-        android:background="@android:color/transparent"
-        android:scaleType="fitCenter"
-        app:srcCompat="@drawable/ic_star_unsaved"
-        android:layout_alignTop="@+id/textView_searchResult_title"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="14dp"
-        android:layout_alignParentEnd="true"
-        android:contentDescription="@string/favorite" />
+            <TextView
+                android:id="@+id/textView_searchResult_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title"
+                android:textAlignment="textStart"
+                android:textColor="@color/colorBlack"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView_searchResult_company"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/company"
+                android:textAlignment="textStart"
+                android:textColor="@color/common_google_signin_btn_text_light_focused"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/textView_searchResult_datePosted"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/date"
+                android:textAlignment="textStart"
+                android:textColor="?android:attr/textColorSecondaryInverseNoDisable"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/searchResult_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/distance" />
+
+        </LinearLayout>
+
+
+
+        <ImageButton
+            android:id="@+id/searchResult_favorite_button"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            android:layout_gravity="end"
+            app:srcCompat="@drawable/ic_star_unsaved"
+            android:contentDescription="@string/favorite"
+            android:layout_marginEnd="12dp"
+            android:gravity="center_vertical"
+            android:layout_alignTop="@+id/linearLayout2"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="12dp" />
+
+
+
+
+
 
 </RelativeLayout>

@@ -4,10 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+
 import com.firebase.client.Firebase;
 import com.kristaappel.jobspot.LoginActivity;
 import com.kristaappel.jobspot.R;
@@ -38,6 +41,8 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Button logoutButton = (Button) view.findViewById(R.id.button_logout);
+        ImageButton linkedInSignInButton = (ImageButton) view.findViewById(R.id.linkedin_signin_button);
+        linkedInSignInButton.setOnClickListener(this);
         logoutButton.setOnClickListener(this);
         firebase = new Firebase("https://jobspot-a0171.firebaseio.com/");
     }
@@ -61,6 +66,8 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
             Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
             loginIntent.putExtra("LogoutExtra", "Logout");
             startActivity(loginIntent);
+        }else if (v.getId() == R.id.linkedin_signin_button){
+            Log.i("ProfileFragment", "Sign in with linkedIn");
         }
     }
 

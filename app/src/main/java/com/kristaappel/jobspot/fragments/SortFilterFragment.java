@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioGroup;
 
+import com.kristaappel.jobspot.BottomNavigationActivity;
 import com.kristaappel.jobspot.R;
 
 
@@ -63,15 +64,20 @@ public class SortFilterFragment extends android.app.Fragment implements RadioGro
         super.onAttach(context);
         if (context instanceof OnSortFilterInteractionListener) {
             mListener = (OnSortFilterInteractionListener) context;
+            BottomNavigationActivity.sortBy = "accquisitiondate";
         }
     }
 
-
+    @Override
+    public void onPause() {
+        super.onPause();
+        mListener.onSortFilterInteraction(radius, posted, sortBy);
+    }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener.onSortFilterInteraction(radius, posted, sortBy);
+ //       mListener.onSortFilterInteraction(radius, posted, sortBy);
         mListener = null;
     }
 

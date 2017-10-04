@@ -1,7 +1,14 @@
 package com.kristaappel.jobspot.objects;
 
+import android.app.Application;
+import android.content.Context;
+import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.kristaappel.jobspot.BottomNavigationActivity;
+import com.kristaappel.jobspot.fragments.MapFragment;
+
 import java.io.Serializable;
 
 public class Job implements Serializable, Parcelable{
@@ -142,6 +149,16 @@ public class Job implements Serializable, Parcelable{
         dest.writeDouble(jobLng);
     }
 
+    public Double getDistance(Context context, Job job){
+        Location currentLocation = LocationHelper.getCurrentLocation(context, new MapFragment());
+        Location jobLocation = new Location("");
+        jobLocation.setLatitude(job.getJobLat());
+        jobLocation.setLongitude(job.getJobLng());
+
+        float distanceInMeters = currentLocation.distanceTo(jobLocation);
+
+        return Math.round((distanceInMeters * 0.000621371) * 10)/10.0;
+    }
 
 }
 
