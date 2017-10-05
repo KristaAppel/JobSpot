@@ -22,18 +22,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.kristaappel.jobspot.fragments.AppliedJobsFragment;
@@ -48,13 +42,12 @@ import com.kristaappel.jobspot.fragments.SortFilterFragment;
 import com.kristaappel.jobspot.objects.FileUtil;
 import com.kristaappel.jobspot.objects.Job;
 import com.kristaappel.jobspot.objects.LocationHelper;
-import com.kristaappel.jobspot.objects.NetworkMonitor;
 import com.kristaappel.jobspot.objects.SavedSearch;
+import com.kristaappel.jobspot.objects.VolleySingleton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -65,7 +58,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import static com.kristaappel.jobspot.R.string.saved;
 
 
 public class BottomNavigationActivity extends AppCompatActivity implements SearchBoxFragment.OnSearchBoxFragmentInteractionListener, SortFilterFragment.OnSortFilterInteractionListener, SavedSearchListFragment.OnSavedSearchInteractionListener {
@@ -287,6 +279,8 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         
         Log.i("BottomNavActivity:283", "joblistcount:" + jobList.size());
 
+
+
         // Sort jobs appropriately:
         if (sortBy.equals("location") || sortBy.equals("accquisitiondate")){
             Collections.sort(jobList, new Comparator<Job>() {
@@ -344,27 +338,31 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
             activity.getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, listfrag).commit();
         }
 
-        ProgressBar progressBar = (ProgressBar)activity.findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.INVISIBLE);
     }
 
 
     public void searchForJobs(String _keywords, String _location){
-        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        // Save the search:
+        String time = String.valueOf(System.currentTimeMillis());
+        SavedSearch newSavedSearch = new SavedSearch(_keywords, radius, _location, posted, time);
+        saveTheSearch(newSavedSearch);
+
+        // Show progress bar:
         ProgressBar progressBar = (ProgressBar)findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
         //Get the search radius, sort type, & number of days from user and put it into the job search url:
-        String url = "https://api.careeronestop.org/v1/jobsearch/TZ1zgEyKTNm69nF/"+_keywords+"/"+_location+"/"+radius+"/"+sortBy+"/desc/0/200/"+posted;
+        String url = "https://api.careeronestop.org/v1/jobsearch/TZ1zgEyKTNm69nF/"+_keywords+"/"+_location+"/"+radius+"/"+sortBy+"/desc/0/120/"+posted;
+        // Get jobs from API:
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.i("BottomNavActvty:344", "response: " + response);
+                Log.i("BottomNavActvty:361", "response: " + response);
                 makeJobList(response);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i("BottomNav:350", "That didn't work!!!!!!!");
+                Log.i("BottomNav:367", "That didn't work!!!!!!!");
                 if (error.networkResponse.statusCode == 404){
                     Toast.makeText(BottomNavigationActivity.this, "No jobs available.", Toast.LENGTH_SHORT).show();
                 }
@@ -379,21 +377,23 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 return params;
             }
         };
-        String time = String.valueOf(System.currentTimeMillis());
-        SavedSearch newSavedSearch = new SavedSearch(_keywords, radius, _location, posted, time);
 
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+    }
+
+    private void saveTheSearch(SavedSearch search){
         // Get saved searches from device:
         ArrayList<SavedSearch> savedSearches = FileUtil.readSavedSearches(this);
         // Find out if the search is already saved:
         boolean foundMatch = false;
-        for (SavedSearch ss : savedSearches){
-            if (ss.equals(newSavedSearch)){
+        for (int i=0; i<savedSearches.size(); i++){
+            if (savedSearches.get(i).equals(search)){
                 foundMatch = true;
             }
         }
         // If the search isn't saved, then save it:
         if (!foundMatch){
-            savedSearches.add(newSavedSearch);
+            savedSearches.add(search);
             // Save savedSearch to device:
             FileUtil.writeSavedSearch(this, savedSearches);
 
@@ -402,11 +402,9 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
             FirebaseAuth mAuth = FirebaseAuth.getInstance();
             FirebaseUser firebaseUser = mAuth.getCurrentUser();
             if (firebaseUser != null) {
-                firebase.child("users").child(firebaseUser.getUid()).child("savedsearches").child(time).setValue(newSavedSearch);
+                firebase.child("users").child(firebaseUser.getUid()).child("savedsearches").child(search.getDateTime()).setValue(search);
             }
         }
-
-        requestQueue.add(stringRequest);
     }
 
     private void makeJobList(String searchResponse){
@@ -426,7 +424,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 // Get the coordinates:
                 LocationHelper.lookUpCompany(this, foundJob);
             }
-            Log.i("BottomNavActivity:412", "jobs count: " + jobsArray.length());
+            Log.i("BottomNavActivity:429", "jobs count: " + jobsArray.length());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -458,18 +456,6 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         radius = _radius;
         posted = _posted;
         sortBy = _sortBy;
-
-//        // Go to MapFragment
-//        if (mapIsShowing){
-//            MapFragment mapFrag = new MapFragment();
-//            getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, mapFrag).commit();
-//            onSearchBoxFragmentInteraction(R.id.searchButton);
-//            // Go to SearchResultListFragment:
-//        }else if (listIsShowing){
-//            SearchResultListFragment searchListFrag = new SearchResultListFragment();
-//            getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, searchListFrag).commit();
-//            onSearchBoxFragmentInteraction(R.id.searchButton);
-//        }
 
         onSearchBoxFragmentInteraction(R.id.searchButton);
     }

@@ -10,7 +10,10 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -168,6 +171,8 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
                 addMapMarkers();
             }
         }
+        ProgressBar progressBar = (ProgressBar)getActivity().findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
 

@@ -63,7 +63,7 @@ public class LocationHelper {
     public static void lookUpCompany(final Activity activity, final Job foundJob){
         // This will look up a company by name, city, & state and get additional information about it.
         // This will be used (in the BottomNavigationActivity) to get the company's coordinates so it can be pinned on the map.
-        RequestQueue requestQueue = Volley.newRequestQueue(activity);
+
         String url = "https://maps.googleapis.com/maps/api/geocode/json?address="+foundJob.getCompanyName()+foundJob.getJobCityState()+"&key=AIzaSyC7q_VhmcurOkyz4wwIc0UkK7L0o1bUK-0\n";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
@@ -81,7 +81,7 @@ public class LocationHelper {
         {
 
         };
-        requestQueue.add(stringRequest);
+        VolleySingleton.getInstance(activity.getApplicationContext()).addToRequestQueue(stringRequest);
     }
 
 

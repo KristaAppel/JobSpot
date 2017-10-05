@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.firebase.client.Firebase;
@@ -69,6 +70,13 @@ public class SearchResultListFragment extends ListFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        ProgressBar progressBar = (ProgressBar)getActivity().findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
@@ -121,6 +129,17 @@ public class SearchResultListFragment extends ListFragment {
             final ImageButton favoriteButton = (ImageButton) convertView.findViewById(R.id.searchResult_favorite_button);
             favoriteButton.setImageResource(R.drawable.ic_star_unsaved);
             favoriteButton.setTag(R.drawable.ic_star_unsaved);
+
+            ProgressBar progressBar = (ProgressBar) convertView.findViewById(R.id.progressBar);
+//            while (position < jobs.size()-1 && progressBar != null){
+//                progressBar.setVisibility(View.VISIBLE);
+//            }
+
+//            if (position < jobs.size()-2 && progressBar != null){
+//                progressBar.setVisibility(View.VISIBLE);
+//            }else if (position == jobs.size()-1 && progressBar != null){
+//                progressBar.setVisibility(View.INVISIBLE);
+//            }
 
             // Find out if job is saved:
             ArrayList<Job> savedJobs = FileUtil.readSavedJobs(getContext());
