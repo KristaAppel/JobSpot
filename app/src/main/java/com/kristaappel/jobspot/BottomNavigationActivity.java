@@ -47,6 +47,7 @@ import com.kristaappel.jobspot.fragments.SortFilterFragment;
 import com.kristaappel.jobspot.objects.FileUtil;
 import com.kristaappel.jobspot.objects.Job;
 import com.kristaappel.jobspot.objects.LocationHelper;
+import com.kristaappel.jobspot.objects.NotificationBroadcastReceiver;
 import com.kristaappel.jobspot.objects.SavedSearch;
 import com.kristaappel.jobspot.objects.VolleySingleton;
 import com.linkedin.platform.APIHelper;
@@ -174,6 +175,8 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         SearchScreenFragment searchScreenFrag = new SearchScreenFragment();
         getFragmentManager().beginTransaction().replace(R.id.content, searchScreenFrag).commit();
 
+        NotificationBroadcastReceiver not = new NotificationBroadcastReceiver();
+        not.setAlarm(this);
     }
 
 
