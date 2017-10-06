@@ -65,6 +65,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import static android.R.attr.name;
 
 
 public class BottomNavigationActivity extends AppCompatActivity implements SearchBoxFragment.OnSearchBoxFragmentInteractionListener, SortFilterFragment.OnSortFilterInteractionListener, SavedSearchListFragment.OnSavedSearchInteractionListener {
@@ -489,13 +490,14 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        // App returns here after LinkedIn connection is made.  Get data from LinkedIn API:
         Log.i("LINKEDIN", "onActivityResult from activity");
 
         LISessionManager.getInstance(getApplicationContext()).onActivityResult(this, requestCode, resultCode, data);
  //       Toast.makeText(getActivity(), "NOW it's success", Toast.LENGTH_SHORT).show();
-        Log.i("LINKEDIN", "NOW it's success");
+        Log.i("LINKEDIN", "NOW it's a success");
 
-        String url = "https://api.linkedin.com/v1/people/~"; //:(email-address,formatted-name, phone-numbers, picture-urls::(original))";
+        String url = "https://api.linkedin.com/v1/people/~:(formatted-name,email-address,headline,location,industry,summary,specialties,picture-url)?format=json"; //:(email-address,formatted-name, phone-numbers, picture-urls::(original))";
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Retrieving Data...");
         progressDialog.show();
@@ -504,17 +506,38 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         apiHelper.getRequest(this, url, new ApiListener() {
             @Override
             public void onApiSuccess(ApiResponse apiResponse) {
+                String liName = "";
+                String liEmail = "";
+                String liHeadline = "";
+                String liIndustry = "";
+                String liLocation = "";
+                String liPictureURL = "";
+                String liSummary = "";
+
                 Log.i("LINKEDIN", "response: " + apiResponse);
                 JSONObject responseObject = apiResponse.getResponseDataAsJson();
+                Log.i("LINKEDIN", "response as json: " + responseObject);
                 try {
-                    String email = responseObject.getString("emailAddress");
-                    String name = responseObject.getString("formattedName");
-                    Log.i("LINKEDIN", "name: " + name);
-                    Log.i("LINKEDIN", "email: " + email);
+                    liName = responseObject.getString("formattedName");
+                    liEmail = responseObject.getString("emailAddress");
+                    liHeadline = responseObject.getString("headline");
+                    liIndustry = responseObject.getString("industry");
+                    JSONObject liLocationObject = responseObject.getJSONObject("location");
+                    liLocation = liLocationObject.getString("name");
+                    liPictureURL = responseObject.getString("pictureUrl");
+                    liSummary = responseObject.getString("summary");
+
 //                    progressDialog.dismiss();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                Log.i("LINKEDIN", "name: " + liName);
+                Log.i("LINKEDIN", "email: " + liEmail);
+                Log.i("LINKEDIN", "headline: " + liHeadline);
+                Log.i("LINKEDIN", "industry: " + liIndustry);
+                Log.i("LINKEDIN", "location: " + liLocation);
+                Log.i("LINKEDIN", "picture url: " + liPictureURL);
+                Log.i("LINKEDIN", "summary: " + liSummary);
             }
 
             @Override
