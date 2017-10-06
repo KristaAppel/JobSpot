@@ -2,7 +2,9 @@ package com.kristaappel.jobspot;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Location;
@@ -44,6 +46,11 @@ import com.kristaappel.jobspot.objects.Job;
 import com.kristaappel.jobspot.objects.LocationHelper;
 import com.kristaappel.jobspot.objects.SavedSearch;
 import com.kristaappel.jobspot.objects.VolleySingleton;
+import com.linkedin.platform.APIHelper;
+import com.linkedin.platform.LISessionManager;
+import com.linkedin.platform.errors.LIApiError;
+import com.linkedin.platform.listeners.ApiListener;
+import com.linkedin.platform.listeners.ApiResponse;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -476,5 +483,47 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         et_kw.setText(keywords);
 
         onSearchBoxFragmentInteraction(R.id.searchButton);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.i("LINKEDIN", "onActivityResult from activity");
+
+        LISessionManager.getInstance(getApplicationContext()).onActivityResult(this, requestCode, resultCode, data);
+ //       Toast.makeText(getActivity(), "NOW it's success", Toast.LENGTH_SHORT).show();
+        Log.i("LINKEDIN", "NOW it's success");
+
+        String url = "https://api.linkedin.com/v1/people/~"; //:(email-address,formatted-name, phone-numbers, picture-urls::(original))";
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Retrieving Data...");
+        progressDialog.show();
+
+        APIHelper apiHelper = APIHelper.getInstance(getApplicationContext());
+        apiHelper.getRequest(this, url, new ApiListener() {
+            @Override
+            public void onApiSuccess(ApiResponse apiResponse) {
+                Log.i("LINKEDIN", "response: " + apiResponse);
+                JSONObject responseObject = apiResponse.getResponseDataAsJson();
+                try {
+                    String email = responseObject.getString("emailAddress");
+                    String name = responseObject.getString("formattedName");
+                    Log.i("LINKEDIN", "name: " + name);
+                    Log.i("LINKEDIN", "email: " + email);
+//                    progressDialog.dismiss();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onApiError(LIApiError error) {
+                Log.i("LINKEDIN", "onApiError");
+                error.printStackTrace();
+            }
+        });
+        progressDialog.dismiss();
+
     }
 }

@@ -7,6 +7,8 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
+// This Singleton class improves performance by ensuring  that there is only one instance of a Volley RequestQueue
+
 public class VolleySingleton {
     private static VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
