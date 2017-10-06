@@ -197,8 +197,10 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
                 zoomToLatLong = new LatLng(currentAddress.getLatitude(), currentAddress.getLongitude());
             }
 
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(zoomToLatLong, 12);
-            googleMap.animateCamera(cameraUpdate);
+            if (zoomToLatLong != null){
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(zoomToLatLong, 12);
+                googleMap.animateCamera(cameraUpdate);
+            }
         }
 
     }

@@ -7,7 +7,9 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginStart="@dimen/activity_horizontal_margin">
 
         <Button
             android:id="@+id/button_logout"
@@ -15,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="51dp"
+            android:layout_marginBottom="19dp"
             android:background="@color/colorPrimary"
             android:text="@string/logout"
             android:textColor="@color/colorWhite" />
@@ -24,14 +26,81 @@
             android:id="@+id/linkedin_signin_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/button_logout"
+            android:layout_below="@+id/textView_profile_explanation"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="110dp"
+            android:layout_marginTop="9dp"
             android:background="@android:color/transparent"
             app:srcCompat="@drawable/linkedin_signin" />
 
-    </RelativeLayout>
+        <ImageView
+            android:id="@+id/imageView_profile"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="34dp"
+            app:srcCompat="@drawable/ic_profile" />
 
+        <TextView
+            android:id="@+id/textView_profile_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageView_profile"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"
+            android:textAlignment="center"
+            android:textColor="@color/colorBlack"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView_profile_headline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView_profile_name"
+            android:layout_centerHorizontal="true"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView_profile_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView_profile_headline"
+            android:layout_centerHorizontal="true"
+            android:textAlignment="center"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textView_profile_summary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView_profile_industry"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp"
+            android:textAlignment="center"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textView_profile_explanation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Having a professional online presence is important.  Connect with LinkedIn to see how potential employers see you."
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:layout_below="@+id/textView_profile_industry"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:id="@+id/textView_profile_industry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView_profile_location"
+            android:layout_centerHorizontal="true"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
 
 
 </FrameLayout>

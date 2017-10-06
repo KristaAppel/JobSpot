@@ -22,7 +22,10 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -51,10 +54,12 @@ import com.linkedin.platform.LISessionManager;
 import com.linkedin.platform.errors.LIApiError;
 import com.linkedin.platform.listeners.ApiListener;
 import com.linkedin.platform.listeners.ApiResponse;
-
+import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -65,14 +70,18 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import static android.R.attr.name;
-
 
 public class BottomNavigationActivity extends AppCompatActivity implements SearchBoxFragment.OnSearchBoxFragmentInteractionListener, SortFilterFragment.OnSortFilterInteractionListener, SavedSearchListFragment.OnSavedSearchInteractionListener {
 
     private ActionBar actionBar;
     private String keywords;
     private String location;
+    static String liPictureURL = "";
+    static String liName = "";
+    static String liHeadline = "";
+    static String liLocation = "";
+    static String liIndustry = "";
+    static String liSummary = "";
     private static Double jobLat;
     private static Double jobLng;
     private static ArrayList<Job> jobList = new ArrayList<>();
@@ -126,7 +135,13 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                     return true;
                 case R.id.navigation_account:
                     // Create and display a ProfileFragment:
-                    ProfileFragment profileFrag = new ProfileFragment();
+                    ProfileFragment profileFrag;
+                    if (!liPictureURL.equals("")){
+                        profileFrag = ProfileFragment.newInstance(liPictureURL, liName);
+                    }else{
+                        profileFrag = new ProfileFragment();
+                    }
+
                     getFragmentManager().beginTransaction().replace(R.id.content, profileFrag).commit();
                     // Show actionbar:
                     if (actionBar != null){
@@ -486,6 +501,11 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         onSearchBoxFragmentInteraction(R.id.searchButton);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -494,10 +514,9 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         Log.i("LINKEDIN", "onActivityResult from activity");
 
         LISessionManager.getInstance(getApplicationContext()).onActivityResult(this, requestCode, resultCode, data);
- //       Toast.makeText(getActivity(), "NOW it's success", Toast.LENGTH_SHORT).show();
         Log.i("LINKEDIN", "NOW it's a success");
 
-        String url = "https://api.linkedin.com/v1/people/~:(formatted-name,email-address,headline,location,industry,summary,specialties,picture-url)?format=json"; //:(email-address,formatted-name, phone-numbers, picture-urls::(original))";
+        String url = "https://api.linkedin.com/v1/people/~:(formatted-name,email-address,headline,location,industry,summary,picture-url)?format=json"; //:(email-address,formatted-name, phone-numbers, picture-urls::(original))";
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Retrieving Data...");
         progressDialog.show();
@@ -506,13 +525,8 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         apiHelper.getRequest(this, url, new ApiListener() {
             @Override
             public void onApiSuccess(ApiResponse apiResponse) {
-                String liName = "";
                 String liEmail = "";
-                String liHeadline = "";
-                String liIndustry = "";
-                String liLocation = "";
-                String liPictureURL = "";
-                String liSummary = "";
+                liIndustry = "";
 
                 Log.i("LINKEDIN", "response: " + apiResponse);
                 JSONObject responseObject = apiResponse.getResponseDataAsJson();
@@ -526,10 +540,9 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                     liLocation = liLocationObject.getString("name");
                     liPictureURL = responseObject.getString("pictureUrl");
                     liSummary = responseObject.getString("summary");
-
-//                    progressDialog.dismiss();
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    Toast.makeText(BottomNavigationActivity.this, "Error retrieving data", Toast.LENGTH_SHORT).show();
                 }
                 Log.i("LINKEDIN", "name: " + liName);
                 Log.i("LINKEDIN", "email: " + liEmail);
@@ -538,6 +551,9 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 Log.i("LINKEDIN", "location: " + liLocation);
                 Log.i("LINKEDIN", "picture url: " + liPictureURL);
                 Log.i("LINKEDIN", "summary: " + liSummary);
+
+                displayLinkedInData(BottomNavigationActivity.this);
+
             }
 
             @Override
@@ -549,4 +565,33 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         progressDialog.dismiss();
 
     }
+
+    public static void displayLinkedInData(Activity activity){
+        // Get views:
+        ImageButton linkedInButton = (ImageButton) activity.findViewById(R.id.linkedin_signin_button);
+        TextView textViewExplanation = (TextView) activity.findViewById(R.id.textView_profile_explanation);
+        ImageView profileImageView = (ImageView) activity.findViewById(R.id.imageView_profile);
+        TextView textViewName = (TextView) activity.findViewById(R.id.textView_profile_name);
+        TextView textViewHeadline = (TextView) activity.findViewById(R.id.textView_profile_headline);
+        TextView textViewLocation = (TextView) activity.findViewById(R.id.textView_profile_location);
+        TextView textViewIndustry = (TextView) activity.findViewById(R.id.textView_profile_industry);
+        TextView textViewSummary = (TextView) activity.findViewById(R.id.textView_profile_summary);
+        // If we have data from LinkedIn, hide the LinkedIn button and show the data:
+        if (!liPictureURL.equals("") && profileImageView != null){
+            // display profile image:
+            profileImageView = (ImageView) activity.findViewById(R.id.imageView_profile);
+            Picasso.with(activity).load(liPictureURL).into(profileImageView);
+            // display text:
+            textViewName.setText(liName);
+            textViewHeadline.setText(liHeadline);
+            textViewLocation.setText(liLocation);
+            textViewIndustry.setText(liIndustry);
+            textViewSummary.setText(liSummary);
+            // Hide 'Sign in with LinkedIn' button:
+            linkedInButton.setVisibility(View.INVISIBLE);
+            textViewExplanation.setVisibility(View.INVISIBLE);
+        }
+
+    }
+
 }
