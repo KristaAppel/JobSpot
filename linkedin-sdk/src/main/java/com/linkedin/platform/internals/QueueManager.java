@@ -26,11 +26,10 @@ public class QueueManager {
 
     private static final String TAG = QueueManager.class.getName();
     private static QueueManager queueManager;
-    private Context ctx;
     private RequestQueue requestQueue;
 
     private QueueManager(Context context) {
-        ctx = context.getApplicationContext();
+        Context ctx = context.getApplicationContext();
         requestQueue = Volley.newRequestQueue(ctx);
     }
 

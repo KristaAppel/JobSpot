@@ -28,7 +28,6 @@ public class LIApiError extends Exception {
         other;
     }
 
-    private VolleyError volleyError;
     private int httpStatusCode = -1;
     private ApiErrorResponse apiErrorResponse;
     private ErrorType errorType;
@@ -48,7 +47,7 @@ public class LIApiError extends Exception {
 
     public LIApiError(VolleyError volleyError) {
         super(volleyError.getMessage(), volleyError.fillInStackTrace());
-        this.volleyError = volleyError;
+        VolleyError volleyError1 = volleyError;
         if (volleyError.networkResponse != null) {
             httpStatusCode = volleyError.networkResponse.statusCode;
             try {

@@ -5,7 +5,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.linkedin.platform.errors.LIAppErrorCode;
 import com.linkedin.platform.errors.LIDeepLinkError;

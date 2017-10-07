@@ -45,7 +45,6 @@ import com.linkedin.platform.APIHelper;
 import com.linkedin.platform.LISessionManager;
 import com.linkedin.platform.errors.LIApiError;
 import com.linkedin.platform.errors.LIAuthError;
-import com.linkedin.platform.errors.LIDeepLinkError;
 import com.linkedin.platform.listeners.ApiListener;
 import com.linkedin.platform.listeners.ApiResponse;
 import com.linkedin.platform.listeners.AuthListener;
@@ -65,7 +64,7 @@ public class EventFragment extends Fragment {
     public static final String EXTRA_EVENT_ATTENDING = "EXTRA_EVENT_ATTENDING";
     public static final String EXTRA_EVENT_ATTENDEES = "EXTRA_EVENT_ATTENDEES";
 
-    public static final EventFragment newInstance(Event event)
+    public static EventFragment newInstance(Event event)
 	{
 		EventFragment f = new EventFragment();
 		Bundle bdl = new Bundle();

@@ -17,7 +17,6 @@
 package com.linkedin.platform.listeners;
 
 import com.linkedin.platform.errors.LIAuthError;
-import com.linkedin.platform.errors.LIDeepLinkError;
 
 public interface AuthListener {
 

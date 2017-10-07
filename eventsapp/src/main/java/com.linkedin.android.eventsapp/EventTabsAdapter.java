@@ -33,8 +33,7 @@ import com.linkedin.android.eventsapp.EventFragment;
 import java.util.ArrayList;
 
 public class EventTabsAdapter extends FragmentPagerAdapter implements TabListener, OnPageChangeListener {
-	private final Context mContext;
-	private final ActionBar mActionBar;
+    private final ActionBar mActionBar;
 	private final ViewPager mViewPager;
 	private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
     private final ArrayList<Fragment> mFragments = new ArrayList<Fragment>();
@@ -51,7 +50,7 @@ public class EventTabsAdapter extends FragmentPagerAdapter implements TabListene
 
 	public EventTabsAdapter(FragmentActivity activity, ViewPager pager) {
 		super(activity.getSupportFragmentManager());
-		mContext = activity;
+        Context mContext = activity;
 		mActionBar = activity.getActionBar();
 		mViewPager = pager;
 		mViewPager.setAdapter(this);

@@ -30,7 +30,6 @@ import android.widget.TextView;
 import com.linkedin.android.eventsapp.Event;
 import com.linkedin.android.eventsapp.EventFragment;
 import com.linkedin.android.eventsapp.EventsManager;
-import com.linkedin.android.eventsapp.Person;
 import com.linkedin.platform.LISessionManager;
 
 import java.util.*;
@@ -38,13 +37,11 @@ import java.text.*;
 
 public class MainActivity extends FragmentActivity {
 	public static final String TAG = MainActivity.class.getCanonicalName();
-	private ViewPager pager;
-	private com.linkedin.android.eventsapp.EventTabsAdapter mEventTabsAdapter;
 
-	@Override
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		pager = new ViewPager(this);
+        ViewPager pager = new ViewPager(this);
 		pager.setId(R.id.pager);
         pager.setOffscreenPageLimit(5);
 		setContentView(pager);
@@ -58,15 +55,17 @@ public class MainActivity extends FragmentActivity {
                 ActionBar.LayoutParams.MATCH_PARENT,
                 Gravity.CENTER);
         textviewTitle.setText("UPCOMING EVENTS");
-        bar.setCustomView(viewActionBar, params);
+        if (bar != null) {
+            bar.setCustomView(viewActionBar, params);
+        }
         bar.setDisplayShowCustomEnabled(true);
         bar.setDisplayShowTitleEnabled(false);
         bar.setIcon(new ColorDrawable(Color.TRANSPARENT));
         bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#F15153")));
 
 		bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		
-		mEventTabsAdapter = new com.linkedin.android.eventsapp.EventTabsAdapter(this, pager);
+
+        EventTabsAdapter mEventTabsAdapter = new EventTabsAdapter(this, pager);
         SimpleDateFormat ft = new SimpleDateFormat ("E dd MMM");
         ArrayList<Event> events = EventsManager.getInstance(this).getEvents();
         for (Event event : events) {

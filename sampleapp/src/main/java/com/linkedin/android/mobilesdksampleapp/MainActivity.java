@@ -31,7 +31,6 @@ import android.widget.Toast;
 
 import com.linkedin.platform.LISession;
 import com.linkedin.platform.errors.LIAuthError;
-import com.linkedin.platform.errors.LIDeepLinkError;
 import com.linkedin.platform.listeners.AuthListener;
 import com.linkedin.platform.LISessionManager;
 import com.linkedin.platform.utils.Scope;
@@ -142,8 +141,8 @@ public class MainActivity extends Activity {
 
         ((TextView) findViewById(R.id.at)).setText(
                 accessTokenValid ? session.getAccessToken().toString() : "Sync with LinkedIn to enable these buttons");
-        ((Button) findViewById(R.id.apiCall)).setEnabled(accessTokenValid);
-        ((Button) findViewById(R.id.deeplink)).setEnabled(accessTokenValid);
+        findViewById(R.id.apiCall).setEnabled(accessTokenValid);
+        findViewById(R.id.deeplink).setEnabled(accessTokenValid);
     }
 
     private static Scope buildScope() {

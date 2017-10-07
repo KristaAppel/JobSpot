@@ -29,7 +29,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.linkedin.android.eventsapp.Constants;
-import com.linkedin.android.eventsapp.Event;
 import com.linkedin.android.eventsapp.FetchImageTask;
 import com.linkedin.android.eventsapp.Person;
 import com.linkedin.platform.APIHelper;
@@ -74,14 +73,18 @@ public class ProfileActivity extends Activity {
         ActionBar.LayoutParams params = new ActionBar.LayoutParams(
                 ActionBar.LayoutParams.WRAP_CONTENT,
                 ActionBar.LayoutParams.MATCH_PARENT);
-        bar.setCustomView(viewActionBar, params);
+        if (bar != null) {
+            bar.setCustomView(viewActionBar, params);
+        }
         bar.setDisplayShowCustomEnabled(true);
         bar.setDisplayShowTitleEnabled(false);
         bar.setIcon(new ColorDrawable(Color.TRANSPARENT));
         bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#F15153")));
 
         TextView attendeeNameView = (TextView) findViewById(R.id.attendeeName);
-        attendeeNameView.setText(person.getFirstName() + " " + person.getLastName());
+        if (person != null) {
+            attendeeNameView.setText(person.getFirstName() + " " + person.getLastName());
+        }
 
         final ImageView attendeeImageView = (ImageView) findViewById(R.id.attendeeImage);
         final TextView attendeeHeadlineView = (TextView) findViewById(R.id.attendeeHeadline);

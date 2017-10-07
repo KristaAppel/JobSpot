@@ -26,11 +26,10 @@ import java.util.ArrayList;
 public class EventsManager {
 
     private static EventsManager sEventsManager;
-    private Context mAppContext;
     private ArrayList<Event> mEvents;
 
     private EventsManager(Context ctx, ArrayList<Event> events) {
-        mAppContext = ctx;
+        Context mAppContext = ctx;
         mEvents = events;
     }
 

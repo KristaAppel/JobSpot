@@ -31,7 +31,6 @@ public class EventsHelper {
 
     private static String[] eventNames = {"CONFERENCE 1", "CONFERENCE 2", "CONFERENCE 3", "CONFERENCE 4"};
     private static String[] eventLocations = {"Davos, Switzerland", "Bogota, Colombia", "San Francisco, CA", "Las Vegas, NV"};
-    private static String eventImageName = "conference";
 
     public static ArrayList<Event> getEvents(Context ctx) {
         ArrayList<Event> events = new ArrayList<Event>();
@@ -41,6 +40,7 @@ public class EventsHelper {
             Date date = cal.getTime();
             String eventName = eventNames[i];
             List<Person> attendeeList = getAttendees().subList(0,i+1);
+            String eventImageName = "conference";
             events.add(new Event(eventName,
                     eventLocations[i],
                     getImageResourceId(ctx.getApplicationContext(), eventImageName),

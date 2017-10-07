@@ -18,9 +18,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.firebase.client.Firebase;
-import com.kristaappel.jobspot.BottomNavigationActivity;
 import com.kristaappel.jobspot.LoginActivity;
 import com.kristaappel.jobspot.R;
+import com.kristaappel.jobspot.objects.NetworkMonitor;
 import com.kristaappel.jobspot.objects.NotificationBroadcastReceiver;
 import com.linkedin.platform.AccessToken;
 import com.linkedin.platform.LISessionManager;
@@ -28,9 +28,6 @@ import com.linkedin.platform.errors.LIAuthError;
 import com.linkedin.platform.listeners.AuthListener;
 import com.linkedin.platform.utils.Scope;
 import com.squareup.picasso.Picasso;
-
-import static android.R.attr.fragment;
-import static android.content.Context.MODE_PRIVATE;
 
 
 public class ProfileFragment extends android.app.Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
@@ -133,7 +130,12 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
             loginIntent.putExtra("LogoutExtra", "Logout");
             startActivity(loginIntent);
         }else if (v.getId() == R.id.linkedin_signin_button){
-            loginToLinkedIn();
+            if (NetworkMonitor.deviceIsConnected(getActivity())){
+                loginToLinkedIn();
+            }else {
+                Toast.makeText(getActivity(), "No connection.", Toast.LENGTH_SHORT).show();
+            }
+            
         }
 
     }

@@ -23,10 +23,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -48,6 +45,7 @@ import com.kristaappel.jobspot.fragments.SortFilterFragment;
 import com.kristaappel.jobspot.objects.FileUtil;
 import com.kristaappel.jobspot.objects.Job;
 import com.kristaappel.jobspot.objects.LocationHelper;
+import com.kristaappel.jobspot.objects.NetworkMonitor;
 import com.kristaappel.jobspot.objects.NotificationBroadcastReceiver;
 import com.kristaappel.jobspot.objects.SavedSearch;
 import com.kristaappel.jobspot.objects.VolleySingleton;
@@ -56,11 +54,10 @@ import com.linkedin.platform.LISessionManager;
 import com.linkedin.platform.errors.LIApiError;
 import com.linkedin.platform.listeners.ApiListener;
 import com.linkedin.platform.listeners.ApiResponse;
-import com.squareup.picasso.Picasso;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -230,8 +227,13 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
             case R.id.locationButton:
                 // Get the user's current location and enter it into the location box:
                 Location currentLocation = LocationHelper.getCurrentLocation(getApplicationContext(), new MapFragment());
-                Address currentAddress = LocationHelper.getCurrentAddressFromLocation(currentLocation, getApplicationContext());
-                et_location.setText(currentAddress.getLocality() + ", " + currentAddress.getAdminArea()); // This shows city, state
+                if (currentLocation != null){
+                    Address currentAddress = LocationHelper.getCurrentAddressFromLocation(currentLocation, getApplicationContext());
+                    et_location.setText(currentAddress.getLocality() + ", " + currentAddress.getAdminArea()); // This shows city, state
+                }else{
+                    Toast.makeText(this, "Location not found.  Please make sure location services are enabled.", Toast.LENGTH_SHORT).show();
+                }
+                
                 break;
             case R.id.filterButton:
                 //Show a list of filter & sort options, use chosen options in job search
@@ -369,6 +371,10 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
 
 
     public void searchForJobs(String _keywords, String _location){
+        if (!NetworkMonitor.deviceIsConnected(this)){
+            Toast.makeText(this, "No connection.", Toast.LENGTH_SHORT).show();
+            return;
+        }
         // Save the search:
         String time = String.valueOf(System.currentTimeMillis());
         SavedSearch newSavedSearch = new SavedSearch(_keywords, radius, _location, posted, time);

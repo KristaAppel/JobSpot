@@ -14,7 +14,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 
-import com.kristaappel.jobspot.BottomNavigationActivity;
 import com.kristaappel.jobspot.R;
 import com.kristaappel.jobspot.SplashActivity;
 
