@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Location;
@@ -77,6 +78,8 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     private ActionBar actionBar;
     private String keywords;
     private String location;
+    private String radius = "20";
+    private String posted = "30";
     static String liPictureURL = "";
     static String liName = "";
     static String liHeadline = "";
@@ -88,15 +91,41 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     private static ArrayList<Job> jobList = new ArrayList<>();
     private static boolean mapIsShowing = true;
     private static boolean listIsShowing = false;
-    private String radius = "20";
-    private String posted = "30";
     public static String sortBy = "accquisitiondate";
     static SavedSearch savedSearch;
 
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_bottomnavigation);
+
+        actionBar = getSupportActionBar();
+
+        // Hide actionbar:
+        if (actionBar != null){
+            actionBar.hide();
+        }
+
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        // Create and display a SearchScreenFragment:
+        SearchScreenFragment searchScreenFrag = new SearchScreenFragment();
+        getFragmentManager().beginTransaction().replace(R.id.content, searchScreenFrag).commit();
+
+        // Start notifications if they are enabled:
+        SharedPreferences sharedPreferences = this.getSharedPreferences("com.kristaappel.jobspot.preferences", Context.MODE_PRIVATE);
+        String notificationPreference = sharedPreferences.getString("notifications", "on");
+        if (notificationPreference.equals("on")){
+            NotificationBroadcastReceiver notificationReceiver = new NotificationBroadcastReceiver();
+            notificationReceiver.setAlarm(this);
+        }
+
+    }
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
@@ -138,16 +167,15 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                     // Create and display a ProfileFragment:
                     ProfileFragment profileFrag;
                     if (!liPictureURL.equals("")){
-                        profileFrag = ProfileFragment.newInstance(liPictureURL, liName);
+                        profileFrag = ProfileFragment.newInstance(liName, liPictureURL, liHeadline, liLocation, liIndustry, liSummary);
                     }else{
                         profileFrag = new ProfileFragment();
                     }
-
                     getFragmentManager().beginTransaction().replace(R.id.content, profileFrag).commit();
                     // Show actionbar:
                     if (actionBar != null){
                         actionBar.show();
-                        actionBar.setTitle("Preferences");
+                        actionBar.setTitle("Profile");
                     }
                     return true;
             }
@@ -155,29 +183,6 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         }
 
     };
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bottomnavigation);
-
-        actionBar = getSupportActionBar();
-
-        // Hide actionbar:
-        if (actionBar != null){
-            actionBar.hide();
-        }
-
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-        // Create and display a SearchScreenFragment:
-        SearchScreenFragment searchScreenFrag = new SearchScreenFragment();
-        getFragmentManager().beginTransaction().replace(R.id.content, searchScreenFrag).commit();
-
-        NotificationBroadcastReceiver not = new NotificationBroadcastReceiver();
-        not.setAlarm(this);
-    }
 
 
 
@@ -242,6 +247,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 break;
             case R.id.searchButton:
                 jobList.clear();
+                // Set appropriate button colors:
                 if (mapIsShowing){
                     mapButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                     mapButton.setTextColor(getResources().getColor(R.color.colorWhite));
@@ -260,7 +266,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 if (et_keywords.getText().toString().length() >0){
                     keywords = et_keywords.getText().toString();
                 }
-                Log.i("BottomNavActivity:240", "Entered location: " + location + " Entered keywords: " + keywords);
+
                 if (location==null || location.equals("")){
                     Toast.makeText(this, "Enter a location", Toast.LENGTH_SHORT).show();
                 }else if  (keywords==null || (keywords.equals(""))){
@@ -296,16 +302,13 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         if (foundJob != null && jobLat != null && jobLng != null) {
             newJob = new Job(foundJob.getJobID(), foundJob.getJobTitle(), foundJob.getCompanyName(), foundJob.getDatePosted(), foundJob.getJobURL(), foundJob.getJobCityState(), jobLat, jobLng);
         }else{
-            Log.i("BottomNav:276", "foundjob is nul!!!!!!!!!!");
+            Log.i("BottomNav:299", "foundjob is nul!!!!!!!!!!");
         }
         // Add new job to the list of jobs:
         if (newJob != null){
             jobList.add(newJob);
         }
-        
-        Log.i("BottomNavActivity:283", "joblistcount:" + jobList.size());
-
-
+        Log.i("BottomNavActivity:306", "joblistcount:" + jobList.size());
 
         // Sort jobs appropriately:
         if (sortBy.equals("location") || sortBy.equals("accquisitiondate")){
@@ -338,7 +341,6 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
             });
         }
 
-
         if (mapIsShowing){
             // Create and display a MapFragment in bottom container:
             MapFragment mapFrag;
@@ -350,7 +352,6 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 }else{
                     mapFrag = new MapFragment();
                 }
-
             }
             activity.getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, mapFrag).commit();
         }else if (listIsShowing){
@@ -382,13 +383,13 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.i("BottomNavActvty:361", "response: " + response);
+                Log.i("BottomNavActvty:384", "response: " + response);
                 makeJobList(response);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i("BottomNav:367", "That didn't work!!!!!!!");
+                Log.i("BottomNav:390", "That didn't work!!!!!!!");
                 if (error.networkResponse.statusCode == 404){
                     Toast.makeText(BottomNavigationActivity.this, "No jobs available.", Toast.LENGTH_SHORT).show();
                 }
@@ -450,7 +451,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 // Get the coordinates:
                 LocationHelper.lookUpCompany(this, foundJob);
             }
-            Log.i("BottomNavActivity:429", "jobs count: " + jobsArray.length());
+            Log.i("BottomNavActivity:452", "jobs count: " + jobsArray.length());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -555,7 +556,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 Log.i("LINKEDIN", "picture url: " + liPictureURL);
                 Log.i("LINKEDIN", "summary: " + liSummary);
 
-                displayLinkedInData(BottomNavigationActivity.this);
+                ProfileFragment.displayLinkedInData(BottomNavigationActivity.this, liPictureURL, liHeadline, liLocation, liIndustry, liSummary);
 
             }
 
@@ -566,34 +567,6 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
             }
         });
         progressDialog.dismiss();
-
-    }
-
-    public static void displayLinkedInData(Activity activity){
-        // Get views:
-        ImageButton linkedInButton = (ImageButton) activity.findViewById(R.id.linkedin_signin_button);
-        TextView textViewExplanation = (TextView) activity.findViewById(R.id.textView_profile_explanation);
-        ImageView profileImageView = (ImageView) activity.findViewById(R.id.imageView_profile);
-        TextView textViewName = (TextView) activity.findViewById(R.id.textView_profile_name);
-        TextView textViewHeadline = (TextView) activity.findViewById(R.id.textView_profile_headline);
-        TextView textViewLocation = (TextView) activity.findViewById(R.id.textView_profile_location);
-        TextView textViewIndustry = (TextView) activity.findViewById(R.id.textView_profile_industry);
-        TextView textViewSummary = (TextView) activity.findViewById(R.id.textView_profile_summary);
-        // If we have data from LinkedIn, hide the LinkedIn button and show the data:
-        if (!liPictureURL.equals("") && profileImageView != null){
-            // display profile image:
-            profileImageView = (ImageView) activity.findViewById(R.id.imageView_profile);
-            Picasso.with(activity).load(liPictureURL).into(profileImageView);
-            // display text:
-            textViewName.setText(liName);
-            textViewHeadline.setText(liHeadline);
-            textViewLocation.setText(liLocation);
-            textViewIndustry.setText(liIndustry);
-            textViewSummary.setText(liSummary);
-            // Hide 'Sign in with LinkedIn' button:
-            linkedInButton.setVisibility(View.INVISIBLE);
-            textViewExplanation.setVisibility(View.INVISIBLE);
-        }
 
     }
 

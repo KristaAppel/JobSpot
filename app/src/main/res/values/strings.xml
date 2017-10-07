@@ -4,7 +4,7 @@
     <string name="search">Search</string>
     <string name="saved">Saved</string>
     <string name="applied">Applied</string>
-    <string name="account">Account</string>
+    <string name="profile">Profile</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

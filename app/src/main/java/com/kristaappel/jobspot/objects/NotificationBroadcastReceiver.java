@@ -16,6 +16,7 @@ import android.util.Log;
 
 import com.kristaappel.jobspot.BottomNavigationActivity;
 import com.kristaappel.jobspot.R;
+import com.kristaappel.jobspot.SplashActivity;
 
 import java.util.Date;
 
@@ -73,7 +74,7 @@ public class NotificationBroadcastReceiver extends WakefulBroadcastReceiver {
 
 
             // Create PendingIntent to open the app:
-            Intent intent = new Intent(context, BottomNavigationActivity.class);
+            Intent intent = new Intent(context, SplashActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             // Tell the notification to call the PendingIntent when the notification is clicked:
