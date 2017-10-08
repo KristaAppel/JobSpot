@@ -73,23 +73,23 @@ import java.util.Map;
 public class BottomNavigationActivity extends AppCompatActivity implements SearchBoxFragment.OnSearchBoxFragmentInteractionListener, SortFilterFragment.OnSortFilterInteractionListener, SavedSearchListFragment.OnSavedSearchInteractionListener {
 
     private ActionBar actionBar;
-    private String keywords;
-    private String location;
+    private static String keywords;
+    private static String location;
     private String radius = "20";
     private String posted = "30";
-    static String liPictureURL = "";
-    static String liName = "";
-    static String liHeadline = "";
-    static String liLocation = "";
-    static String liIndustry = "";
-    static String liSummary = "";
+    private static String liPictureURL = "";
+    private static String liName = "";
+    private static String liHeadline = "";
+    private static String liLocation = "";
+    private static String liIndustry = "";
+    private static String liSummary = "";
     private static Double jobLat;
     private static Double jobLng;
-    private static ArrayList<Job> jobList = new ArrayList<>();
-    private static boolean mapIsShowing = true;
-    private static boolean listIsShowing = false;
+    private static final ArrayList<Job> jobList = new ArrayList<>();
+    public static boolean mapIsShowing = true;
+    public static boolean listIsShowing = false;
     public static String sortBy = "accquisitiondate";
-    static SavedSearch savedSearch;
+    private static SavedSearch savedSearch;
 
 
     @Override
@@ -121,18 +121,32 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
 
     }
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+    private final BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            EditText et_keywords = (EditText) findViewById(R.id.et_keywords);
+            EditText et_location = (EditText) findViewById(R.id.et_location);
+            // Get user's input data & make sure it's not empty:
+            if (et_location != null && et_keywords != null){
+                if (et_location.getText().toString().length() >0){
+                    location = et_location.getText().toString();
+                }
+                if (et_keywords.getText().toString().length() >0){
+                    keywords = et_keywords.getText().toString();
+                }
+            }
+
             switch (item.getItemId()) {
                 case R.id.navigation_search:
                     // Create and display a SearchScreenFragment:
                     SearchScreenFragment searchScreenFrag;
-                    if (jobList == null){
-                        searchScreenFrag = new SearchScreenFragment();
-                    }else{
+                    if (jobList != null){
                         searchScreenFrag = SearchScreenFragment.newInstance(jobList);
+                    }else if (location != null && keywords != null) {
+                        searchScreenFrag = SearchScreenFragment.newInstance(location, keywords);
+                    }else{
+                        searchScreenFrag = new SearchScreenFragment();
                     }
                     getFragmentManager().beginTransaction().replace(R.id.content, searchScreenFrag).commit();
                     // Hide actionbar:
@@ -213,7 +227,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 }
                 break;
             case R.id.mapFragToggle2:
-                // Create and display a ResultsListFragment in bottom container:
+                // Create and display a SearchResultListFragment in bottom container:
                 SearchResultListFragment searchResultListFrag = SearchResultListFragment.newInstance(jobList);
                 getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, searchResultListFrag).commit();
                 mapIsShowing = false;
@@ -304,13 +318,13 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         if (foundJob != null && jobLat != null && jobLng != null) {
             newJob = new Job(foundJob.getJobID(), foundJob.getJobTitle(), foundJob.getCompanyName(), foundJob.getDatePosted(), foundJob.getJobURL(), foundJob.getJobCityState(), jobLat, jobLng);
         }else{
-            Log.i("BottomNav:299", "foundjob is nul!!!!!!!!!!");
+            Log.i("BottomNav:321", "foundjob is nul!!!!!!!!!!");
         }
         // Add new job to the list of jobs:
         if (newJob != null){
             jobList.add(newJob);
         }
-        Log.i("BottomNavActivity:306", "joblistcount:" + jobList.size());
+        Log.i("BottomNavActivity:327", "joblistcount:" + jobList.size());
 
         // Sort jobs appropriately:
         if (sortBy.equals("location") || sortBy.equals("accquisitiondate")){
@@ -331,7 +345,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
 
         if (sortBy.equals("accquisitiondate")){
             Collections.sort(jobList, new Comparator<Job>() {
-                DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.US);
+                final DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.US);
                 @Override
                 public int compare(Job job1, Job job2) {
                     try{
@@ -370,7 +384,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     }
 
 
-    public void searchForJobs(String _keywords, String _location){
+    private void searchForJobs(String _keywords, String _location){
         if (!NetworkMonitor.deviceIsConnected(this)){
             Toast.makeText(this, "No connection.", Toast.LENGTH_SHORT).show();
             return;
@@ -379,7 +393,6 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         String time = String.valueOf(System.currentTimeMillis());
         SavedSearch newSavedSearch = new SavedSearch(_keywords, radius, _location, posted, time);
         saveTheSearch(newSavedSearch);
-
         // Show progress bar:
         ProgressBar progressBar = (ProgressBar)findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
@@ -389,13 +402,13 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.i("BottomNavActvty:384", "response: " + response);
+                Log.i("BottomNavActvty:405", "response: " + response);
                 makeJobList(response);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i("BottomNav:390", "That didn't work!!!!!!!");
+                Log.i("BottomNav:411", "That didn't work!!!!!!!");
                 if (error.networkResponse.statusCode == 404){
                     Toast.makeText(BottomNavigationActivity.this, "No jobs available.", Toast.LENGTH_SHORT).show();
                 }
@@ -457,7 +470,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 // Get the coordinates:
                 LocationHelper.lookUpCompany(this, foundJob);
             }
-            Log.i("BottomNavActivity:452", "jobs count: " + jobsArray.length());
+            Log.i("BottomNavActivity:473", "jobs count: " + jobsArray.length());
         } catch (JSONException e) {
             e.printStackTrace();
         }

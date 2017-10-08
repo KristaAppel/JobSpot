@@ -26,7 +26,7 @@ public class VolleySingleton {
         return volleySingleton;
     }
 
-    public RequestQueue getRequestQueue(){
+    private RequestQueue getRequestQueue(){
         if (requestQueue == null){
             requestQueue = Volley.newRequestQueue(mContext.getApplicationContext());
         }

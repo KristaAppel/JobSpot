@@ -15,9 +15,9 @@ import java.util.ArrayList;
 
 public class FileUtil {
 
-    private static String fileTypeSaved = "saved";
-    private static String fileTypeApplied = "applied";
-    private static String fileTypeSearch = "search";
+    private static final String fileTypeSaved = "saved";
+    private static final String fileTypeApplied = "applied";
+    private static final String fileTypeSearch = "search";
 
     private static String getFileName(String fileType){
         Firebase firebase = new Firebase("https://jobspot-a0171.firebaseio.com/");

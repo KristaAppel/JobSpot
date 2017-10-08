@@ -7,8 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 
+import com.kristaappel.jobspot.BottomNavigationActivity;
 import com.kristaappel.jobspot.R;
 
 
@@ -56,6 +58,30 @@ public class SearchBoxFragment extends android.app.Fragment implements View.OnCl
 
         ImageButton searchButton = (ImageButton) view.findViewById(R.id.searchButton);
         searchButton.setOnClickListener(this);
+
+        // Display the location and keywords from the search in the editTexts:
+        if (SearchScreenFragment.locationText != null){
+            EditText et_loc = (EditText) getActivity().findViewById(R.id.et_location);
+            et_loc.setText(SearchScreenFragment.locationText);
+        }
+        if (SearchScreenFragment.keywordsText != null){
+            EditText et_kw = (EditText) getActivity().findViewById(R.id.et_keywords);
+            et_kw.setText(SearchScreenFragment.keywordsText);
+        }
+
+        if (BottomNavigationActivity.mapIsShowing){
+            // Set buttons to appropriate colors:
+            mapButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            mapButton.setTextColor(getResources().getColor(R.color.colorWhite));
+            listButton.setBackgroundColor(getResources().getColor(R.color.colorLightGrey));
+            listButton.setTextColor(getResources().getColor(R.color.colorPrimary));
+        }else if (BottomNavigationActivity.listIsShowing){
+            // Set buttons to appropriate colors:
+            mapButton.setBackgroundColor(getResources().getColor(R.color.colorLightGrey));
+            mapButton.setTextColor(getResources().getColor(R.color.colorPrimary));
+            listButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            listButton.setTextColor(getResources().getColor(R.color.colorWhite));
+        }
     }
 
 

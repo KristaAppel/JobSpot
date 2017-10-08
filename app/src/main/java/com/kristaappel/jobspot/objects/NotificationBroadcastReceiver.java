@@ -62,7 +62,7 @@ public class NotificationBroadcastReceiver extends WakefulBroadcastReceiver {
         packageManager.setComponentEnabledSetting(receiver, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
     }
 
-    public void showNotification(Context context){
+    private void showNotification(Context context){
             // Create an expanded notification
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
             builder.setSmallIcon(R.drawable.jobspot_small_notification_icon);

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -26,6 +27,8 @@ public class SearchResultListFragment extends ListFragment {
 
     private static final int ID_CONSTANT = 0x01010;
     private ArrayList<Job> jobs;
+    private static String displayLocation;
+    private static String displayKeywords;
     private static final String ARG_PARAM1 = "param1";
     private Firebase firebase;
     private FirebaseUser firebaseUser;
@@ -40,6 +43,13 @@ public class SearchResultListFragment extends ListFragment {
         Bundle args = new Bundle();
         args.putParcelableArrayList(ARG_PARAM1, joblist);
         fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static SearchResultListFragment newInstance(String _location, String _keywords){
+        SearchResultListFragment fragment = new SearchResultListFragment();
+        displayLocation = _location;
+        displayKeywords = _keywords;
         return fragment;
     }
 
@@ -65,6 +75,17 @@ public class SearchResultListFragment extends ListFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setEmptyText("No Jobs to Display");
+
+        // Display the location and keywords from the search in the editTexts:
+        if (displayLocation != null){
+            EditText et_loc = (EditText) getActivity().findViewById(R.id.et_location);
+            et_loc.setText(displayLocation);
+        }
+
+        if (displayKeywords != null) {
+            EditText et_kw = (EditText) getActivity().findViewById(R.id.et_keywords);
+            et_kw.setText(displayKeywords);
+        }
     }
 
     @Override
@@ -130,17 +151,6 @@ public class SearchResultListFragment extends ListFragment {
             favoriteButton.setImageResource(R.drawable.ic_star_unsaved);
             favoriteButton.setTag(R.drawable.ic_star_unsaved);
 
-            ProgressBar progressBar = (ProgressBar) convertView.findViewById(R.id.progressBar);
-//            while (position < jobs.size()-1 && progressBar != null){
-//                progressBar.setVisibility(View.VISIBLE);
-//            }
-
-//            if (position < jobs.size()-2 && progressBar != null){
-//                progressBar.setVisibility(View.VISIBLE);
-//            }else if (position == jobs.size()-1 && progressBar != null){
-//                progressBar.setVisibility(View.INVISIBLE);
-//            }
-
             // Find out if job is saved:
             ArrayList<Job> savedJobs = FileUtil.readSavedJobs(getContext());
             for (Job savedJob : savedJobs){
@@ -150,7 +160,6 @@ public class SearchResultListFragment extends ListFragment {
                     favoriteButton.setTag(R.drawable.ic_star_saved);
                 }
             }
-
 
             favoriteButton.setOnClickListener(new View.OnClickListener() {
                 @Override

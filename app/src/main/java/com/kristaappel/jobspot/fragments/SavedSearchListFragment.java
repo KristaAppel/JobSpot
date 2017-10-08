@@ -30,7 +30,7 @@ import java.util.HashMap;
 
 public class SavedSearchListFragment extends ListFragment {
 
-    ArrayList<SavedSearch> savedSearches;
+    private ArrayList<SavedSearch> savedSearches;
     private static final int ID_CONSTANT = 0x01010;
     private SavedSearchAdapter listAdapter;
     private OnSavedSearchInteractionListener mListener;

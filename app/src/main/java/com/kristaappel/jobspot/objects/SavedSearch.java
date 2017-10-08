@@ -5,11 +5,11 @@ import java.io.Serializable;
 
 public class SavedSearch implements Serializable{
 
-    private String keywords;
-    private String radius;
-    private String location;
-    private String days;
-    private String dateTime;
+    private final String keywords;
+    private final String radius;
+    private final String location;
+    private final String days;
+    private final String dateTime;
 
     public SavedSearch(String _keywords, String _radius, String _location, String _days, String _datetime){
         keywords = _keywords;

@@ -33,15 +33,15 @@ import com.squareup.picasso.Picasso;
 public class ProfileFragment extends android.app.Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     private Firebase firebase;
-    AccessToken linkedInAccessToken;
-    static String liPictureUrl = "";
-    static String liName = "";
-    static String liHeadline = "";
-    static String liLocation = "";
-    static String liIndustry = "";
-    static String liSummary = "";
-    Switch notificationSwitch;
-    SharedPreferences sharedPreferences;
+    private AccessToken linkedInAccessToken;
+    private static String liPictureUrl = "";
+    private static String liName = "";
+    private static String liHeadline = "";
+    private static String liLocation = "";
+    private static String liIndustry = "";
+    private static String liSummary = "";
+    private Switch notificationSwitch;
+    private SharedPreferences sharedPreferences;
 
 
     public ProfileFragment() {
@@ -145,7 +145,7 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
     }
 
 
-    public void loginToLinkedIn(){
+    private void loginToLinkedIn(){
         LISessionManager.getInstance(getActivity().getApplicationContext()).init(getActivity(), buildScope(), new AuthListener() {
             @Override
             public void onAuthSuccess() {

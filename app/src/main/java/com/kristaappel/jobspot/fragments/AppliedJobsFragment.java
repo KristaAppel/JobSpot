@@ -30,7 +30,7 @@ public class AppliedJobsFragment extends ListFragment {
 
     private ArrayList<Job> appliedJobs;
     private static final int ID_CONSTANT = 0x01010;
-    AppliedListAdapter listAdapter;
+    private AppliedListAdapter listAdapter;
 
 
     @Override

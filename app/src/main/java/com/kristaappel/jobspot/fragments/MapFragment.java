@@ -36,8 +36,8 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
     private Address currentAddress;
     private Location currentLocation;
     private ArrayList<Job> jobs;
-    static String displayLocation;
-    static String displayKeywords;
+    private static String displayLocation;
+    private static String displayKeywords;
     private static final String ARG_PARAM1 = "param1";
 
 
@@ -133,7 +133,7 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
             googleMap.setMyLocationEnabled(true);
         }
         if (displayLocation != null){
-            // Display the location and leywords from the search in the editTexts:
+            // Display the location and keywords from the search in the editTexts:
             EditText et_loc = (EditText) getActivity().findViewById(R.id.et_location);
             EditText et_kw = (EditText) getActivity().findViewById(R.id.et_keywords);
             et_loc.setText(displayLocation);
