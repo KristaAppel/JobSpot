@@ -199,8 +199,6 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
 
     @Override
     public void onSearchBoxFragmentInteraction(int id) {
-        Button mapButton = (Button) findViewById(R.id.mapFragToggle1);
-        Button listButton = (Button) findViewById(R.id.mapFragToggle2);
         EditText et_keywords = (EditText) findViewById(R.id.et_keywords);
         EditText et_location = (EditText) findViewById(R.id.et_location);
 
@@ -219,11 +217,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                     getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, mapFrag).commit();
                     mapIsShowing = true;
                     listIsShowing = false;
-                    // Set buttons to appropriate colors:
-                    mapButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                    mapButton.setTextColor(getResources().getColor(R.color.colorWhite));
-                    listButton.setBackgroundColor(getResources().getColor(R.color.colorLightGrey));
-                    listButton.setTextColor(getResources().getColor(R.color.colorPrimary));
+                    toggleButtonColors();
                 }
                 break;
             case R.id.mapFragToggle2:
@@ -232,11 +226,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, searchResultListFrag).commit();
                 mapIsShowing = false;
                 listIsShowing = true;
-                // Set buttons to appropriate colors:
-                mapButton.setBackgroundColor(getResources().getColor(R.color.colorLightGrey));
-                mapButton.setTextColor(getResources().getColor(R.color.colorPrimary));
-                listButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                listButton.setTextColor(getResources().getColor(R.color.colorWhite));
+                toggleButtonColors();
                 break;
             case R.id.locationButton:
                 // Get the user's current location and enter it into the location box:
@@ -263,18 +253,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 break;
             case R.id.searchButton:
                 jobList.clear();
-                // Set appropriate button colors:
-                if (mapIsShowing){
-                    mapButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                    mapButton.setTextColor(getResources().getColor(R.color.colorWhite));
-                    listButton.setBackgroundColor(getResources().getColor(R.color.colorLightGrey));
-                    listButton.setTextColor(getResources().getColor(R.color.colorPrimary));
-                }else{
-                    mapButton.setBackgroundColor(getResources().getColor(R.color.colorLightGrey));
-                    mapButton.setTextColor(getResources().getColor(R.color.colorPrimary));
-                    listButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                    listButton.setTextColor(getResources().getColor(R.color.colorWhite));
-                }
+                toggleButtonColors();
                 // Get user's input data & make sure it's not empty:
                 if (et_location.getText().toString().length() >0){
                     location = et_location.getText().toString();
@@ -293,6 +272,23 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 InputMethodManager inputMethodManager2 = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputMethodManager2.hideSoftInputFromWindow(et_keywords.getWindowToken(), 0);
                 break;
+        }
+    }
+
+    private void toggleButtonColors(){
+        // Show appropriate colors for the map/list buttons:
+        Button mapButton = (Button) findViewById(R.id.mapFragToggle1);
+        Button listButton = (Button) findViewById(R.id.mapFragToggle2);
+        if (mapIsShowing){
+            mapButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            mapButton.setTextColor(getResources().getColor(R.color.colorWhite));
+            listButton.setBackgroundColor(getResources().getColor(R.color.colorLightGrey));
+            listButton.setTextColor(getResources().getColor(R.color.colorPrimary));
+        }else if (listIsShowing){
+            mapButton.setBackgroundColor(getResources().getColor(R.color.colorLightGrey));
+            mapButton.setTextColor(getResources().getColor(R.color.colorPrimary));
+            listButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            listButton.setTextColor(getResources().getColor(R.color.colorWhite));
         }
     }
 
@@ -318,17 +314,24 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         if (foundJob != null && jobLat != null && jobLng != null) {
             newJob = new Job(foundJob.getJobID(), foundJob.getJobTitle(), foundJob.getCompanyName(), foundJob.getDatePosted(), foundJob.getJobURL(), foundJob.getJobCityState(), jobLat, jobLng);
         }else{
-            Log.i("BottomNav:321", "foundjob is nul!!!!!!!!!!");
+            Log.i("BottomNav:317", "foundjob is nul!!!!!!!!!!");
         }
         // Add new job to the list of jobs:
         if (newJob != null){
             jobList.add(newJob);
         }
-        Log.i("BottomNavActivity:327", "joblistcount:" + jobList.size());
+        Log.i("BottomNavActivity:323", "joblistcount:" + jobList.size());
 
+        sortJobs(activity, jobList);
+
+        showJobs(activity, jobList);
+
+    }
+
+    private static void sortJobs(final Activity activity, ArrayList<Job> jobs){
         // Sort jobs appropriately:
         if (sortBy.equals("location") || sortBy.equals("accquisitiondate")){
-            Collections.sort(jobList, new Comparator<Job>() {
+            Collections.sort(jobs, new Comparator<Job>() {
                 @Override
                 public int compare(Job job1, Job job2) {
                     if (sortBy.equals("location")){
@@ -344,7 +347,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         }
 
         if (sortBy.equals("accquisitiondate")){
-            Collections.sort(jobList, new Comparator<Job>() {
+            Collections.sort(jobs, new Comparator<Job>() {
                 final DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.US);
                 @Override
                 public int compare(Job job1, Job job2) {
@@ -356,12 +359,14 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 }
             });
         }
+    }
 
+    private static void showJobs(final Activity activity, ArrayList<Job> jobs){
         if (mapIsShowing){
             // Create and display a MapFragment in bottom container:
             MapFragment mapFrag;
-            if (jobList != null){
-                mapFrag = MapFragment.newInstance(jobList);
+            if (jobs != null){
+                mapFrag = MapFragment.newInstance(jobs);
             }else{
                 if (savedSearch != null){
                     mapFrag = MapFragment.newInstance(savedSearch.getLocation(), savedSearch.getKeywords());
@@ -373,14 +378,13 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         }else if (listIsShowing){
             // Create and display a SearchResultListFragment in bottom container:
             SearchResultListFragment listfrag;
-            if (jobList != null){
-                listfrag = SearchResultListFragment.newInstance(jobList);
+            if (jobs != null){
+                listfrag = SearchResultListFragment.newInstance(jobs);
             }else{
                 listfrag = new SearchResultListFragment();
             }
             activity.getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, listfrag).commit();
         }
-
     }
 
 
