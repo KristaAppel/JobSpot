@@ -38,11 +38,12 @@
 
                         <ImageButton
                             android:id="@+id/locationButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
                             android:layout_gravity="center_vertical"
                             android:layout_marginStart="8dp"
                             android:background="@android:color/transparent"
+                            android:scaleType="fitCenter"
                             android:tint="@color/colorPrimary"
                             app:srcCompat="@android:drawable/ic_menu_mylocation" />
 
@@ -72,14 +73,15 @@
 
                         <ImageButton
                             android:id="@+id/filterButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
                             android:layout_gravity="center_vertical"
                             android:layout_marginStart="8dp"
+                            android:layout_weight="0"
                             android:background="@android:color/transparent"
+                            android:scaleType="fitCenter"
                             android:tint="@color/colorPrimary"
-                            app:srcCompat="@android:drawable/ic_menu_sort_by_size"
-                            android:layout_weight="0"/>
+                            app:srcCompat="@android:drawable/ic_menu_sort_by_size" />
 
                         <EditText
                             android:id="@+id/et_keywords"
@@ -96,17 +98,18 @@
                             android:textAppearance="@style/TextAppearance.AppCompat"
                             android:layout_weight="1"/>
 
-                            <ImageButton
-                                android:id="@+id/recentButton"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:background="@android:color/transparent"
-                                android:contentDescription="@string/recent_searches"
-                                android:src="@android:drawable/ic_menu_recent_history"
-                                android:tint="@color/colorPrimary"
-                                android:layout_marginEnd="8dp"
-                                android:layout_weight="0"/>
+                        <ImageButton
+                            android:id="@+id/recentButton"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginEnd="8dp"
+                            android:layout_weight="0"
+                            android:background="@android:color/transparent"
+                            android:contentDescription="@string/recent_searches"
+                            android:scaleType="fitCenter"
+                            android:src="@android:drawable/ic_menu_recent_history"
+                            android:tint="@color/colorPrimary" />
 
                     </LinearLayout>
 
