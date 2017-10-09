@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -69,6 +72,7 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -84,15 +88,14 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
         super.onViewCreated(view, savedInstanceState);
 
         // Set button click listeners:
-        Button logoutButton = (Button) view.findViewById(R.id.button_logout);
         ImageButton linkedInSignInButton = (ImageButton) view.findViewById(R.id.linkedin_signin_button);
         linkedInSignInButton.setOnClickListener(this);
-        logoutButton.setOnClickListener(this);
         Switch notificationSwitch = (Switch) view.findViewById(R.id.switch_notifications);
         notificationSwitch.setOnCheckedChangeListener(this);
 
         firebase = new Firebase("https://jobspot-a0171.firebaseio.com/");
 
+        // Display LinkedIn profile data, if available:
         if (!linkedInError){
             Log.i("LINKEDIN", "no error");
             displayLinkedInData(getActivity(), liPictureUrl, liHeadline, liLocation, liIndustry, liSummary);
@@ -119,6 +122,25 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
 
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.profile_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.profile_menu_logout){
+            // Logout:
+            firebase.unauth();
+            linkedInError = true;
+            // Go to login screen:
+            Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
+            loginIntent.putExtra("LogoutExtra", "Logout");
+            startActivity(loginIntent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -133,14 +155,7 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.button_logout){
-            // Logout:
-            firebase.unauth();
-            // Go to login screen:
-            Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
-            loginIntent.putExtra("LogoutExtra", "Logout");
-            startActivity(loginIntent);
-        }else if (v.getId() == R.id.linkedin_signin_button){
+        if (v.getId() == R.id.linkedin_signin_button){
             linkedInError = false;
             if (NetworkMonitor.deviceIsConnected(getActivity())){
                 loginToLinkedIn();

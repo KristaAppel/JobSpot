@@ -11,17 +11,6 @@
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_marginStart="@dimen/activity_horizontal_margin">
 
-        <Button
-            android:id="@+id/button_logout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="19dp"
-            android:background="@color/colorPrimary"
-            android:text="@string/logout"
-            android:textColor="@color/colorWhite" />
-
         <ImageButton
             android:id="@+id/linkedin_signin_button"
             android:layout_width="wrap_content"
