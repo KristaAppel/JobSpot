@@ -406,13 +406,13 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.i("BottomNavActvty:405", "response: " + response);
+                Log.i("BottomNavActvty:409", "response: " + response);
                 makeJobList(response);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i("BottomNav:411", "That didn't work!!!!!!!");
+                Log.i("BottomNav:415", "That didn't work!!!!!!!");
                 if (error.networkResponse.statusCode == 404){
                     Toast.makeText(BottomNavigationActivity.this, "No jobs available.", Toast.LENGTH_SHORT).show();
                 }
@@ -474,7 +474,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 // Get the coordinates:
                 LocationHelper.lookUpCompany(this, foundJob);
             }
-            Log.i("BottomNavActivity:473", "jobs count: " + jobsArray.length());
+            Log.i("BottomNavActivity:477", "jobs count: " + jobsArray.length());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -537,11 +537,18 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 0){
+            Toast.makeText(this, "Could not retrieve LinkedIn data", Toast.LENGTH_SHORT).show();
+            ProfileFragment.linkedInError = true;
+            Log.i("LINKEDIN543", "returning from onActivityResult");
+            return;
+        }
+        Log.i("LINKEDIN546", "resultCode: " + resultCode);
         // App returns here after LinkedIn connection is made.  Get data from LinkedIn API:
-        Log.i("LINKEDIN", "onActivityResult from activity");
+        Log.i("LINKEDIN548", "onActivityResult from BottomNavigationActivity");
 
         LISessionManager.getInstance(getApplicationContext()).onActivityResult(this, requestCode, resultCode, data);
-        Log.i("LINKEDIN", "NOW it's a success");
+        Log.i("LINKEDIN551", "NOW it's a success");
 
         String url = "https://api.linkedin.com/v1/people/~:(formatted-name,email-address,headline,location,industry,summary,picture-url)?format=json"; //:(email-address,formatted-name, phone-numbers, picture-urls::(original))";
         final ProgressDialog progressDialog = new ProgressDialog(this);
@@ -555,9 +562,9 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 String liEmail = "";
                 liIndustry = "";
 
-                Log.i("LINKEDIN", "response: " + apiResponse);
+                Log.i("LINKEDIN565", "response: " + apiResponse);
                 JSONObject responseObject = apiResponse.getResponseDataAsJson();
-                Log.i("LINKEDIN", "response as json: " + responseObject);
+                Log.i("LINKEDIN567", "response as json: " + responseObject);
                 try {
                     liName = responseObject.getString("formattedName");
                     liEmail = responseObject.getString("emailAddress");
@@ -585,7 +592,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
 
             @Override
             public void onApiError(LIApiError error) {
-                Log.i("LINKEDIN", "onApiError");
+                Log.i("LINKEDIN595", "onApiError");
                 error.printStackTrace();
             }
         });

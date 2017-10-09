@@ -29,6 +29,8 @@ import com.linkedin.platform.listeners.AuthListener;
 import com.linkedin.platform.utils.Scope;
 import com.squareup.picasso.Picasso;
 
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
+
 
 public class ProfileFragment extends android.app.Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
@@ -40,8 +42,8 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
     private static String liLocation = "";
     private static String liIndustry = "";
     private static String liSummary = "";
-    private Switch notificationSwitch;
     private SharedPreferences sharedPreferences;
+    public static boolean linkedInError = false;
 
 
     public ProfileFragment() {
@@ -86,12 +88,16 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
         ImageButton linkedInSignInButton = (ImageButton) view.findViewById(R.id.linkedin_signin_button);
         linkedInSignInButton.setOnClickListener(this);
         logoutButton.setOnClickListener(this);
-        notificationSwitch = (Switch) view.findViewById(R.id.switch_notifications);
+        Switch notificationSwitch = (Switch) view.findViewById(R.id.switch_notifications);
         notificationSwitch.setOnCheckedChangeListener(this);
 
         firebase = new Firebase("https://jobspot-a0171.firebaseio.com/");
 
-        displayLinkedInData(getActivity(), liPictureUrl, liHeadline, liLocation, liIndustry, liSummary);
+        if (!linkedInError){
+            Log.i("LINKEDIN", "no error");
+            displayLinkedInData(getActivity(), liPictureUrl, liHeadline, liLocation, liIndustry, liSummary);
+        }
+
 
         sharedPreferences = getActivity().getSharedPreferences("com.kristaappel.jobspot.preferences", Context.MODE_PRIVATE);
 
@@ -103,7 +109,12 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
         }
 
         if (linkedInAccessToken != null) {
+            Log.i("LINKEDIN", "access token not null");
             LISessionManager.getInstance(getActivity().getApplicationContext()).init(linkedInAccessToken);
+            if (!linkedInError){
+                Log.i("LINKEDIN", "no error & access token not null");
+                displayLinkedInData(getActivity(), liPictureUrl, liHeadline, liLocation, liIndustry, liSummary);
+            }
         }
 
     }
@@ -130,6 +141,7 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
             loginIntent.putExtra("LogoutExtra", "Logout");
             startActivity(loginIntent);
         }else if (v.getId() == R.id.linkedin_signin_button){
+            linkedInError = false;
             if (NetworkMonitor.deviceIsConnected(getActivity())){
                 loginToLinkedIn();
             }else {
@@ -149,18 +161,20 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
         LISessionManager.getInstance(getActivity().getApplicationContext()).init(getActivity(), buildScope(), new AuthListener() {
             @Override
             public void onAuthSuccess() {
+                linkedInError = false;
                 if (linkedInAccessToken == null) {
                     linkedInAccessToken = LISessionManager.getInstance(getActivity().getApplicationContext()).getSession().getAccessToken();
                 }else{
-                    Log.i("LINKEDIN", "access token not null");
+                    Log.i("LINKEDINprofile154", "access token not null");
                     LISessionManager.getInstance(getActivity().getApplicationContext()).init(linkedInAccessToken);
                 }
             }
 
             @Override
             public void onAuthError(LIAuthError error) {
-                Toast.makeText(getActivity(), "Error" + error.toString(), Toast.LENGTH_SHORT).show();
-                Log.i("LINKEDIN", "Error: " + error.toString());
+                Log.i("LINKEDINprofile162", "Error: " + error.toString());
+     //           LISessionManager.getInstance(getActivity().getApplicationContext()).clearSession();
+                linkedInError = true;
             }
         }, true);
     }
