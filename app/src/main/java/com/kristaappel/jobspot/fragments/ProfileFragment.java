@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -33,6 +36,7 @@ import com.linkedin.platform.utils.Scope;
 import com.squareup.picasso.Picasso;
 
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
+import static android.support.v7.widget.AppCompatDrawableManager.get;
 
 
 public class ProfileFragment extends android.app.Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
@@ -86,7 +90,6 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         // Set button click listeners:
         ImageButton linkedInSignInButton = (ImageButton) view.findViewById(R.id.linkedin_signin_button);
         linkedInSignInButton.setOnClickListener(this);

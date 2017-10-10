@@ -537,10 +537,10 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == 0){
+        if (resultCode != RESULT_OK){
             Toast.makeText(this, "Could not retrieve LinkedIn data", Toast.LENGTH_SHORT).show();
             ProfileFragment.linkedInError = true;
-            Log.i("LINKEDIN543", "returning from onActivityResult");
+            Log.i("LINKEDIN543", "returning from onActivityResult - result not OK");
             return;
         }
         Log.i("LINKEDIN546", "resultCode: " + resultCode);

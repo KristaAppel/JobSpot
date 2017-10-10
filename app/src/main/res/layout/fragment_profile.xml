@@ -75,7 +75,7 @@
             android:id="@+id/textView_profile_explanation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Having a professional online presence is important.  Connect with LinkedIn to see how potential employers see you."
+            android:text="@string/explanation_linkedin"
             android:textAlignment="center"
             android:textSize="16sp"
             android:layout_below="@+id/textView_profile_industry"
