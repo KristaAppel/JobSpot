@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 import com.firebase.client.Firebase;
@@ -65,9 +66,9 @@ public class JobInfoFragment extends android.app.Fragment implements View.OnClic
         webView.setWebViewClient(new WebViewClient());
         webView.loadUrl(job.getJobURL());
 
-        ImageButton sharebutton = (ImageButton) view.findViewById(R.id.jobInfo_button_share);
-        ImageButton saveButton = (ImageButton) view.findViewById(R.id.jobInfo_button_save);
-        ImageButton appliedButton = (ImageButton) view.findViewById(R.id.jobInfo_button_applied);
+        Button sharebutton = (Button) view.findViewById(R.id.jobInfo_button_share);
+        Button saveButton = (Button) view.findViewById(R.id.jobInfo_button_save);
+        Button appliedButton = (Button) view.findViewById(R.id.jobInfo_button_applied);
         sharebutton.setOnClickListener(this);
         saveButton.setOnClickListener(this);
         appliedButton.setOnClickListener(this);
@@ -80,7 +81,7 @@ public class JobInfoFragment extends android.app.Fragment implements View.OnClic
         for (Job savedJob : savedJobs){
             if (savedJob.getJobID().equals(job.getJobID())){
                 // The job is saved, so display filled star:
-                saveButton.setImageResource(R.drawable.ic_star_saved);
+                saveButton.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.ic_star_saved), null, null);
                 saveButton.setTag(R.drawable.ic_star_saved);
             }
         }
@@ -89,7 +90,7 @@ public class JobInfoFragment extends android.app.Fragment implements View.OnClic
         for (Job appliedJob : appliedJobs){
             if (appliedJob.getJobID().equals(job.getJobID())){
                 // The job is saved as applied, so display a red check:
-                appliedButton.setImageResource(R.drawable.ic_check_checked);
+                appliedButton.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.ic_check_checked), null, null);
                 appliedButton.setTag(R.drawable.ic_check_checked);
             }
         }
@@ -118,11 +119,11 @@ public class JobInfoFragment extends android.app.Fragment implements View.OnClic
                 Log.i("JobInfoFragment", "share the job");
                 break;
             case R.id.jobInfo_button_save:
-                ImageButton saveButton = (ImageButton) v.findViewById(R.id.jobInfo_button_save);
+                Button saveButton = (Button) v.findViewById(R.id.jobInfo_button_save);
 
                 // If the job is not saved, then save it:
                 if ((Integer)saveButton.getTag() == R.drawable.ic_star_unsaved){
-                    saveButton.setImageResource(R.drawable.ic_star_saved);
+                    saveButton.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.ic_star_saved), null, null);
                     saveButton.setTag(R.drawable.ic_star_saved);
                     // Save the job to the device:
                     ArrayList<Job> savedJobs = FileUtil.readSavedJobs(getActivity());
@@ -136,7 +137,7 @@ public class JobInfoFragment extends android.app.Fragment implements View.OnClic
 
                     // If the job is saved, then unsave it:
                 }else if ((Integer)saveButton.getTag() == R.drawable.ic_star_saved){
-                    saveButton.setImageResource(R.drawable.ic_star_unsaved);
+                    saveButton.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.ic_star_unsaved), null, null);
                     saveButton.setTag(R.drawable.ic_star_unsaved);
                     // Unsave the job from the device:
                     ArrayList<Job> savedJobs = FileUtil.readSavedJobs(getActivity());
@@ -156,11 +157,11 @@ public class JobInfoFragment extends android.app.Fragment implements View.OnClic
                 }
                 break;
             case R.id.jobInfo_button_applied:
-                ImageButton appliedButton = (ImageButton) v.findViewById(R.id.jobInfo_button_applied);
+                Button appliedButton = (Button) v.findViewById(R.id.jobInfo_button_applied);
 
                 // If the job is not saved as applied, then save it:
                 if ((Integer)appliedButton.getTag() == R.drawable.ic_check_unchecked){
-                    appliedButton.setImageResource(R.drawable.ic_check_checked);
+                    appliedButton.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.ic_check_checked), null, null);
                     appliedButton.setTag(R.drawable.ic_check_checked);
                     // Save the job to the device:
                     ArrayList appliedJobs = FileUtil.readAppliedJobs(getActivity());

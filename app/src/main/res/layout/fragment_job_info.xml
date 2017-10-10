@@ -19,36 +19,49 @@
             android:layout_marginTop="4dp"
             android:layout_marginEnd="4dp">
 
-            <ImageButton
+            <Button
                 android:id="@+id/jobInfo_button_share"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
                 android:tint="@color/colorAccent"
+                android:drawableTop="@android:drawable/ic_menu_share"
+                android:text="Save"
+                android:textColor="@color/colorAccent"
+                android:drawableTint="@color/colorPrimary"
+                android:textSize="10sp"
                 app:srcCompat="?attr/actionModeShareDrawable"
                 android:contentDescription="@string/share" />
 
-            <ImageButton
+            <Button
                 android:id="@+id/jobInfo_button_save"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
                 android:layout_marginStart="4dp"
                 android:tint="@color/colorAccent"
+                android:drawableTop="@drawable/ic_star_unsaved"
+                android:text="Save"
+                android:textColor="@color/colorAccent"
+                android:textSize="10sp"
                 app:srcCompat="@drawable/ic_star_unsaved"
                 android:contentDescription="@string/save" />
 
-            <ImageButton
+            <Button
                 android:id="@+id/jobInfo_button_applied"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:background="@android:color/transparent"
+                android:contentDescription="@string/applied"
+                android:drawableTop="@drawable/ic_check_unchecked"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/ic_check_unchecked"
-                android:contentDescription="@string/applied" />
+                android:text="Applied"
+                android:textColor="@color/colorAccent"
+                android:textSize="10sp"
+                app:srcCompat="@drawable/ic_check_unchecked" />
 
         </LinearLayout>
 
