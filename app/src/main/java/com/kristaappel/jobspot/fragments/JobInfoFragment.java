@@ -172,6 +172,26 @@ public class JobInfoFragment extends android.app.Fragment implements View.OnClic
                         firebase.child("users").child(firebaseUser.getUid()).child("appliedjobs").child(job.getJobID()).setValue(job);
                     }
                     Toast.makeText(getActivity(), "Job added to Applied Jobs.", Toast.LENGTH_SHORT).show();
+
+                    // If the job is saved to applied list, then unsave it:
+                }else if ((Integer)appliedButton.getTag() == R.drawable.ic_check_checked){
+                    appliedButton.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.ic_check_unchecked), null, null);
+                    appliedButton.setTag(R.drawable.ic_check_unchecked);
+                    // Unsave from the device:
+                    ArrayList<Job> appliedJobs = FileUtil.readAppliedJobs(getActivity());
+                    ArrayList<Job> jobsToRemove = new ArrayList<>();
+                    for (Job appliedJob : appliedJobs){
+                        if (appliedJob.getJobID().equals(job.getJobID())){
+                            jobsToRemove.add(appliedJob);
+                        }
+                    }
+                    appliedJobs.removeAll(jobsToRemove);
+                    FileUtil.writeSavedJob(getActivity(), appliedJobs);
+                    // Unsave from Firebase:
+                    if (firebaseUser != null) {
+                        firebase.child("users").child(firebaseUser.getUid()).child("appliedjobs").child(job.getJobID()).removeValue();
+                    }
+                    Toast.makeText(getActivity(), "Job has been removed.", Toast.LENGTH_SHORT).show();
                 }
                 break;
         }

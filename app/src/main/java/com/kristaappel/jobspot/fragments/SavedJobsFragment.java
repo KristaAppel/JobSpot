@@ -90,7 +90,6 @@ public class SavedJobsFragment extends ListFragment {
             savedJobs = FileUtil.readSavedJobs(getActivity());
         }
 
-
     }
 
     @Override
@@ -106,7 +105,6 @@ public class SavedJobsFragment extends ListFragment {
         //Create and display a JobInfoFragment for the selected job:
         JobInfoFragment jobInfoFragment = JobInfoFragment.newInstance(savedJobs.get(position));
         getFragmentManager().beginTransaction().replace(R.id.content, jobInfoFragment).commit();
-
     }
 
 

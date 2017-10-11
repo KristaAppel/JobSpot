@@ -8,8 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -127,18 +129,43 @@ public class AppliedJobsFragment extends ListFragment {
 
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             if (convertView == null){
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.applied_list_item, parent, false);
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.saved_list_item, parent, false);
             }
 
             // Get text views:
-            TextView textTitle = (TextView) convertView.findViewById(R.id.textView_applied_title);
-            TextView textCompany = (TextView) convertView.findViewById(R.id.textView_applied_company);
+            TextView textTitle = (TextView) convertView.findViewById(R.id.textView_saved_title);
+            TextView textCompany = (TextView) convertView.findViewById(R.id.textView_saved_company);
 
             // Set text:
             textTitle.setText(appliedJobs.get(position).getJobTitle());
             textCompany.setText(appliedJobs.get(position).getCompanyName());
+
+            ImageButton deleteButton = (ImageButton) convertView.findViewById(R.id.savedJobs_delete_button);
+            deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Unsave the job from Firebase:
+                    Firebase firebase = new Firebase("https://jobspot-a0171.firebaseio.com/");
+                    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                    FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                    if (firebaseUser != null) {
+                        firebase.child("users").child(firebaseUser.getUid()).child("appliedjobs").child(appliedJobs.get(position).getJobID()).removeValue();
+                    }
+                    // Unsave the job from the device:
+                    ArrayList<Job> jobsToRemove = new ArrayList<>();
+                    for (Job appliedJob : appliedJobs){
+                        if (appliedJob.getJobID().equals(appliedJobs.get(position).getJobID())){
+                            jobsToRemove.add(appliedJob);
+                        }
+                    }
+                    appliedJobs.removeAll(jobsToRemove);
+                    FileUtil.writeAppliedJob(getActivity(), appliedJobs);
+                    Toast.makeText(getActivity(), "Job has been removed.", Toast.LENGTH_SHORT).show();
+                    notifyDataSetChanged();
+                }
+            });
 
             return convertView;
         }

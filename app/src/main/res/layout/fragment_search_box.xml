@@ -110,7 +110,7 @@
                             android:background="@android:color/transparent"
                             android:contentDescription="@string/recent_searches"
                             android:scaleType="fitCenter"
-                            android:src="@android:drawable/ic_menu_recent_history"
+                            android:src="@drawable/ic_history"
                             android:tint="@color/colorPrimary" />
 
                     </LinearLayout>
@@ -123,7 +123,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:gravity="right"
+                    android:gravity="end"
                     android:layout_weight="0.3">
 
                     <ImageButton
