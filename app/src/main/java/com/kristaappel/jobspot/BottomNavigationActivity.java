@@ -73,8 +73,8 @@ import java.util.Map;
 public class BottomNavigationActivity extends AppCompatActivity implements SearchBoxFragment.OnSearchBoxFragmentInteractionListener, SortFilterFragment.OnSortFilterInteractionListener, SavedSearchListFragment.OnSavedSearchInteractionListener {
 
     private ActionBar actionBar;
-    private static String keywords;
-    private static String location;
+    public static String keywords;
+    public static String location;
     private String radius = "20";
     private String posted = "30";
     private static String liPictureURL = "";

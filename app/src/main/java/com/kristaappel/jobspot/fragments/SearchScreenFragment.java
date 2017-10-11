@@ -45,6 +45,7 @@ public class SearchScreenFragment extends android.app.Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             jobs = getArguments().getParcelableArrayList(ARG_PARAM1);
         }
@@ -75,32 +76,31 @@ public class SearchScreenFragment extends android.app.Fragment {
             }
             getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, searchResultListFragment).commit();
         }
-
-
     }
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        EditText et_loc = (EditText) view.findViewById(R.id.et_location);
+        EditText et_kw = (EditText) getActivity().findViewById(R.id.et_keywords);
+
         // Display the location and keywords from the search in the editTexts:
         if (locationText != null){
-            EditText et_loc = (EditText) getActivity().findViewById(R.id.et_location);
             et_loc.setText(locationText);
         }
         if (keywordsText != null){
-            EditText et_kw = (EditText) getActivity().findViewById(R.id.et_keywords);
             et_kw.setText(keywordsText);
         }
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_search_screen, container, false);
-
-
     }
 
 
@@ -108,6 +108,7 @@ public class SearchScreenFragment extends android.app.Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
     }
+
 
     @Override
     public void onDetach() {

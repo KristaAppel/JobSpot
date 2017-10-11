@@ -1,6 +1,7 @@
 package com.kristaappel.jobspot.fragments;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -40,6 +41,9 @@ public class SearchBoxFragment extends android.app.Fragment implements View.OnCl
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        EditText et_loc = (EditText) getActivity().findViewById(R.id.et_location);
+        EditText et_kw = (EditText) getActivity().findViewById(R.id.et_keywords);
+
         // Set click listeners:
         Button mapButton = (Button) view.findViewById(R.id.mapFragToggle1);
         mapButton.setOnClickListener(this);
@@ -59,13 +63,12 @@ public class SearchBoxFragment extends android.app.Fragment implements View.OnCl
         ImageButton searchButton = (ImageButton) view.findViewById(R.id.searchButton);
         searchButton.setOnClickListener(this);
 
+
         // Display the location and keywords from the search in the editTexts:
         if (SearchScreenFragment.locationText != null){
-            EditText et_loc = (EditText) getActivity().findViewById(R.id.et_location);
             et_loc.setText(SearchScreenFragment.locationText);
         }
         if (SearchScreenFragment.keywordsText != null){
-            EditText et_kw = (EditText) getActivity().findViewById(R.id.et_keywords);
             et_kw.setText(SearchScreenFragment.keywordsText);
         }
 
@@ -93,6 +96,40 @@ public class SearchBoxFragment extends android.app.Fragment implements View.OnCl
             mListener = (OnSearchBoxFragmentInteractionListener) context;
         }
     }
+
+    @Override
+    public void onPause() {
+
+        // Save the location and keywords from the last search to the activity so they can
+        // be displayed when the user comes back to this screen:
+        EditText et_loc = (EditText) getActivity().findViewById(R.id.et_location);
+        EditText et_kw = (EditText) getActivity().findViewById(R.id.et_keywords);
+        if (et_loc != null && et_loc.getText() != null){
+            BottomNavigationActivity.location = et_loc.getText().toString();
+        }
+        if (et_kw != null && et_kw.getText() != null){
+            BottomNavigationActivity.keywords = et_kw.getText().toString();
+        }
+
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Display the location and keywords from the last search:
+        EditText et_loc = (EditText) getActivity().findViewById(R.id.et_location);
+        EditText et_kw = (EditText) getActivity().findViewById(R.id.et_keywords);
+
+        if (BottomNavigationActivity.location!=null){
+            et_loc.setText(BottomNavigationActivity.location);
+        }
+        if (BottomNavigationActivity.keywords!=null){
+            et_kw.setText(BottomNavigationActivity.keywords);
+        }
+    }
+
 
     @Override
     public void onDetach() {

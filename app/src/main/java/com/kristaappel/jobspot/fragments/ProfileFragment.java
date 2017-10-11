@@ -165,9 +165,7 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
             }else {
                 Toast.makeText(getActivity(), "No connection.", Toast.LENGTH_SHORT).show();
             }
-            
         }
-
     }
     // Set permissions to retrieve info from LinkedIn:
     private static Scope buildScope(){
