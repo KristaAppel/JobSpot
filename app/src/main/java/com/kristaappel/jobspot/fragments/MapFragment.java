@@ -2,6 +2,8 @@ package com.kristaappel.jobspot.fragments;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -10,9 +12,12 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -127,6 +132,8 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
             googleMap = map;
         }
 
+        setAdapter();
+
         googleMap.setOnInfoWindowClickListener(this);
 
         if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -176,6 +183,39 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
     }
 
 
+    private void setAdapter(){
+        googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            @Override
+            public View getInfoWindow(Marker marker) {
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+                // Create custom layout for Info Window so we can have a multiline snippet:
+                LinearLayout linearLayout = new LinearLayout(getContext());
+                linearLayout.setOrientation(LinearLayout.VERTICAL);
+
+                TextView title = new TextView(getContext());
+                title.setTextColor(getResources().getColor(R.color.colorBlack));
+                title.setGravity(Gravity.CENTER);
+                title.setTypeface(null, Typeface.BOLD);
+                title.setTextSize(18);
+                title.setText(marker.getTitle());
+
+                TextView snippet = new TextView(getContext());
+                snippet.setTextColor(Color.GRAY);
+                snippet.setGravity(Gravity.CENTER);
+                snippet.setText(marker.getSnippet());
+
+                linearLayout.addView(title);
+                linearLayout.addView(snippet);
+                return linearLayout;
+            }
+        });
+    }
+
+
     private void zoomInCamera(){
         if (googleMap != null){
             LatLng zoomToLatLong = null;
@@ -212,14 +252,10 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
                 for (Job job : jobs){
                     if (job.getJobLat() != 0 && job.getJobLng() != 0 && job.getCompanyName() != null && job.getJobTitle() != null){
                         LatLng jobPosition = new LatLng(job.getJobLat(), job.getJobLng());
-                        MarkerOptions markerOptions = new MarkerOptions();
-                        markerOptions.title(job.getJobTitle());
-                        markerOptions.snippet(job.getCompanyName());
-                        markerOptions.position(jobPosition);
-                        googleMap.addMarker(markerOptions);
+                        googleMap.addMarker(new MarkerOptions().position(jobPosition).title(job.getJobTitle()).snippet(job.getCompanyName() + "\n" + "Posted on: " + job.getDatePosted()));
                     }
                 }
-            }
+    }
 
         }
     }
