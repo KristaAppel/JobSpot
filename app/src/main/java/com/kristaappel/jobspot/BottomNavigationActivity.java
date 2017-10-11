@@ -349,7 +349,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
 
         if (sortBy.equals("accquisitiondate")){
             Collections.sort(jobs, new Comparator<Job>() {
-                final DateFormat dateTimeFormat = new SimpleDateFormat("MM-dd-yyyy hh:mm a", Locale.US);
+                final DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.US);
                 @Override
                 public int compare(Job job1, Job job2) {
                     try{

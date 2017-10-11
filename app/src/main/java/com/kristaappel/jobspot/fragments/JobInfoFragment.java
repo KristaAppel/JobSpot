@@ -175,7 +175,7 @@ public class JobInfoFragment extends android.app.Fragment implements View.OnClic
                     if (firebaseUser != null){
                         firebase.child("users").child(firebaseUser.getUid()).child("appliedjobs").child(job.getJobID()).setValue(job);
                         String applyTime = new SimpleDateFormat("MM-dd-yyyy HH:mm a", Locale.US).format(Calendar.getInstance().getTime());
-                        firebase.child("users").child(firebaseUser.getUid()).child("appliedjobs").child(job.getJobID()).child("applydate").setValue(applyTime);
+                        firebase.child("users").child(firebaseUser.getUid()).child("appliedjobs").child(job.getJobID()).child("applyDate").setValue(applyTime);
                     }
                     Toast.makeText(getActivity(), "Job added to Applied Jobs.", Toast.LENGTH_SHORT).show();
 

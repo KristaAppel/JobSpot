@@ -24,8 +24,14 @@ import com.kristaappel.jobspot.objects.FileUtil;
 import com.kristaappel.jobspot.objects.Job;
 import com.kristaappel.jobspot.objects.NetworkMonitor;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Locale;
 
 
 public class AppliedJobsFragment extends ListFragment {
@@ -53,8 +59,8 @@ public class AppliedJobsFragment extends ListFragment {
             FirebaseAuth mAuth = FirebaseAuth.getInstance();
             FirebaseUser firebaseUser = mAuth.getCurrentUser();
             if (firebaseUser != null) {
-                Firebase firebaseSavedRef = firebase.child("users").child(firebaseUser.getUid()).child("appliedjobs");
-                firebaseSavedRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                Firebase firebaseAppliedRef = firebase.child("users").child(firebaseUser.getUid()).child("appliedjobs");
+                firebaseAppliedRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         appliedJobs.clear();
@@ -70,7 +76,7 @@ public class AppliedJobsFragment extends ListFragment {
                             String jobCityState = snapshotJob.get("jobCityState").toString();
                             Double jobLat = (Double) snapshotJob.get("jobLat");
                             Double jobLng = (Double) snapshotJob.get("jobLng");
-                            String applyDate = snapshotJob.get("applydate").toString();
+                            String applyDate = snapshotJob.get("applyDate").toString();
 
                             Job appliedJob = new Job(jobID, jobTitle, companyName, datePosted, jobURL, jobCityState, jobLat, jobLng, applyDate);
 
@@ -88,6 +94,7 @@ public class AppliedJobsFragment extends ListFragment {
 
             }
         }else{
+            // Not connected.  Get list from device:
             appliedJobs = FileUtil.readSavedJobs(getActivity());
         }
 
@@ -134,6 +141,24 @@ public class AppliedJobsFragment extends ListFragment {
             if (convertView == null){
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.applied_list_item, parent, false);
             }
+
+            // Sort jobs by apply date:
+            Collections.sort(appliedJobs, new Comparator<Job>() {
+                final DateFormat dateTimeFormat = new SimpleDateFormat("MM-dd-yyyy hh:mm a", Locale.US);
+                @Override
+                public int compare(Job job1, Job job2) {
+                    try{
+                        if (!job1.getApplyDate().equals("") && !job2.getApplyDate().equals("")){
+                            return dateTimeFormat.parse(job2.getApplyDate()).compareTo(dateTimeFormat.parse(job1.getApplyDate()));
+                        }else{
+                            return 0;
+                        }
+                        
+                    }catch (ParseException e){
+                        throw new IllegalArgumentException(e);
+                    }
+                }
+            });
 
             // Get text views:
             TextView textTitle = (TextView) convertView.findViewById(R.id.textView_applied_title);
