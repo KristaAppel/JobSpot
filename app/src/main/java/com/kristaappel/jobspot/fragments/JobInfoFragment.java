@@ -19,7 +19,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.kristaappel.jobspot.R;
 import com.kristaappel.jobspot.objects.FileUtil;
 import com.kristaappel.jobspot.objects.Job;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 
 public class JobInfoFragment extends android.app.Fragment implements View.OnClickListener {
@@ -170,6 +174,8 @@ public class JobInfoFragment extends android.app.Fragment implements View.OnClic
                     // Save the job to Firebase:
                     if (firebaseUser != null){
                         firebase.child("users").child(firebaseUser.getUid()).child("appliedjobs").child(job.getJobID()).setValue(job);
+                        String applyTime = new SimpleDateFormat("MM-dd-yyyy HH:mm a", Locale.US).format(Calendar.getInstance().getTime());
+                        firebase.child("users").child(firebaseUser.getUid()).child("appliedjobs").child(job.getJobID()).child("applydate").setValue(applyTime);
                     }
                     Toast.makeText(getActivity(), "Job added to Applied Jobs.", Toast.LENGTH_SHORT).show();
 

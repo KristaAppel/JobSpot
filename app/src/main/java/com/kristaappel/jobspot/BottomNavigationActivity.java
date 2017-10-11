@@ -240,6 +240,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 
                 break;
             case R.id.filterButton:
+                jobList.clear();
                 //Show a list of filter & sort options, use chosen options in job search
                 SortFilterFragment sortFilterFragment = new SortFilterFragment();
                 getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, sortFilterFragment).commit();
@@ -317,7 +318,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
             Log.i("BottomNav:317", "foundjob is nul!!!!!!!!!!");
         }
         // Add new job to the list of jobs:
-        if (newJob != null){
+        if (newJob != null && !jobList.contains(newJob)){
             jobList.add(newJob);
         }
         Log.i("BottomNavActivity:323", "joblistcount:" + jobList.size());
@@ -348,7 +349,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
 
         if (sortBy.equals("accquisitiondate")){
             Collections.sort(jobs, new Comparator<Job>() {
-                final DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.US);
+                final DateFormat dateTimeFormat = new SimpleDateFormat("MM-dd-yyyy hh:mm a", Locale.US);
                 @Override
                 public int compare(Job job1, Job job2) {
                     try{
@@ -393,6 +394,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
             Toast.makeText(this, "No connection.", Toast.LENGTH_SHORT).show();
             return;
         }
+        jobList.clear();
         // Save the search:
         String time = String.valueOf(System.currentTimeMillis());
         SavedSearch newSavedSearch = new SavedSearch(_keywords, radius, _location, posted, time);
@@ -506,7 +508,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         radius = _radius;
         posted = _posted;
         sortBy = _sortBy;
-
+        jobList.clear();
         onSearchBoxFragmentInteraction(R.id.searchButton);
     }
 
