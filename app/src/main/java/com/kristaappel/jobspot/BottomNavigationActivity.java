@@ -313,7 +313,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         // Use coords with job data that was already retrieved to create a Job object:
         Job newJob = null;
         if (foundJob != null && jobLat != null && jobLng != null) {
-            newJob = new Job(foundJob.getJobID(), foundJob.getJobTitle(), foundJob.getCompanyName(), foundJob.getDatePosted(), foundJob.getJobURL(), foundJob.getJobCityState(), jobLat, jobLng);
+            newJob = new Job(foundJob.getJobID(), foundJob.getJobTitle(), foundJob.getCompanyName(), foundJob.getDatePosted(), foundJob.getJobURL(), foundJob.getJobCityState(), jobLat, jobLng, "");
         }else{
             Log.i("BottomNav:317", "foundjob is nul!!!!!!!!!!");
         }
@@ -472,7 +472,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 String dateposted = jobObj.getString("AccquisitionDate");
                 String joburl = jobObj.getString("URL");
                 String jobcitystate = jobObj.getString("Location");
-                Job foundJob = new Job(jobid, jobtitle, companyname, dateposted, joburl, jobcitystate, 0, 0);
+                Job foundJob = new Job(jobid, jobtitle, companyname, dateposted, joburl, jobcitystate, 0, 0, "");
                 // Get the coordinates:
                 LocationHelper.lookUpCompany(this, foundJob);
             }

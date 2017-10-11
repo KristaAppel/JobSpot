@@ -70,8 +70,9 @@ public class AppliedJobsFragment extends ListFragment {
                             String jobCityState = snapshotJob.get("jobCityState").toString();
                             Double jobLat = (Double) snapshotJob.get("jobLat");
                             Double jobLng = (Double) snapshotJob.get("jobLng");
+                            String applyDate = snapshotJob.get("applydate").toString();
 
-                            Job appliedJob = new Job(jobID, jobTitle, companyName, datePosted, jobURL, jobCityState, jobLat, jobLng);
+                            Job appliedJob = new Job(jobID, jobTitle, companyName, datePosted, jobURL, jobCityState, jobLat, jobLng, applyDate);
 
                             appliedJobs.add(appliedJob);
                             listAdapter.notifyDataSetChanged();
@@ -131,18 +132,21 @@ public class AppliedJobsFragment extends ListFragment {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             if (convertView == null){
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.saved_list_item, parent, false);
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.applied_list_item, parent, false);
             }
 
             // Get text views:
-            TextView textTitle = (TextView) convertView.findViewById(R.id.textView_saved_title);
-            TextView textCompany = (TextView) convertView.findViewById(R.id.textView_saved_company);
+            TextView textTitle = (TextView) convertView.findViewById(R.id.textView_applied_title);
+            TextView textCompany = (TextView) convertView.findViewById(R.id.textView_applied_company);
+            TextView textDate = (TextView) convertView.findViewById(R.id.textView_applied_date);
 
             // Set text:
             textTitle.setText(appliedJobs.get(position).getJobTitle());
             textCompany.setText(appliedJobs.get(position).getCompanyName());
+            String applyDateString = "Applied on: " + appliedJobs.get(position).getApplyDate();
+            textDate.setText(applyDateString);
 
-            ImageButton deleteButton = (ImageButton) convertView.findViewById(R.id.savedJobs_delete_button);
+            ImageButton deleteButton = (ImageButton) convertView.findViewById(R.id.appliedJobs_delete_button);
             deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

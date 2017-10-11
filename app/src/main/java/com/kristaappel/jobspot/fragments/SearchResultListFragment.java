@@ -92,7 +92,9 @@ public class SearchResultListFragment extends ListFragment {
     public void onResume() {
         super.onResume();
         ProgressBar progressBar = (ProgressBar)getActivity().findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.INVISIBLE);
+        if (progressBar != null){
+            progressBar.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import com.kristaappel.jobspot.fragments.MapFragment;
 
 import java.io.Serializable;
@@ -19,9 +18,10 @@ public class Job implements Serializable, Parcelable{
     private String jobCityState;
     private double jobLat;
     private double jobLng;
+    private String applyDate;
 
 
-    public Job(String jobid, String jobtitle, String companyname, String dateposted, String joburl, String jobcitystate, double joblat, double joblng){
+    public Job(String jobid, String jobtitle, String companyname, String dateposted, String joburl, String jobcitystate, double joblat, double joblng, String applydate){
         jobID = jobid;
         jobTitle = jobtitle;
         companyName = companyname;
@@ -30,6 +30,7 @@ public class Job implements Serializable, Parcelable{
         jobCityState = jobcitystate;
         jobLat = joblat;
         jobLng = joblng;
+        applyDate = applydate;
     }
 
 
@@ -65,6 +66,10 @@ public class Job implements Serializable, Parcelable{
         this.jobLng = jobLng;
     }
 
+    public void setApplyDate(String applydate){
+        this.applyDate = applydate;
+    }
+
     private Job(Parcel in) {
         jobID = in.readString();
         jobTitle = in.readString();
@@ -74,6 +79,7 @@ public class Job implements Serializable, Parcelable{
         jobCityState = in.readString();
         jobLat = in.readDouble();
         jobLng = in.readDouble();
+        applyDate = in.readString();
     }
 
     public static final Creator<Job> CREATOR = new Creator<Job>() {
@@ -119,6 +125,10 @@ public class Job implements Serializable, Parcelable{
     public double getJobLng(){
         return jobLng;
     }
+
+    public String getApplyDate(){
+        return applyDate;
+    }
     
     @Override
     public boolean equals(Object obj) {
@@ -145,6 +155,7 @@ public class Job implements Serializable, Parcelable{
         dest.writeString(jobCityState);
         dest.writeDouble(jobLat);
         dest.writeDouble(jobLng);
+        dest.writeString(applyDate);
     }
 
     public Double getDistance(Context context, Job job){

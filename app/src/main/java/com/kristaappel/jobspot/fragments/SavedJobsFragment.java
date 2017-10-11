@@ -71,7 +71,7 @@ public class SavedJobsFragment extends ListFragment {
                             Double jobLat = (Double) snapshotJob.get("jobLat");
                             Double jobLng = (Double) snapshotJob.get("jobLng");
 
-                            Job savedJob = new Job(jobID, jobTitle, companyName, datePosted, jobURL, jobCityState, jobLat, jobLng);
+                            Job savedJob = new Job(jobID, jobTitle, companyName, datePosted, jobURL, jobCityState, jobLat, jobLng, "");
 
                             savedJobs.add(savedJob);
                             listAdapter.notifyDataSetChanged();

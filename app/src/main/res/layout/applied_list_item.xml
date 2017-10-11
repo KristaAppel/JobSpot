@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants">
 
     <TextView
         android:id="@+id/textView_applied_title"
@@ -21,12 +23,35 @@
         android:id="@+id/textView_applied_company"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textView_applied_title"
+        android:layout_below="@+id/textView_applied_title"
+        android:layout_marginEnd="54dp"
         android:text="@string/company"
-        android:textAlignment="textEnd"
-        android:textSize="18sp"
+        android:textAlignment="textStart"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textView_applied_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView_applied_company"
+        android:layout_alignStart="@+id/textView_applied_company"
+        android:text="@string/date"
+        android:textAlignment="textStart"
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="54dp"
-        android:layout_below="@+id/textView_applied_title"
-        android:layout_alignStart="@+id/textView_applied_title" />
+        android:textColor="?android:attr/textColorSecondaryInverseNoDisable" />
+
+    <ImageButton
+        android:id="@+id/appliedJobs_delete_button"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:layout_marginEnd="14dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/ic_trash"
+        android:layout_alignTop="@+id/textView_applied_title"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp" />
 
 </RelativeLayout>
