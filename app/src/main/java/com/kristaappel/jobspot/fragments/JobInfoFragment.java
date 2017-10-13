@@ -120,20 +120,19 @@ public class JobInfoFragment extends android.app.Fragment implements View.OnClic
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         switch (v.getId()){
             case R.id.jobInfo_button_share:
-                //TODO: share
-                Log.i("JobInfoFragment", "share the job");
-//                String jobTitle = job.getJobTitle();
-//                String jobCompany = job.getCompanyName();
-//                String jobLocation = job.getJobCityState();
-//                String jobURL = job.getJobURL();
-//                String shareString = jobTitle + "\n" + jobCompany + "\n" + jobLocation + "\n" + jobURL;
-//                Intent shareIntent = new Intent();
-//                shareIntent.setAction(Intent.ACTION_MEDIA_SHARED);
-//                shareIntent.putExtra(Intent.EXTRA_TEXT, shareString);
-//                shareIntent.setType("text/plain");
-//                if (shareIntent.resolveActivity(getActivity().getPackageManager()) != null){
-//                    startActivity(shareIntent);
-//                }
+                String jobTitle = job.getJobTitle();
+                String jobCompany = job.getCompanyName();
+                String jobLocation = job.getJobCityState();
+                String jobURL = job.getJobURL();
+                String shareString = jobTitle + "\n" + jobCompany + "\n" + jobLocation + "\n" + jobURL;
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Check out this job!");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, shareString);
+                shareIntent.setType("text/plain");
+                if (shareIntent.resolveActivity(getActivity().getPackageManager()) != null){
+                    startActivity(shareIntent);
+                }
                 break;
             case R.id.jobInfo_button_save:
                 Button saveButton = (Button) v.findViewById(R.id.jobInfo_button_save);

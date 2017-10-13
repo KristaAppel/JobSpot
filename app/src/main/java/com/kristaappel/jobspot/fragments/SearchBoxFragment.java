@@ -122,10 +122,10 @@ public class SearchBoxFragment extends android.app.Fragment implements View.OnCl
         EditText et_loc = (EditText) getActivity().findViewById(R.id.et_location);
         EditText et_kw = (EditText) getActivity().findViewById(R.id.et_keywords);
 
-        if (BottomNavigationActivity.location!=null){
+        if (BottomNavigationActivity.location!=null && et_loc != null){
             et_loc.setText(BottomNavigationActivity.location);
         }
-        if (BottomNavigationActivity.keywords!=null){
+        if (BottomNavigationActivity.keywords!=null && et_kw != null){
             et_kw.setText(BottomNavigationActivity.keywords);
         }
     }
