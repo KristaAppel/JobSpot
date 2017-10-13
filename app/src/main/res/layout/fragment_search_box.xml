@@ -49,17 +49,18 @@
 
                         <EditText
                             android:id="@+id/et_location"
-                            android:backgroundTint="@color/colorLightGrey"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginEnd="8dp"
                             android:layout_marginStart="8dp"
                             android:background="@android:color/white"
+                            android:backgroundTint="@color/colorLightGrey"
                             android:drawableStart="@drawable/ic_place"
                             android:hint="@string/enter_location"
                             android:iconifiedByDefault="false"
                             android:queryHint="Enter Location"
+                            android:singleLine="true"
                             android:textAppearance="@style/TextAppearance.AppCompat" />
 
                     </LinearLayout>
@@ -86,19 +87,20 @@
 
                         <EditText
                             android:id="@+id/et_keywords"
-                            android:backgroundTint="@color/colorLightGrey"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginEnd="8dp"
                             android:layout_marginStart="8dp"
+                            android:layout_weight="1"
                             android:background="@android:color/white"
+                            android:backgroundTint="@color/colorLightGrey"
                             android:drawableStart="@drawable/ic_search_original"
                             android:hint="@string/enter_keyword_s"
                             android:iconifiedByDefault="false"
                             android:queryHint="Enter Keyword(s)"
-                            android:textAppearance="@style/TextAppearance.AppCompat"
-                            android:layout_weight="1"/>
+                            android:singleLine="true"
+                            android:textAppearance="@style/TextAppearance.AppCompat" />
 
                         <ImageButton
                             android:id="@+id/recentButton"
