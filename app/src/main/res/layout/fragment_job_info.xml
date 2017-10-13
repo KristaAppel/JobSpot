@@ -27,7 +27,7 @@
                 android:scaleType="fitCenter"
                 android:tint="@color/colorAccent"
                 android:drawableTop="@android:drawable/ic_menu_share"
-                android:text="Save"
+                android:text="Share"
                 android:textColor="@color/colorAccent"
                 android:drawableTint="@color/colorPrimary"
                 android:textSize="10sp"
