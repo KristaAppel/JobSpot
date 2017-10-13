@@ -23,9 +23,8 @@
             android:id="@+id/imageView_profile"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_marginTop="31dp"
             app:srcCompat="@drawable/ic_profile"
-            android:layout_alignTop="@+id/switch_notifications"
+            android:layout_below="@+id/switch_notifications"
             android:layout_centerHorizontal="true" />
 
         <TextView
@@ -78,6 +77,8 @@
             android:text="@string/explanation_linkedin"
             android:textAlignment="center"
             android:textSize="16sp"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:layout_below="@+id/textView_profile_industry"
             android:layout_alignParentStart="true" />
 
@@ -100,6 +101,8 @@
             android:background="@color/colorLightGrey"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
+            android:paddingTop="8dp"
+            android:padding="8dp"
             android:checked="true"
             android:text="@string/enable_notifications" />
 
