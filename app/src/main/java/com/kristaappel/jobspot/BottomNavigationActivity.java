@@ -31,6 +31,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.firebase.client.Firebase;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.kristaappel.jobspot.fragments.AppliedJobsFragment;
@@ -90,6 +93,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     public static boolean listIsShowing = false;
     public static String sortBy = "accquisitiondate";
     private static SavedSearch savedSearch;
+    private AdView adView;
 
 
     @Override
@@ -103,6 +107,15 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         if (actionBar != null){
             actionBar.hide();
         }
+
+        MobileAds.initialize(this, "ca-app-pub-3536941884869320~4191396929");
+
+        adView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice("08940364D47932550C2D91C5209F820D")
+                .build();
+        adView.loadAd(adRequest);
+        adView.setVisibility(View.GONE);
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -153,6 +166,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                     if (actionBar != null){
                         actionBar.hide();
                     }
+                    adView.setVisibility(View.GONE);
                     return true;
                 case R.id.navigation_saved:
                     // Create and display a SavedJobsFragment:
@@ -163,6 +177,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                         actionBar.show();
                         actionBar.setTitle("Saved Jobs");
                     }
+                    adView.setVisibility(View.VISIBLE);
                     return true;
                 case R.id.navigation_applied:
                     // Create and display an AppliedJobsFragment:
@@ -173,6 +188,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                         actionBar.show();
                         actionBar.setTitle("Jobs You've Applied For");
                     }
+                    adView.setVisibility(View.VISIBLE);
                     return true;
                 case R.id.navigation_account:
                     // Create and display a ProfileFragment:
@@ -188,6 +204,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                         actionBar.show();
                         actionBar.setTitle("Profile");
                     }
+                    adView.setVisibility(View.GONE);
                     return true;
             }
             return false;
@@ -218,6 +235,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                     mapIsShowing = true;
                     listIsShowing = false;
                     toggleButtonColors();
+                    adView.setVisibility(View.GONE);
                 }
                 break;
             case R.id.mapFragToggle2:
@@ -227,6 +245,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 mapIsShowing = false;
                 listIsShowing = true;
                 toggleButtonColors();
+                adView.setVisibility(View.VISIBLE);
                 break;
             case R.id.locationButton:
                 // Get the user's current location and enter it into the location box:

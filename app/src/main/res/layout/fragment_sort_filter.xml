@@ -108,7 +108,7 @@
                 android:id="@+id/radioButton_sortby_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/location"/>
+                android:text="@string/distance_capital"/>
             <RadioButton
                 android:id="@+id/radioButton_sortby_3"
                 android:layout_width="wrap_content"
