@@ -7,19 +7,42 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.kristaappel.jobspot.BottomNavigationActivity;
 import com.kristaappel.jobspot.R;
 import com.kristaappel.jobspot.SplashActivity;
 
-import java.util.Date;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
+import static android.R.attr.radius;
 import static android.content.Context.NOTIFICATION_SERVICE;
+import static com.kristaappel.jobspot.BottomNavigationActivity.sortBy;
+import static com.kristaappel.jobspot.objects.FileUtil.readMostRecentSearch;
 
 public class NotificationBroadcastReceiver extends WakefulBroadcastReceiver {
 
@@ -29,7 +52,8 @@ public class NotificationBroadcastReceiver extends WakefulBroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Log.i("Receiver", "onReceive");
         setAlarm(context);
-        showNotification(context);
+        getNewJobs(context);
+//        showNotification(context);
     }
 
     public void setAlarm(Context context){
@@ -50,6 +74,96 @@ public class NotificationBroadcastReceiver extends WakefulBroadcastReceiver {
         packageManager.setComponentEnabledSetting(receiver, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
     }
 
+    public void getNewJobs(final Context context){
+        Log.i("Receiver", "getNewJobs");
+
+        if (!NetworkMonitor.deviceIsConnected(context)){
+            return;
+        }
+        final ArrayList<Job> newJobs = new ArrayList<>();
+        final SavedSearch recentSearch = FileUtil.readMostRecentSearch(context);
+        if (recentSearch != null){
+            Log.i("Receiver", "most recent search: " + recentSearch.getKeywords() + " - " + recentSearch.getLocation());
+        }
+        final Job mostRecentJob = FileUtil.readMostRecentJob(context);
+        if (mostRecentJob != null) {
+            Log.i("Receiver", "most recent job: " + mostRecentJob.getJobTitle() + " - " + mostRecentJob.getDatePosted());
+        }
+        if (recentSearch != null){
+            String url = "https://api.careeronestop.org/v1/jobsearch/TZ1zgEyKTNm69nF/" + recentSearch.getKeywords() + "/"+recentSearch.getLocation()+"/" + recentSearch.getRadius() + "/" + "accquisitiondate" + "/desc/0/120/" + "30";
+            final ArrayList<Job> jobs = new ArrayList<>();
+            final DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.US);
+            // Get jobs from API:
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.i("Receiver", "response: " + response);
+                    // Parse JSON to make a list of Job objects:
+                    try {
+                        JSONObject responseObj = new JSONObject(response);
+                        JSONArray jobsArray = responseObj.getJSONArray("Jobs");
+                        for (int i = 0; i<jobsArray.length(); i++){
+                            JSONObject jobObj = jobsArray.getJSONObject(i);
+                            String jobid = jobObj.getString("JvId");
+                            String jobtitle = jobObj.getString("JobTitle");
+                            String companyname = jobObj.getString("Company");
+                            String dateposted = jobObj.getString("AccquisitionDate");
+                            String joburl = jobObj.getString("URL");
+                            String jobcitystate = jobObj.getString("Location");
+                            Job foundJob = new Job(jobid, jobtitle, companyname, dateposted, joburl, jobcitystate, 0, 0, "");
+
+                            jobs.add(foundJob);
+                        }
+                        for (Job job : jobs){
+                            try{
+                                // Find out if each job is newer than the most recent job:
+                                if (dateTimeFormat.parse(mostRecentJob.getDatePosted()).compareTo(dateTimeFormat.parse(job.getDatePosted()))<0){
+                                    newJobs.add(job);
+                                    Log.i("Receiver", "new jobs: " + newJobs.size());
+                                }
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (newJobs.size() > 0){
+                        showNotification(context, newJobs.size(), recentSearch);
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.i("Receiver", "That didn't work!!!!!!!");
+                    if (error.networkResponse.statusCode == 404){
+                        Log.i("Receiver", "No jobs available");
+                    }
+                }
+            })
+            {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("Content-Type", "application/json");
+                    params.put("Authorization", "Bearer imXBBrutJKGqrj6NHkLNPA41F8H/dbvQDiYjpaLrQWmYzJb+PNAZ7dg8D6Gv7onpkZl1mccgSRygH+xiE7AZrQ==");
+                    return params;
+                }
+            };
+
+            VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
+        }
+
+        //TODO: run a job search with the recentSearch
+        //TODO: compare date of recentJob with dates of jobs in the new search
+        //TODO: if the date of a search is more recent than the date of recentJob, keep count of how many jobs are newer
+        //TODO: return an int to return the count of new jobs?
+        //TODO: notify the user how many new jobs there are in the search
+    }
+
     public void cancelAlarms(Context context){
         Log.i("Receiver", "cancel alarms");
         alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -62,12 +176,12 @@ public class NotificationBroadcastReceiver extends WakefulBroadcastReceiver {
         packageManager.setComponentEnabledSetting(receiver, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
     }
 
-    private void showNotification(Context context){
+    private void showNotification(Context context, int numberOfNewJobs, SavedSearch search){
             // Create an expanded notification
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
             builder.setSmallIcon(R.drawable.jobspot_small_notification_icon);
-            builder.setContentTitle("New Jobs");
-            builder.setContentText("There are new jobs waiting for you!");
+            builder.setContentTitle("New " + search.getKeywords() + " Jobs");
+            builder.setContentText("There are " + numberOfNewJobs + " new " + search.getKeywords() + " Jobs available in " + search.getLocation());
             Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.jobspot_large_notification_icon);
             builder.setLargeIcon(bitmap);
 

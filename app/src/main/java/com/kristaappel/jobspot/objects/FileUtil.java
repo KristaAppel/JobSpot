@@ -68,6 +68,19 @@ public class FileUtil {
         }
     }
 
+    public static void writeMostRecentJob(Context context, Job job){
+        try{
+            String fileName = "mostRecentJob.txt";
+            FileOutputStream fileOutputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            objectOutputStream.writeObject(job);
+            objectOutputStream.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
     public static void writeSavedSearch(Context context, ArrayList<SavedSearch> savedSearches){
         try {
             // Save the arraylist to local storage:
@@ -77,6 +90,18 @@ public class FileUtil {
             objectOutputStream.writeObject(savedSearches);
             objectOutputStream.close();
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void writeMostRecentSearch(Context context, SavedSearch search){
+        try{
+            String fileName = "mostRecentSearch.txt";
+            FileOutputStream fileOutputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            objectOutputStream.writeObject(search);
+            objectOutputStream.close();
+        }catch (Exception e){
             e.printStackTrace();
         }
     }
@@ -142,6 +167,21 @@ public class FileUtil {
         return savedSearches;
     }
 
+    public static SavedSearch readMostRecentSearch(Context context){
+        try{
+            String fileName = "mostRecentSearch.txt";
+            FileInputStream fileInputStream = context.openFileInput(fileName);
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            Object readObject = objectInputStream.readObject();
+
+            if (readObject instanceof SavedSearch){
+                return (SavedSearch) readObject;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public static ArrayList<Job> readAppliedJobs(Context context) {
         ArrayList<Job> appliedJobs = new ArrayList<>();
@@ -170,6 +210,22 @@ public class FileUtil {
             e.printStackTrace();
         }
         return appliedJobs;
+    }
+
+    public static Job readMostRecentJob(Context context){
+        try{
+            String fileName = "mostRecentJob.txt";
+            FileInputStream fileInputStream = context.openFileInput(fileName);
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            Object readObject = objectInputStream.readObject();
+
+            if (readObject instanceof Job){
+                return (Job) readObject;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

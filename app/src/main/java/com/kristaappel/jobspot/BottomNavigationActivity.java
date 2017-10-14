@@ -360,6 +360,25 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 }
             });
         }
+
+        // Get the most recent job and save it to the device:
+        ArrayList<Job> recentJobs = new ArrayList<>();
+        recentJobs.addAll(jobs);
+        final DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.US);
+        Collections.sort(recentJobs, new Comparator<Job>() {
+            @Override
+            public int compare(Job job1, Job job2) {
+                try {
+                    return dateTimeFormat.parse(job2.getDatePosted()).compareTo(dateTimeFormat.parse(job1.getDatePosted()));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
+
+        Job mostRecentJob = recentJobs.get(0);
+        FileUtil.writeMostRecentJob(activity, mostRecentJob);
     }
 
     private static void showJobs(final Activity activity, ArrayList<Job> jobs){
@@ -457,6 +476,8 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 firebase.child("users").child(firebaseUser.getUid()).child("savedsearches").child(search.getDateTime()).setValue(search);
             }
         }
+
+        FileUtil.writeMostRecentSearch(this, search);
     }
 
     private void makeJobList(String searchResponse){
