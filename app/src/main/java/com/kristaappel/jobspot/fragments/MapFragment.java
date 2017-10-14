@@ -252,7 +252,7 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
                 for (Job job : jobs){
                     if (job.getJobLat() != 0 && job.getJobLng() != 0 && job.getCompanyName() != null && job.getJobTitle() != null){
                         LatLng jobPosition = new LatLng(job.getJobLat(), job.getJobLng());
-                        googleMap.addMarker(new MarkerOptions().position(jobPosition).title(job.getJobTitle()).snippet(job.getCompanyName() + "\n" + "Posted on: " + job.getDatePosted()));
+                        googleMap.addMarker(new MarkerOptions().position(jobPosition).title(job.getJobTitle()).snippet(job.getCompanyName() + "\n" + job.getDistance(getContext(), job) + " miles away\n" + "Posted on: " + job.getDatePosted()));
                     }
                 }
     }
