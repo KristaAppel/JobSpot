@@ -32,14 +32,14 @@
 
     <ImageButton
         android:id="@+id/savedJobs_delete_button"
-        android:layout_width="52dp"
-        android:layout_height="52dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/textView_saved_title"
-        android:layout_marginStart="4dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginEnd="14dp"
         android:background="@android:color/transparent"
         android:scaleType="fitCenter"
-        app:srcCompat="@drawable/ic_trash" />
+        android:foregroundGravity="center_vertical"
+        app:srcCompat="@drawable/ic_trash"
+        android:layout_alignTop="@+id/textView_saved_title"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

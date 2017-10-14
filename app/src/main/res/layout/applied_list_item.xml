@@ -44,14 +44,15 @@
 
     <ImageButton
         android:id="@+id/appliedJobs_delete_button"
-        android:layout_width="52dp"
-        android:layout_height="52dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/textView_applied_title"
         android:layout_marginEnd="14dp"
+        android:layout_marginTop="10dp"
+        android:foregroundGravity="center_vertical"
         android:background="@android:color/transparent"
         android:scaleType="fitCenter"
-        app:srcCompat="@drawable/ic_trash"
-        android:layout_alignTop="@+id/textView_applied_title"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="10dp" />
+        app:srcCompat="@drawable/ic_trash" />
 
 </RelativeLayout>
