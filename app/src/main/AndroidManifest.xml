@@ -32,7 +32,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".SplashActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="nosensor"
+            android:configChanges="orientation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -41,14 +42,17 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="nosensor"
+            android:configChanges="orientation"/>
         <activity
             android:name=".CreateAccountActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="nosensor"
+            android:configChanges="orientation"/>
         <activity
             android:name=".BottomNavigationActivity"
             android:label="@string/title_activity_map"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="nosensor"
+            android:configChanges="orientation"/>
 
         <receiver android:name=".objects.NotificationBroadcastReceiver"/>
         <receiver android:name=".objects.BootReceiver"

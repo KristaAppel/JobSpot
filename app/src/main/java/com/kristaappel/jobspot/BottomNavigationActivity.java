@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Location;
@@ -100,6 +101,15 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bottomnavigation);
+
+        Log.i("BottomNavActivity", "istablet: " + getResources().getBoolean(R.bool.is_tablet));
+        if (getResources().getBoolean(R.bool.is_tablet)){
+            //TODO: it's a tablet.  do tablet stuff
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }else{
+            //TODO: it's a phone.  do phone stuff.
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
 
         actionBar = getSupportActionBar();
 
@@ -396,8 +406,11 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
             }
         });
 
-        Job mostRecentJob = recentJobs.get(0);
-        FileUtil.writeMostRecentJob(activity, mostRecentJob);
+        if (recentJobs.size() > 0){
+            Job mostRecentJob = recentJobs.get(0);
+            FileUtil.writeMostRecentJob(activity, mostRecentJob);
+        }
+
     }
 
     private static void showJobs(final Activity activity, ArrayList<Job> jobs){

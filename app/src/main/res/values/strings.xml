@@ -6,7 +6,8 @@
     <string name="applied">Applied</string>
     <string name="profile">Profile</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+    <bool name="is_tablet">false</bool>
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="email_address">Email address</string>
     <string name="create_account">Create Account</string>

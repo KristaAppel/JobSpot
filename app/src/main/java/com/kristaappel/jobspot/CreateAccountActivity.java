@@ -1,12 +1,14 @@
 package com.kristaappel.jobspot;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -45,6 +47,17 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
 
         editText_username = (EditText) findViewById(R.id.editText_create_email);
         editText_password = (EditText) findViewById(R.id.editText_create_password);
+
+        Log.i("BottomNavActivity", "istablet: " + getResources().getBoolean(R.bool.is_tablet));
+        if (getResources().getBoolean(R.bool.is_tablet)){
+            //TODO: it's a tablet.  do tablet stuff
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        }else{
+            //TODO: it's a phone.  do phone stuff.
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
 
         firebase = new Firebase("https://jobspot-a0171.firebaseio.com/");
 

@@ -1,10 +1,13 @@
 package com.kristaappel.jobspot;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 
 public class SplashActivity extends AppCompatActivity implements View.OnClickListener {
@@ -13,6 +16,15 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        Log.i("BottomNavActivity", "istablet: " + getResources().getBoolean(R.bool.is_tablet));
+        if (getResources().getBoolean(R.bool.is_tablet)){
+            //TODO: it's a tablet.  do tablet stuff
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }else{
+            //TODO: it's a phone.  do phone stuff.
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null){
