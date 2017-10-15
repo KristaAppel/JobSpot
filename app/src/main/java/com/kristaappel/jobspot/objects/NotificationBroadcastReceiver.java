@@ -81,19 +81,22 @@ public class NotificationBroadcastReceiver extends WakefulBroadcastReceiver {
             return;
         }
         final ArrayList<Job> newJobs = new ArrayList<>();
+        // Get the most recent job search:
         final SavedSearch recentSearch = FileUtil.readMostRecentSearch(context);
         if (recentSearch != null){
             Log.i("Receiver", "most recent search: " + recentSearch.getKeywords() + " - " + recentSearch.getLocation());
         }
+        // Get the most recent job from the most recent search:
         final Job mostRecentJob = FileUtil.readMostRecentJob(context);
         if (mostRecentJob != null) {
             Log.i("Receiver", "most recent job: " + mostRecentJob.getJobTitle() + " - " + mostRecentJob.getDatePosted());
         }
         if (recentSearch != null){
+            // Create url string from recent search criteria:
             String url = "https://api.careeronestop.org/v1/jobsearch/TZ1zgEyKTNm69nF/" + recentSearch.getKeywords() + "/"+recentSearch.getLocation()+"/" + recentSearch.getRadius() + "/" + "accquisitiondate" + "/desc/0/120/" + "30";
             final ArrayList<Job> jobs = new ArrayList<>();
             final DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.US);
-            // Get jobs from API:
+            // Run the job search:
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
@@ -117,7 +120,8 @@ public class NotificationBroadcastReceiver extends WakefulBroadcastReceiver {
                         for (Job job : jobs){
                             try{
                                 // Find out if each job is newer than the most recent job:
-                                if (dateTimeFormat.parse(mostRecentJob.getDatePosted()).compareTo(dateTimeFormat.parse(job.getDatePosted()))<0){
+                                if (mostRecentJob != null && dateTimeFormat.parse(mostRecentJob.getDatePosted()).compareTo(dateTimeFormat.parse(job.getDatePosted())) < 0) {
+                                    // If a job is new, add it to the newJobs arraylist:
                                     newJobs.add(job);
                                     Log.i("Receiver", "new jobs: " + newJobs.size());
                                 }
@@ -131,8 +135,11 @@ public class NotificationBroadcastReceiver extends WakefulBroadcastReceiver {
                         e.printStackTrace();
                     }
 
+                    // If there are new jobs, show a notification:
                     if (newJobs.size() > 0){
                         showNotification(context, newJobs.size(), recentSearch);
+                    }else{
+                        Log.i("Receiver", "New Jobs: " + newJobs.size());
                     }
                 }
             }, new Response.ErrorListener() {
@@ -157,11 +164,6 @@ public class NotificationBroadcastReceiver extends WakefulBroadcastReceiver {
             VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
         }
 
-        //TODO: run a job search with the recentSearch
-        //TODO: compare date of recentJob with dates of jobs in the new search
-        //TODO: if the date of a search is more recent than the date of recentJob, keep count of how many jobs are newer
-        //TODO: return an int to return the count of new jobs?
-        //TODO: notify the user how many new jobs there are in the search
     }
 
     public void cancelAlarms(Context context){
@@ -181,7 +183,7 @@ public class NotificationBroadcastReceiver extends WakefulBroadcastReceiver {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
             builder.setSmallIcon(R.drawable.jobspot_small_notification_icon);
             builder.setContentTitle("New " + search.getKeywords() + " Jobs");
-            builder.setContentText("There are " + numberOfNewJobs + " new " + search.getKeywords() + " Jobs available in " + search.getLocation());
+            builder.setContentText("There are " + numberOfNewJobs + " new " + search.getKeywords() + " jobs available in " + search.getLocation());
             Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.jobspot_large_notification_icon);
             builder.setLargeIcon(bitmap);
 
