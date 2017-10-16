@@ -21,6 +21,7 @@ public class SearchScreenFragment extends android.app.Fragment {
     private ArrayList<Job> jobs;
     public static String locationText;
     public static String keywordsText;
+    private boolean isTablet = false;
 
 
     public SearchScreenFragment() {
@@ -46,6 +47,8 @@ public class SearchScreenFragment extends android.app.Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        isTablet = getResources().getBoolean(R.bool.is_tablet);
+
         if (getArguments() != null) {
             jobs = getArguments().getParcelableArrayList(ARG_PARAM1);
         }
@@ -53,7 +56,8 @@ public class SearchScreenFragment extends android.app.Fragment {
         SearchBoxFragment searchBoxFrag = new SearchBoxFragment();
         getFragmentManager().beginTransaction().replace(R.id.searchScreen_topContainer, searchBoxFrag).commit();
 
-        if (BottomNavigationActivity.mapIsShowing){
+        if (isTablet){
+            // Display for tablet:
             // Create and display a MapFragment:
             MapFragment mapFrag;
             if (jobs != null) {
@@ -64,7 +68,6 @@ public class SearchScreenFragment extends android.app.Fragment {
                 mapFrag = new MapFragment();
             }
             getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, mapFrag).commit();
-        }else if (BottomNavigationActivity.listIsShowing){
             // Create and display a SearchResultListFragment:
             SearchResultListFragment searchResultListFragment;
             if (jobs != null){
@@ -74,8 +77,34 @@ public class SearchScreenFragment extends android.app.Fragment {
             }else{
                 searchResultListFragment = new SearchResultListFragment();
             }
-            getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, searchResultListFragment).commit();
+            getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer2, searchResultListFragment).commit();
+        }else{
+            // Display for phone:
+            if (BottomNavigationActivity.mapIsShowing){
+                // Create and display a MapFragment:
+                MapFragment mapFrag;
+                if (jobs != null) {
+                    mapFrag = MapFragment.newInstance(jobs);
+                }else if (locationText != null && keywordsText != null){
+                    mapFrag = MapFragment.newInstance(locationText, keywordsText);
+                }else{
+                    mapFrag = new MapFragment();
+                }
+                getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, mapFrag).commit();
+            }else if (BottomNavigationActivity.listIsShowing){
+                // Create and display a SearchResultListFragment:
+                SearchResultListFragment searchResultListFragment;
+                if (jobs != null){
+                    searchResultListFragment = SearchResultListFragment.newInstance(jobs);
+                }else if (locationText != null && keywordsText != null) {
+                    searchResultListFragment = SearchResultListFragment.newInstance(locationText, keywordsText);
+                }else{
+                    searchResultListFragment = new SearchResultListFragment();
+                }
+                getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, searchResultListFragment).commit();
+            }
         }
+
     }
 
 

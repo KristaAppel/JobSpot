@@ -95,6 +95,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     public static String sortBy = "accquisitiondate";
     private static SavedSearch savedSearch;
     private AdView adView;
+    private static boolean isTablet = false;
 
 
     @Override
@@ -104,10 +105,10 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
 
         Log.i("BottomNavActivity", "istablet: " + getResources().getBoolean(R.bool.is_tablet));
         if (getResources().getBoolean(R.bool.is_tablet)){
-            //TODO: it's a tablet.  do tablet stuff
+            isTablet = true;
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }else{
-            //TODO: it's a phone.  do phone stuff.
+            isTablet = false;
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
 
@@ -414,8 +415,8 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     }
 
     private static void showJobs(final Activity activity, ArrayList<Job> jobs){
-        if (mapIsShowing){
-            // Create and display a MapFragment in bottom container:
+        if (isTablet){
+            // Create and display a MapFragment in bottom-left container:
             MapFragment mapFrag;
             if (jobs != null){
                 mapFrag = MapFragment.newInstance(jobs);
@@ -427,16 +428,40 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 }
             }
             activity.getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, mapFrag).commit();
-        }else if (listIsShowing){
-            // Create and display a SearchResultListFragment in bottom container:
+            // Create and display a SearchResultListFragment in bottom-right container:
             SearchResultListFragment listfrag;
             if (jobs != null){
                 listfrag = SearchResultListFragment.newInstance(jobs);
             }else{
                 listfrag = new SearchResultListFragment();
             }
-            activity.getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, listfrag).commit();
+            activity.getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer2, listfrag).commit();
+        }else{
+            if (mapIsShowing){
+                // Create and display a MapFragment in bottom container:
+                MapFragment mapFrag;
+                if (jobs != null){
+                    mapFrag = MapFragment.newInstance(jobs);
+                }else{
+                    if (savedSearch != null){
+                        mapFrag = MapFragment.newInstance(savedSearch.getLocation(), savedSearch.getKeywords());
+                    }else{
+                        mapFrag = new MapFragment();
+                    }
+                }
+                activity.getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, mapFrag).commit();
+            }else if (listIsShowing){
+                // Create and display a SearchResultListFragment in bottom container:
+                SearchResultListFragment listfrag;
+                if (jobs != null){
+                    listfrag = SearchResultListFragment.newInstance(jobs);
+                }else{
+                    listfrag = new SearchResultListFragment();
+                }
+                activity.getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, listfrag).commit();
+            }
         }
+
     }
 
 
