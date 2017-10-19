@@ -18,6 +18,8 @@ public class FileUtil {
     private static final String fileTypeSaved = "saved";
     private static final String fileTypeApplied = "applied";
     private static final String fileTypeSearch = "search";
+    private static final String fileTypeRecentSearch = "recentSearch";
+    private static final String fileTypeRecentJob = "recentJob";
 
     private static String getFileName(String fileType){
         Firebase firebase = new Firebase("https://jobspot-a0171.firebaseio.com/");
@@ -26,19 +28,28 @@ public class FileUtil {
         String savedJobsFile = null;
         String appliedJobsFile = null;
         String savedSearchesFile = null;
+        String recentSearchFile = null;
+        String recentJobFile = null;
         if (firebaseUser != null) {
             savedJobsFile = "savedjobs" + firebaseUser.getUid() + ".txt";
             appliedJobsFile = "appliedjobs" + firebaseUser.getUid() + ".txt";
             savedSearchesFile = "savedsearches" + firebaseUser.getUid() + ".txt";
+            recentSearchFile = "recentSearch" + firebaseUser.getUid() + ".txt";
+            recentJobFile = "recentJob" + firebaseUser.getUid() + ".txt";
         }
-        if (fileType.equals(fileTypeSaved)){
-            return savedJobsFile;
-        }else if (fileType.equals(fileTypeApplied)) {
-            return appliedJobsFile;
-        }else if (fileType.equals(fileTypeSearch)){
-            return savedSearchesFile;
-        }else {
-            return null;
+        switch (fileType) {
+            case fileTypeSaved:
+                return savedJobsFile;
+            case fileTypeApplied:
+                return appliedJobsFile;
+            case fileTypeSearch:
+                return savedSearchesFile;
+            case fileTypeRecentSearch:
+                return recentSearchFile;
+            case fileTypeRecentJob:
+                return recentJobFile;
+            default:
+                return null;
         }
     }
 
@@ -70,7 +81,7 @@ public class FileUtil {
 
     public static void writeMostRecentJob(Context context, Job job){
         try{
-            String fileName = "mostRecentJob.txt";
+            String fileName = getFileName(fileTypeRecentJob);
             FileOutputStream fileOutputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
             objectOutputStream.writeObject(job);
@@ -96,7 +107,7 @@ public class FileUtil {
 
     public static void writeMostRecentSearch(Context context, SavedSearch search){
         try{
-            String fileName = "mostRecentSearch.txt";
+            String fileName = getFileName(fileTypeRecentSearch);
             FileOutputStream fileOutputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
             objectOutputStream.writeObject(search);
@@ -169,7 +180,7 @@ public class FileUtil {
 
     public static SavedSearch readMostRecentSearch(Context context){
         try{
-            String fileName = "mostRecentSearch.txt";
+            String fileName = getFileName(fileTypeRecentSearch);
             FileInputStream fileInputStream = context.openFileInput(fileName);
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
             Object readObject = objectInputStream.readObject();
@@ -214,7 +225,7 @@ public class FileUtil {
 
     public static Job readMostRecentJob(Context context){
         try{
-            String fileName = "mostRecentJob.txt";
+            String fileName = getFileName(fileTypeRecentJob);
             FileInputStream fileInputStream = context.openFileInput(fileName);
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
             Object readObject = objectInputStream.readObject();
@@ -224,6 +235,7 @@ public class FileUtil {
             }
         }catch (Exception e){
             e.printStackTrace();
+            return null;
         }
         return null;
     }
