@@ -19,10 +19,10 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
 
         Log.i("BottomNavActivity", "istablet: " + getResources().getBoolean(R.bool.is_tablet));
         if (getResources().getBoolean(R.bool.is_tablet)){
-            //TODO: it's a tablet.  do tablet stuff
+            // It's a tablet.  Show in landscape:
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }else{
-            //TODO: it's a phone.  do phone stuff.
+            // It's a phone.  Show in portrait:
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
 
@@ -43,4 +43,5 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
             startActivity(loginIntent);
         }
     }
+
 }
