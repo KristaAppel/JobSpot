@@ -85,11 +85,15 @@ public class NotificationBroadcastReceiver extends WakefulBroadcastReceiver {
         final SavedSearch recentSearch = FileUtil.readMostRecentSearch(context);
         if (recentSearch != null){
             Log.i("Receiver", "most recent search: " + recentSearch.getKeywords() + " - " + recentSearch.getLocation());
+        }else{
+            Log.i("Receiver", "most recent search is null");
         }
         // Get the most recent job from the most recent search:
         final Job mostRecentJob = FileUtil.readMostRecentJob(context);
         if (mostRecentJob != null) {
             Log.i("Receiver", "most recent job: " + mostRecentJob.getJobTitle() + " - " + mostRecentJob.getDatePosted());
+        }else{
+            Log.i("Receiver", "most recent job is null");
         }
         if (recentSearch != null){
             // Create url string from recent search criteria:
