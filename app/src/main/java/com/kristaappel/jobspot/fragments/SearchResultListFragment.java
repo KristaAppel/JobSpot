@@ -91,10 +91,10 @@ public class SearchResultListFragment extends ListFragment {
     @Override
     public void onResume() {
         super.onResume();
-        ProgressBar progressBar = (ProgressBar)getActivity().findViewById(R.id.progressBar);
-        if (progressBar != null){
-            progressBar.setVisibility(View.INVISIBLE);
-        }
+//        ProgressBar progressBar = (ProgressBar)getActivity().findViewById(R.id.progressBar);
+//        if (progressBar != null){
+//            progressBar.setVisibility(View.INVISIBLE);
+//        }
     }
 
     @Override
@@ -130,6 +130,10 @@ public class SearchResultListFragment extends ListFragment {
         public View getView(final int position, View convertView, ViewGroup parent) {
             if (convertView == null){
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.searchresult_list_item, parent, false);
+            }
+            ProgressBar progressBar = (ProgressBar)getActivity().findViewById(R.id.progressBar);
+            if (progressBar != null){
+                progressBar.setVisibility(View.INVISIBLE);
             }
 
             // Get TextViews:

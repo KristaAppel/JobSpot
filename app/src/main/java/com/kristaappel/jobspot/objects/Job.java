@@ -133,8 +133,8 @@ public class Job implements Serializable, Parcelable{
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Job){
-            Job otherPerson = (Job) obj;
-            return this.getJobID().equals(otherPerson.getJobID());
+            Job otherJob = (Job) obj;
+            return this.getJobID().equals(otherJob.getJobID());
         }
         return false;
     }

@@ -43,7 +43,7 @@ public class SavedSearch implements Serializable{
     public boolean equals(Object obj) {
         if (obj instanceof SavedSearch){
             SavedSearch otherSearch = (SavedSearch) obj;
-            return this.getKeywords().equals(otherSearch.getKeywords()) && this.getLocation().equals(otherSearch.getLocation()) && this.getDays().equals(otherSearch.getDays()) && this.getRadius().equals(otherSearch.getRadius());
+            return this.getKeywords().equals(otherSearch.getKeywords()) && this.getLocation().equals(otherSearch.getLocation());
         }
         return false;
     }

@@ -496,15 +496,19 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.i("BottomNavActvty:409", "response: " + response);
+                Log.i("BottomNavActvty:499", "response: " + response);
                 makeJobList(response);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i("BottomNav:415", "That didn't work!!!!!!!");
+                Log.i("BottomNav:505", "That didn't work!!!!!!!");
                 if (error.networkResponse.statusCode == 404){
                     Toast.makeText(BottomNavigationActivity.this, "No jobs available.", Toast.LENGTH_SHORT).show();
+                    ProgressBar progressBar = (ProgressBar)BottomNavigationActivity.this.findViewById(R.id.progressBar);
+                    if (progressBar != null){
+                        progressBar.setVisibility(View.INVISIBLE);
+                    }
                 }
             }
         })
@@ -527,12 +531,14 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         // Find out if the search is already saved:
         boolean foundMatch = false;
         for (int i=0; i<savedSearches.size(); i++){
-            if (savedSearches.get(i).equals(search)){
+            if (savedSearches.get(i).getKeywords().equals(search.getKeywords()) && savedSearches.get(i).getLocation().equals(search.getLocation())){
+                Log.i("match", savedSearches.get(i).getKeywords() + " " + search.getKeywords() + "\n" + savedSearches.get(i).getLocation() + " " + search.getLocation());
                 foundMatch = true;
             }
         }
         // If the search isn't saved, then save it:
         if (!foundMatch){
+            Log.i("match", "no matches");
             savedSearches.add(search);
             // Save savedSearch to device:
             FileUtil.writeSavedSearch(this, savedSearches);
@@ -545,7 +551,6 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 firebase.child("users").child(firebaseUser.getUid()).child("savedsearches").child(search.getDateTime()).setValue(search);
             }
         }
-
         FileUtil.writeMostRecentSearch(this, search);
     }
 

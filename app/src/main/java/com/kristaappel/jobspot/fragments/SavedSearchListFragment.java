@@ -70,7 +70,7 @@ public class SavedSearchListFragment extends ListFragment {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         savedSearches.clear();
                         for (DataSnapshot userSnapshot : dataSnapshot.getChildren()){
-                            Log.i("FileUtil", "snapshot: " + userSnapshot.getValue());
+                            Log.i("SavedSearchFrag", "snapshot: " + userSnapshot.getValue());
 
                             HashMap snapshotSearch = (HashMap) userSnapshot.getValue();
                             String keywords = snapshotSearch.get("keywords").toString();
@@ -108,14 +108,8 @@ public class SavedSearchListFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-
-        //Create and display a SearchScreenFragment:
-   //     SearchScreenFragment searchScreenFragment = SearchScreenFragment.newInstance(savedSearches.get(position).getLocation(), savedSearches.get(position).getKeywords());
-   //     getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, searchScreenFragment).commit();
-
-        // Use the chosen saved search to run a job search!
+        // Use the chosen saved search to run a job search:
         mListener.onsavedSearchInteraction(savedSearches.get(position));
-
     }
 
     private class SavedSearchAdapter extends BaseAdapter {
@@ -167,7 +161,7 @@ public class SavedSearchListFragment extends ListFragment {
                     // Unsave the search from the device:
                     ArrayList<SavedSearch> searchesToRemove = new ArrayList<>();
                     for (SavedSearch savedSearch : savedSearches){
-                        if (savedSearch.equals(savedSearches.get(position))){
+                        if (savedSearch.getDateTime().equals(savedSearches.get(position).getDateTime())){
                             searchesToRemove.add(savedSearch);
                         }
                     }
