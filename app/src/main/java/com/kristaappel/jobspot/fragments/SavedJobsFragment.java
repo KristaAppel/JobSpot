@@ -137,10 +137,13 @@ public class SavedJobsFragment extends ListFragment {
             // Get TextViews:
             TextView textTitle = (TextView) convertView.findViewById(R.id.textView_saved_title);
             TextView textCompany = (TextView) convertView.findViewById(R.id.textView_saved_company);
+            TextView textDate = (TextView) convertView.findViewById(R.id.textView_saved_datePosted);
 
             // Set text:
             textTitle.setText(savedJobs.get(position).getJobTitle());
             textCompany.setText(savedJobs.get(position).getCompanyName());
+            String datePostedString = "Posted on: " + savedJobs.get(position).getDatePosted();
+            textDate.setText(datePostedString);
 
             ImageButton deleteButton = (ImageButton) convertView.findViewById(R.id.savedJobs_delete_button);
             deleteButton.setOnClickListener(new View.OnClickListener() {

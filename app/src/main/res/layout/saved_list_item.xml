@@ -24,11 +24,22 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/textView_saved_title"
         android:layout_below="@+id/textView_saved_title"
-        android:layout_marginBottom="16dp"
         android:layout_marginEnd="54dp"
         android:text="@string/company"
         android:textAlignment="textStart"
         android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textView_saved_datePosted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView_saved_company"
+        android:layout_alignStart="@+id/textView_saved_company"
+        android:text="@string/date"
+        android:textAlignment="textStart"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="54dp"
+        android:textColor="?android:attr/textColorSecondaryInverseNoDisable"/>
 
     <ImageButton
         android:id="@+id/savedJobs_delete_button"
