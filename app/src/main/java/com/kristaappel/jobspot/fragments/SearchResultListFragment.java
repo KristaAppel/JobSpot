@@ -131,10 +131,6 @@ public class SearchResultListFragment extends ListFragment {
             if (convertView == null){
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.searchresult_list_item, parent, false);
             }
-            ProgressBar progressBar = (ProgressBar)getActivity().findViewById(R.id.progressBar);
-            if (progressBar != null){
-                progressBar.setVisibility(View.INVISIBLE);
-            }
 
             // Get TextViews:
             TextView textTitle = (TextView) convertView.findViewById(R.id.textView_searchResult_title);
@@ -211,6 +207,12 @@ public class SearchResultListFragment extends ListFragment {
 
                 }
             });
+
+            // Hide progress bar:
+            ProgressBar progressBar = (ProgressBar)getActivity().findViewById(R.id.progressBar);
+            if (progressBar != null){
+                progressBar.setVisibility(View.INVISIBLE);
+            }
 
             return convertView;
         }

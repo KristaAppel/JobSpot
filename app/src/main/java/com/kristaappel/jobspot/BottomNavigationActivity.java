@@ -505,6 +505,8 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 Log.i("BottomNav:505", "That didn't work!!!!!!!");
                 if (error.networkResponse.statusCode == 404){
                     Toast.makeText(BottomNavigationActivity.this, "No jobs available.", Toast.LENGTH_SHORT).show();
+                    ArrayList<Job> emptyJobs = new ArrayList<>();
+                    showJobs(BottomNavigationActivity.this,emptyJobs);
                     ProgressBar progressBar = (ProgressBar)BottomNavigationActivity.this.findViewById(R.id.progressBar);
                     if (progressBar != null){
                         progressBar.setVisibility(View.INVISIBLE);

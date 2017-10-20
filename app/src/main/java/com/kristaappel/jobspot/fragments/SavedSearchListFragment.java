@@ -81,8 +81,17 @@ public class SavedSearchListFragment extends ListFragment {
 
                             SavedSearch aSearch = new SavedSearch(keywords, radius, location, days, dateTime);
 
-                            savedSearches.add(aSearch);
-                            listAdapter.notifyDataSetChanged();
+                            boolean foundMatch = false;
+                            for (int i=0; i<savedSearches.size(); i++){
+                                if (savedSearches.get(i).getKeywords().equals(aSearch.getKeywords()) && savedSearches.get(i).getLocation().equals(aSearch.getLocation())){
+                                    foundMatch = true;
+                                }
+                            }
+                            if (!foundMatch){
+                                savedSearches.add(aSearch);
+                                listAdapter.notifyDataSetChanged();
+                            }
+
 
                         }
                     }
