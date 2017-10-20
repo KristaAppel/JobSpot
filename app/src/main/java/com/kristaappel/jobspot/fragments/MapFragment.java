@@ -238,7 +238,7 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
             }
 
             if (zoomToLatLong != null){
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(zoomToLatLong, 12);
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(zoomToLatLong, 10);
                 googleMap.animateCamera(cameraUpdate);
             }
         }
