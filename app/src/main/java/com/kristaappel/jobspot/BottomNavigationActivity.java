@@ -482,14 +482,15 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
             Toast.makeText(this, "No connection.", Toast.LENGTH_SHORT).show();
             return;
         }
+        // Show progress bar:
+        ProgressBar progressBar = (ProgressBar)findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.VISIBLE);
+
         jobList.clear();
         // Save the search:
         String time = String.valueOf(System.currentTimeMillis());
         SavedSearch newSavedSearch = new SavedSearch(_keywords, radius, _location, posted, time);
         saveTheSearch(newSavedSearch);
-        // Show progress bar:
-        ProgressBar progressBar = (ProgressBar)findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.VISIBLE);
         //Get the search radius, sort type, & number of days from user and put it into the job search url:
         String url = "https://api.careeronestop.org/v1/jobsearch/TZ1zgEyKTNm69nF/"+_keywords+"/"+_location+"/"+radius+"/"+sortBy+"/desc/0/120/"+posted;
         // Get jobs from API:

@@ -1,18 +1,25 @@
 package com.kristaappel.jobspot.fragments;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.kristaappel.jobspot.BottomNavigationActivity;
 import com.kristaappel.jobspot.R;
+import com.kristaappel.jobspot.objects.FileUtil;
+import com.kristaappel.jobspot.objects.SavedSearch;
 
+import java.io.File;
 
 
 public class SortFilterFragment extends android.app.Fragment implements RadioGroup.OnCheckedChangeListener {
@@ -21,6 +28,7 @@ public class SortFilterFragment extends android.app.Fragment implements RadioGro
     private String posted = "30";
     private String sortBy = "accquisitiondate";
     private OnSortFilterInteractionListener mListener;
+    SharedPreferences sharedPreferences;
 
     public SortFilterFragment() {
         // Required empty public constructor
@@ -57,6 +65,38 @@ public class SortFilterFragment extends android.app.Fragment implements RadioGro
         radioGroupRadius.setOnCheckedChangeListener(this);
         radioGroupPosted.setOnCheckedChangeListener(this);
         radioGroupSortBy.setOnCheckedChangeListener(this);
+
+        SavedSearch recentSearch = FileUtil.readMostRecentSearch(getActivity());
+        if (recentSearch != null) {
+            radius = recentSearch.getRadius();
+            posted = recentSearch.getDays();
+        }
+
+        RadioButton radiusButton1 = (RadioButton) getActivity().findViewById(R.id.radioButton_radius_1);
+        radiusButton1.setChecked(radius.equals("10"));
+        RadioButton radiusButton2 = (RadioButton) getActivity().findViewById(R.id.radioButton_radius_2);
+        radiusButton2.setChecked(radius.equals("20"));
+        RadioButton radiusButton3 = (RadioButton) getActivity().findViewById(R.id.radioButton_radius_3);
+        radiusButton3.setChecked(radius.equals("30"));
+        RadioButton radiusButton4 = (RadioButton) getActivity().findViewById(R.id.radioButton_radius_4);
+        radiusButton4.setChecked(radius.equals("40"));
+
+        RadioButton postedButton1 = (RadioButton) getActivity().findViewById(R.id.radioButton_posted_1);
+        postedButton1.setChecked(posted.equals("7"));
+        RadioButton postedButton2 = (RadioButton) getActivity().findViewById(R.id.radioButton_posted_2);
+        postedButton2.setChecked(posted.equals("14"));
+        RadioButton postedButton3 = (RadioButton) getActivity().findViewById(R.id.radioButton_posted_3);
+        postedButton3.setChecked(posted.equals("30"));
+
+        sharedPreferences = getActivity().getSharedPreferences("com.kristaappel.jobspot.preferences", Context.MODE_PRIVATE);
+        String lastSortOption = sharedPreferences.getString("sortBy", "accquisitiondate");
+        Log.i("lastSortOption", lastSortOption);
+        RadioButton sortByButton1 = (RadioButton) getActivity().findViewById(R.id.radioButton_sortby_1);
+        sortByButton1.setChecked(lastSortOption.equals("accquisitiondate"));
+        RadioButton sortByButton2 = (RadioButton) getActivity().findViewById(R.id.radioButton_sortby_2);
+        sortByButton2.setChecked(lastSortOption.equals("location"));
+        RadioButton sortByButton3 = (RadioButton) getActivity().findViewById(R.id.radioButton_sortby_3);
+        sortByButton3.setChecked(lastSortOption.equals("relevance"));
     }
 
     @Override
@@ -116,9 +156,10 @@ public class SortFilterFragment extends android.app.Fragment implements RadioGro
                 break;
             // Get sort type:
             case R.id.radioGroup_sortby:
+                SharedPreferences.Editor editor = sharedPreferences.edit();
                 switch (checkedId){
                     case R.id.radioButton_sortby_1:
-                        sortBy = "accqusitiondate";
+                        sortBy = "accquisitiondate";
                         break;
                     case R.id.radioButton_sortby_2:
                         sortBy = "location";
@@ -127,6 +168,8 @@ public class SortFilterFragment extends android.app.Fragment implements RadioGro
                         sortBy = "relevance";
                         break;
                 }
+                editor.putString("sortBy", sortBy);
+                editor.apply();
                 break;
         }
     }
