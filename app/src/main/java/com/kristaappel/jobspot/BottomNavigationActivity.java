@@ -292,10 +292,10 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 toggleButtonColors();
                 // Get user's input data & make sure it's not empty:
                 if (et_location.getText().toString().length() >0){
-                    location = et_location.getText().toString();
+                    location = et_location.getText().toString().trim();
                 }
                 if (et_keywords.getText().toString().length() >0){
-                    keywords = et_keywords.getText().toString();
+                    keywords = et_keywords.getText().toString().trim();
                 }
 
                 if (location==null || location.equals("")){
