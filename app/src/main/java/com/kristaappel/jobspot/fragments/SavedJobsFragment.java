@@ -24,8 +24,14 @@ import com.kristaappel.jobspot.objects.FileUtil;
 import com.kristaappel.jobspot.objects.Job;
 import com.kristaappel.jobspot.objects.NetworkMonitor;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Locale;
 
 
 public class SavedJobsFragment extends ListFragment {
@@ -39,6 +45,7 @@ public class SavedJobsFragment extends ListFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         savedJobs = FileUtil.readSavedJobs(context);
+        sortJobs();
         listAdapter = new SavedListAdapter();
         setListAdapter(listAdapter);
     }
@@ -89,7 +96,21 @@ public class SavedJobsFragment extends ListFragment {
         }else{
             savedJobs = FileUtil.readSavedJobs(getActivity());
         }
+        sortJobs();
+    }
 
+    private void sortJobs(){
+        Collections.sort(savedJobs, new Comparator<Job>() {
+            final DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.US);
+            @Override
+            public int compare(Job job1, Job job2) {
+                try{
+                    return dateTimeFormat.parse(job2.getDatePosted()).compareTo(dateTimeFormat.parse(job1.getDatePosted()));
+                }catch (ParseException e){
+                    throw new IllegalArgumentException(e);
+                }
+            }
+        });
     }
 
     @Override
@@ -133,6 +154,8 @@ public class SavedJobsFragment extends ListFragment {
             if (convertView == null){
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.saved_list_item, parent, false);
             }
+
+            sortJobs();
 
             // Get TextViews:
             TextView textTitle = (TextView) convertView.findViewById(R.id.textView_saved_title);
