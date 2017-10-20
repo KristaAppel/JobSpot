@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView_saved_company"
         android:layout_alignStart="@+id/textView_saved_company"
-        android:text="@string/date"
+        android:text=""
         android:textAlignment="textStart"
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="54dp"

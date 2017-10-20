@@ -223,7 +223,7 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
             EditText et_location = (EditText) getActivity().findViewById(R.id.et_location);
             enteredLocation = et_location.getText().toString();
             if (!enteredLocation.equals("")){
-                // Zoom to entered location:
+                // Get entered location:
                 Geocoder gc = new Geocoder(getContext());
                 try {
                     List<Address> address = gc.getFromLocationName(enteredLocation, 1);
@@ -233,13 +233,15 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
                     e.printStackTrace();
                 }
             }else{
-                // Zoom to current location:
+                // Get current location:
                 zoomToLatLong = new LatLng(currentAddress.getLatitude(), currentAddress.getLongitude());
             }
 
+            // Zoom:
             if (zoomToLatLong != null){
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(zoomToLatLong, 10);
-                googleMap.animateCamera(cameraUpdate);
+             //   googleMap.animateCamera(cameraUpdate);
+                googleMap.moveCamera(cameraUpdate);
             }
         }
 
