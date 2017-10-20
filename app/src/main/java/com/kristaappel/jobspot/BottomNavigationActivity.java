@@ -350,7 +350,14 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         if (foundJob != null && jobLat != null && jobLng != null) {
             newJob = new Job(foundJob.getJobID(), foundJob.getJobTitle(), foundJob.getCompanyName(), foundJob.getDatePosted(), foundJob.getJobURL(), foundJob.getJobCityState(), jobLat, jobLng, "");
         }else{
-            Log.i("BottomNav:317", "foundjob is nul!!!!!!!!!!");
+            if (foundJob == null){
+                Log.i("BottomNav:354", "foundjob is nul!!!!!!!!!!");
+            }else if (foundJob.getJobLat() == 0 || foundJob.getJobLng() == 0){
+                Log.i("BottomNav:357", "lat or lng is null!!!!!!!!!!");
+                newJob = new Job(foundJob.getJobID(), foundJob.getJobTitle(), foundJob.getCompanyName(), foundJob.getDatePosted(), foundJob.getJobURL(), foundJob.getJobCityState(), 0, 0, "");
+                Toast.makeText(activity, "Could not retrieve job locations.  API limit reached.", Toast.LENGTH_SHORT).show();
+            }
+
         }
         // Add new job to the list of jobs:
         if (newJob != null && !jobList.contains(newJob)){
