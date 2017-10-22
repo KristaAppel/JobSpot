@@ -24,6 +24,8 @@ import com.kristaappel.jobspot.objects.FileUtil;
 import com.kristaappel.jobspot.objects.NetworkMonitor;
 import com.kristaappel.jobspot.objects.SavedSearch;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -157,11 +159,14 @@ public class SavedSearchListFragment extends ListFragment {
             // Get TextViews:
             TextView textTitle = (TextView) convertView.findViewById(R.id.textView_saved_title);
             TextView textSubtitle = (TextView) convertView.findViewById(R.id.textView_saved_company);
+            TextView textSubtitleTwo = (TextView) convertView.findViewById(R.id.textView_saved_datePosted);
 
             // Set text:
             textTitle.setText(savedSearches.get(position).getKeywords());
-            String searchString = "Within " + savedSearches.get(position).getRadius() + " miles of " + savedSearches.get(position).getLocation() + ", past " + savedSearches.get(position).getDays() + " days";
-            textSubtitle.setText(searchString);
+            String subtitleString = "Within " + savedSearches.get(position).getRadius() + " miles of " + savedSearches.get(position).getLocation();
+            textSubtitle.setText(subtitleString);
+            String subtitleStringTwo = "Past " + savedSearches.get(position).getDays() + " days";
+            textSubtitleTwo.setText(subtitleStringTwo);
 
             ImageButton deleteButton = (ImageButton) convertView.findViewById(R.id.savedJobs_delete_button);
             deleteButton.setOnClickListener(new View.OnClickListener() {
