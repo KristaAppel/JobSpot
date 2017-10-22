@@ -40,6 +40,7 @@ public class SavedSearchListFragment extends ListFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         savedSearches = FileUtil.readSavedSearches(context);
+        getSavedSearches();
         listAdapter = new SavedSearchAdapter();
         setListAdapter(listAdapter);
 
@@ -57,7 +58,10 @@ public class SavedSearchListFragment extends ListFragment {
     @Override
     public void onResume() {
         super.onResume();
+        getSavedSearches();
+    }
 
+    private void getSavedSearches(){
         if (NetworkMonitor.deviceIsConnected(getActivity())){
             // We're online.  Get list from Firebase:
             Firebase firebase = new Firebase("https://jobspot-a0171.firebaseio.com/");
@@ -83,7 +87,10 @@ public class SavedSearchListFragment extends ListFragment {
 
                             boolean foundMatch = false;
                             for (int i=0; i<savedSearches.size(); i++){
-                                if (savedSearches.get(i).getKeywords().equals(aSearch.getKeywords()) && savedSearches.get(i).getLocation().equals(aSearch.getLocation())){
+                                if (savedSearches.get(i).getKeywords().equals(aSearch.getKeywords()) &&
+                                        savedSearches.get(i).getLocation().equals(aSearch.getLocation()) &&
+                                        savedSearches.get(i).getRadius().equals(aSearch.getRadius()) &&
+                                        savedSearches.get(i).getDays().equals(aSearch.getDays())){
                                     foundMatch = true;
                                 }
                             }
@@ -177,6 +184,7 @@ public class SavedSearchListFragment extends ListFragment {
                     savedSearches.removeAll(searchesToRemove);
                     FileUtil.writeSavedSearch(getActivity(), savedSearches);
                     Toast.makeText(getActivity(), "Search has been removed.", Toast.LENGTH_SHORT).show();
+                    getSavedSearches();
                     notifyDataSetChanged();
                 }
             });

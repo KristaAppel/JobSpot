@@ -144,7 +144,7 @@ public class SearchResultListFragment extends ListFragment {
             String jobDate = "Posted on: " + jobs.get(position).getDatePosted();
             textDate.setText(jobDate);
             if (jobs.get(position).getJobLng()!= 0 && jobs.get(position).getJobLng() != 0 && jobs.get(position).getDistance(getActivity(), jobs.get(position)) != null){
-                String distanceString = jobs.get(position).getDistance(getActivity(), jobs.get(position)) + " miles away";
+                String distanceString = jobs.get(position).getDistance(getActivity(), jobs.get(position)) + " miles from you";
                 textDistance.setText(distanceString);
             }
 

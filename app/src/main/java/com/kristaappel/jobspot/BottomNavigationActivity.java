@@ -80,8 +80,8 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     private ActionBar actionBar;
     public static String keywords;
     public static String location;
-    private String radius = "20";
-    private String posted = "30";
+    public static String radius = "20";
+    public static String posted = "30";
     private static String liPictureURL = "";
     private static String liName = "";
     private static String liHeadline = "";
@@ -97,6 +97,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     private static SavedSearch savedSearch;
     private AdView adView;
     private static boolean isTablet = false;
+    SortFilterFragment sortFilterFragment;
 
 
     @Override
@@ -277,7 +278,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
             case R.id.filterButton:
                 jobList.clear();
                 //Show a list of filter & sort options, use chosen options in job search
-                SortFilterFragment sortFilterFragment = new SortFilterFragment();
+                sortFilterFragment = new SortFilterFragment();
                 getFragmentManager().beginTransaction().replace(R.id.searchScreen_bottomContainer, sortFilterFragment).commit();
                 InputMethodManager inputMethodManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(et_keywords.getWindowToken(), 0);
@@ -534,7 +535,10 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         // Find out if the search is already saved:
         boolean foundMatch = false;
         for (int i=0; i<savedSearches.size(); i++){
-            if (savedSearches.get(i).getKeywords().equals(search.getKeywords()) && savedSearches.get(i).getLocation().equals(search.getLocation())){
+            if (savedSearches.get(i).getKeywords().equals(search.getKeywords()) &&
+                    savedSearches.get(i).getLocation().equals(search.getLocation()) &&
+                    savedSearches.get(i).getRadius().equals(search.getRadius()) &&
+                    savedSearches.get(i).getDays().equals(search.getDays())){
                 Log.i("match", savedSearches.get(i).getKeywords() + " " + search.getKeywords() + "\n" + savedSearches.get(i).getLocation() + " " + search.getLocation());
                 foundMatch = true;
             }
