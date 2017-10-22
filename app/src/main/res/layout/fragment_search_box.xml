@@ -62,7 +62,7 @@
                             android:queryHint="Enter Location"
                             android:singleLine="true"
                             android:textAppearance="@style/TextAppearance.AppCompat"
-                            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789,"/>
+                            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789, "/>
 
                     </LinearLayout>
 
@@ -102,7 +102,7 @@
                             android:queryHint="Enter Keyword(s)"
                             android:singleLine="true"
                             android:textAppearance="@style/TextAppearance.AppCompat"
-                            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"/>
+                            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz "/>
 
                         <ImageButton
                             android:id="@+id/recentButton"

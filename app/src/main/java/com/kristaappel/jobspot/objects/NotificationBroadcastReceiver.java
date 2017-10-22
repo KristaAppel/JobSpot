@@ -97,7 +97,8 @@ public class NotificationBroadcastReceiver extends WakefulBroadcastReceiver {
         }
         if (recentSearch != null){
             // Create url string from recent search criteria:
-            String url = "https://api.careeronestop.org/v1/jobsearch/TZ1zgEyKTNm69nF/" + recentSearch.getKeywords() + "/"+recentSearch.getLocation()+"/" + recentSearch.getRadius() + "/" + "accquisitiondate" + "/desc/0/120/" + "30";
+            String maxJobsString = String.valueOf(BottomNavigationActivity.maxJobs);
+            String url = "https://api.careeronestop.org/v1/jobsearch/TZ1zgEyKTNm69nF/" + recentSearch.getKeywords() + "/"+recentSearch.getLocation()+"/" + recentSearch.getRadius() + "/" + "accquisitiondate" + "/desc/0/"+maxJobsString+"/" + "30";
             final ArrayList<Job> jobs = new ArrayList<>();
             final DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.US);
             // Run the job search:

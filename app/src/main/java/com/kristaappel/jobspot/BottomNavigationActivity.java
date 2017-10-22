@@ -98,6 +98,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     private AdView adView;
     private static boolean isTablet = false;
     SortFilterFragment sortFilterFragment;
+    public static int maxJobs = 30;
 
 
     @Override
@@ -493,7 +494,8 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         SavedSearch newSavedSearch = new SavedSearch(_keywords, radius, _location, posted, time);
         saveTheSearch(newSavedSearch);
         //Get the search radius, sort type, & number of days from user and put it into the job search url:
-        String url = "https://api.careeronestop.org/v1/jobsearch/TZ1zgEyKTNm69nF/"+_keywords+"/"+_location+"/"+radius+"/"+sortBy+"/desc/0/120/"+posted;
+        String maxJobsString = String.valueOf(maxJobs);
+        String url = "https://api.careeronestop.org/v1/jobsearch/TZ1zgEyKTNm69nF/"+_keywords+"/"+_location+"/"+radius+"/"+sortBy+"/desc/0/"+maxJobsString+"/"+posted;
         // Get jobs from API:
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
@@ -566,7 +568,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         try {
             JSONObject responseObj = new JSONObject(searchResponse);
             JSONArray jobsArray = responseObj.getJSONArray("Jobs");
-            for (int i = 0; i<jobsArray.length(); i++){
+            for (int i = 0; i<maxJobs; i++){
                 JSONObject jobObj = jobsArray.getJSONObject(i);
                 String jobid = jobObj.getString("JvId");
                 String jobtitle = jobObj.getString("JobTitle");
