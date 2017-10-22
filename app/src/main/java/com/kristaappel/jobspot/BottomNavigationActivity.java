@@ -560,6 +560,14 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 firebase.child("users").child(firebaseUser.getUid()).child("savedsearches").child(search.getDateTime()).setValue(search);
             }
         }
+        // Save filters:
+        SharedPreferences sharedPreferences = this.getSharedPreferences("com.kristaappel.jobspot.preferences", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("radius", search.getRadius());
+        editor.putString("posted", search.getDays());
+        editor.putString("sortBy", sortBy);
+        editor.apply();
+
         FileUtil.writeMostRecentSearch(this, search);
     }
 
