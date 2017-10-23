@@ -703,7 +703,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                         liLocationObject = responseObject.getJSONObject("location");
                     }
 
-                    if (liLocationObject.has("name")){
+                    if (liLocationObject != null && liLocationObject.has("name")){
                         liLocation = liLocationObject.getString("name");
                     }
 
@@ -726,6 +726,8 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 Log.i("LINKEDIN", "location: " + liLocation);
                 Log.i("LINKEDIN", "picture url: " + liPictureURL);
                 Log.i("LINKEDIN", "summary: " + liSummary);
+
+                //TODO: save profile data to firebase
 
                 ProfileFragment.displayLinkedInData(BottomNavigationActivity.this, liName, liEmail, liPictureURL, liHeadline, liLocation, liSummary);
 
