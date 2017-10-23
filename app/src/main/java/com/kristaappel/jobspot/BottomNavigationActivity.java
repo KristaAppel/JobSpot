@@ -697,6 +697,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                     liSummary = responseObject.getString("summary");
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    Log.i("LINKEDIN700", "JSONException in onApiSuccess: " + e.toString());
                     Toast.makeText(BottomNavigationActivity.this, "Error retrieving data", Toast.LENGTH_SHORT).show();
                 }
                 Log.i("LINKEDIN", "name: " + liName);
@@ -707,7 +708,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 Log.i("LINKEDIN", "picture url: " + liPictureURL);
                 Log.i("LINKEDIN", "summary: " + liSummary);
 
-                ProfileFragment.displayLinkedInData(BottomNavigationActivity.this, liPictureURL, liHeadline, liLocation, liIndustry, liSummary);
+                ProfileFragment.displayLinkedInData(BottomNavigationActivity.this, liName, liPictureURL, liHeadline, liLocation, liIndustry, liSummary);
 
             }
 

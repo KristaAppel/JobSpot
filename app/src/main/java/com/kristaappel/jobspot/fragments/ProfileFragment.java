@@ -106,8 +106,8 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
 
         // Display LinkedIn profile data, if available:
         if (!linkedInError){
-            Log.i("LINKEDIN", "no error");
-            displayLinkedInData(getActivity(), liPictureUrl, liHeadline, liLocation, liIndustry, liSummary);
+            Log.i("LINKEDINprofile109", "no error");
+            displayLinkedInData(getActivity(), liName, liPictureUrl, liHeadline, liLocation, liIndustry, liSummary);
         }
 
 
@@ -121,11 +121,11 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
         }
 
         if (linkedInAccessToken != null) {
-            Log.i("LINKEDIN", "access token not null");
+            Log.i("LINKEDINprofile124", "access token not null");
             LISessionManager.getInstance(getActivity().getApplicationContext()).init(linkedInAccessToken);
             if (!linkedInError){
-                Log.i("LINKEDIN", "no error & access token not null");
-                displayLinkedInData(getActivity(), liPictureUrl, liHeadline, liLocation, liIndustry, liSummary);
+                Log.i("LINKEDINprofile127", "no error & access token not null");
+                displayLinkedInData(getActivity(), liName, liPictureUrl, liHeadline, liLocation, liIndustry, liSummary);
             }
         }
     }
@@ -182,25 +182,28 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
         LISessionManager.getInstance(getActivity().getApplicationContext()).init(getActivity(), buildScope(), new AuthListener() {
             @Override
             public void onAuthSuccess() {
+                Log.i("LINKEDINprofile185", "onAuthSuccess");
                 linkedInError = false;
                 if (linkedInAccessToken == null) {
                     linkedInAccessToken = LISessionManager.getInstance(getActivity().getApplicationContext()).getSession().getAccessToken();
                 }else{
-                    Log.i("LINKEDINprofile184", "access token not null");
+                    Log.i("LINKEDINprofile190", "access token not null");
                     LISessionManager.getInstance(getActivity().getApplicationContext()).init(linkedInAccessToken);
                 }
             }
 
             @Override
             public void onAuthError(LIAuthError error) {
-                Log.i("LINKEDINprofile191", "Error: " + error.toString());
+                Log.i("LINKEDINprofile197", "onAuthError: " + error.toString());
      //           LISessionManager.getInstance(getActivity().getApplicationContext()).clearSession();
                 linkedInError = true;
             }
         }, true);
     }
 
-    public static void displayLinkedInData(Activity activity, String liPictureURL, String liHeadline, String liLocation, String liIndustry, String liSummary) {
+    public static void displayLinkedInData(Activity activity, String _liName, String liPictureURL, String liHeadline, String liLocation, String liIndustry, String liSummary) {
+        liName = _liName;
+
         // Get views:
         ImageButton linkedInButton = (ImageButton) activity.findViewById(R.id.linkedin_signin_button);
         TextView textViewExplanation = (TextView) activity.findViewById(R.id.textView_profile_explanation);
