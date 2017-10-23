@@ -51,6 +51,7 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
     private AccessToken linkedInAccessToken;
     private static String liPictureUrl = "";
     private static String liName = "";
+    private static String liEmail = "";
     private static String liHeadline = "";
     private static String liLocation = "";
     private static String liSummary = "";
@@ -62,10 +63,11 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
         // Required empty public constructor
     }
 
-    public static ProfileFragment newInstance(String lname, String pictureURL, String headline, String location, String summary) {
+    public static ProfileFragment newInstance(String lname, String lemail, String pictureURL, String headline, String location, String summary) {
         Bundle args = new Bundle();
 
         liName = lname;
+        liEmail = lemail;
         liPictureUrl = pictureURL;
         liHeadline = headline;
         liLocation = location;
@@ -103,10 +105,10 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
         firebase = new Firebase("https://jobspot-a0171.firebaseio.com/");
 
         // Display LinkedIn profile data, if available:
-        if (!linkedInError){
-            Log.i("LINKEDINprofile109", "no error");
-            displayLinkedInData(getActivity(), liName, liPictureUrl, liHeadline, liLocation, liSummary);
-        }
+//        if (!linkedInError){
+//            Log.i("LINKEDINprofile109", "no error");
+//            displayLinkedInData(getActivity(), liName, liPictureUrl, liHeadline, liLocation, liSummary);
+//        }
 
 
         sharedPreferences = getActivity().getSharedPreferences("com.kristaappel.jobspot.preferences", Context.MODE_PRIVATE);
@@ -123,7 +125,7 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
             LISessionManager.getInstance(getActivity().getApplicationContext()).init(linkedInAccessToken);
             if (!linkedInError){
                 Log.i("LINKEDINprofile127", "no error & access token not null");
-                displayLinkedInData(getActivity(), liName, liPictureUrl, liHeadline, liLocation, liSummary);
+                displayLinkedInData(getActivity(), liName, liEmail, liPictureUrl, liHeadline, liLocation, liSummary);
             }
         }
     }
@@ -202,31 +204,35 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
         }, true);
     }
 
-    public static void displayLinkedInData(Activity activity, String _liName, String liPictureURL, String liHeadline, String liLocation, String liSummary) {
+    public static void displayLinkedInData(Activity activity, String _liName, String lEmail, String liPictureURL, String liHeadline, String liLocation, String liSummary) {
         liName = _liName;
+        liEmail = lEmail;
 
         // Get views:
         ImageButton linkedInButton = (ImageButton) activity.findViewById(R.id.linkedin_signin_button);
         TextView textViewExplanation = (TextView) activity.findViewById(R.id.textView_profile_explanation);
         ImageView profileImageView = (ImageView) activity.findViewById(R.id.imageView_profile);
         TextView textViewName = (TextView) activity.findViewById(R.id.textView_profile_name);
+        TextView textViewEmail = (TextView) activity.findViewById(R.id.textView_profile_email);
         TextView textViewHeadline = (TextView) activity.findViewById(R.id.textView_profile_headline);
         TextView textViewLocation = (TextView) activity.findViewById(R.id.textView_profile_location);
         TextView textViewSummary = (TextView) activity.findViewById(R.id.textView_profile_summary);
         // If we have data from LinkedIn, hide the LinkedIn button and show the data:
         if (!liPictureURL.equals("") && profileImageView != null) {
             // display profile image:
-            profileImageView = (ImageView) activity.findViewById(R.id.imageView_profile);
-            Picasso.with(activity).load(liPictureURL).into(profileImageView);
-            // display text:
-            textViewName.setText(liName);
-            textViewHeadline.setText(liHeadline);
-            textViewLocation.setText(liLocation);
-            textViewSummary.setText(liSummary);
-            // Hide 'Sign in with LinkedIn' button:
-            linkedInButton.setVisibility(View.INVISIBLE);
-            textViewExplanation.setVisibility(View.INVISIBLE);
+                profileImageView = (ImageView) activity.findViewById(R.id.imageView_profile);
+                Picasso.with(activity).load(liPictureURL).into(profileImageView);
         }
+        // display text:
+        textViewName.setText(liName);
+        textViewEmail.setText(liEmail);
+        textViewHeadline.setText(liHeadline);
+        textViewLocation.setText(liLocation);
+        textViewSummary.setText(liSummary);
+
+        // Hide 'Sign in with LinkedIn' button:
+        linkedInButton.setVisibility(View.INVISIBLE);
+        textViewExplanation.setVisibility(View.INVISIBLE);
     }
 
 

@@ -88,6 +88,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     public static String posted = "30";
     private static String liPictureURL = "";
     private static String liName = "";
+    private static String liEmail = "";
     private static String liHeadline = "";
     private static String liLocation = "";
     private static String liSummary = "";
@@ -214,8 +215,9 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 case R.id.navigation_account:
                     // Create and display a ProfileFragment:
                     ProfileFragment profileFrag;
-                    if (!liPictureURL.equals("")){
-                        profileFrag = ProfileFragment.newInstance(liName, liPictureURL, liHeadline, liLocation, liSummary);
+                    if (!liName.equals("")){
+           //         if (!liPictureURL.equals("")){
+                        profileFrag = ProfileFragment.newInstance(liName, liEmail, liPictureURL, liHeadline, liLocation, liSummary);
                     }else{
                         profileFrag = new ProfileFragment();
                     }
@@ -679,22 +681,43 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         apiHelper.getRequest(this, url, new ApiListener() {
             @Override
             public void onApiSuccess(ApiResponse apiResponse) {
-                String liEmail = "";
 
-                Log.i("LINKEDIN682", "response: " + apiResponse);
+                Log.i("LINKEDIN684", "response: " + apiResponse);
                 JSONObject responseObject = apiResponse.getResponseDataAsJson();
-                Log.i("LINKEDIN684", "response as json: " + responseObject);
+                Log.i("LINKEDIN686", "response as json: " + responseObject);
                 try {
-                    liName = responseObject.getString("formattedName");
-                    liEmail = responseObject.getString("emailAddress");
-                    liHeadline = responseObject.getString("headline");
-                    JSONObject liLocationObject = responseObject.getJSONObject("location");
-                    liLocation = liLocationObject.getString("name");
-                    liPictureURL = responseObject.getString("pictureUrl");
-                    liSummary = responseObject.getString("summary");
+                    if (responseObject.has("formattedName")){
+                        liName = responseObject.getString("formattedName");
+                    }
+
+                    if (responseObject.has("emailAddress")){
+                        liEmail = responseObject.getString("emailAddress");
+                    }
+
+                    if (responseObject.has("headline")){
+                        liHeadline = responseObject.getString("headline");
+                    }
+
+                    JSONObject liLocationObject = null;
+                    if (responseObject.has("location")){
+                        liLocationObject = responseObject.getJSONObject("location");
+                    }
+
+                    if (liLocationObject.has("name")){
+                        liLocation = liLocationObject.getString("name");
+                    }
+
+                    if (responseObject.has("pictureUrl")){
+                        liPictureURL = responseObject.getString("pictureUrl");
+                    }
+
+                    if (responseObject.has("summary")){
+                        liSummary = responseObject.getString("summary");
+                    }
+
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Log.i("LINKEDIN700", "JSONException in onApiSuccess: " + e.toString());
+                    Log.i("LINKEDIN719", "JSONException in onApiSuccess: " + e.toString());
                     Toast.makeText(BottomNavigationActivity.this, "Error retrieving data", Toast.LENGTH_SHORT).show();
                 }
                 Log.i("LINKEDIN", "name: " + liName);
@@ -704,13 +727,13 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 Log.i("LINKEDIN", "picture url: " + liPictureURL);
                 Log.i("LINKEDIN", "summary: " + liSummary);
 
-                ProfileFragment.displayLinkedInData(BottomNavigationActivity.this, liName, liPictureURL, liHeadline, liLocation, liSummary);
+                ProfileFragment.displayLinkedInData(BottomNavigationActivity.this, liName, liEmail, liPictureURL, liHeadline, liLocation, liSummary);
 
             }
 
             @Override
             public void onApiError(LIApiError error) {
-                Log.i("LINKEDIN712", "onApiError");
+                Log.i("LINKEDIN735", "onApiError");
                 error.printStackTrace();
             }
         });

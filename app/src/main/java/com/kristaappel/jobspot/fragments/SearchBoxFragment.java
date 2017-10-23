@@ -44,6 +44,7 @@ public class SearchBoxFragment extends android.app.Fragment implements View.OnCl
         EditText et_loc = (EditText) getActivity().findViewById(R.id.et_location);
         EditText et_kw = (EditText) getActivity().findViewById(R.id.et_keywords);
 
+
         // Set click listeners:
         Button mapButton = (Button) view.findViewById(R.id.mapFragToggle1);
         mapButton.setOnClickListener(this);
