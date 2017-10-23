@@ -181,14 +181,14 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
                 if (linkedInAccessToken == null) {
                     linkedInAccessToken = LISessionManager.getInstance(getActivity().getApplicationContext()).getSession().getAccessToken();
                 }else{
-                    Log.i("LINKEDINprofile154", "access token not null");
+                    Log.i("LINKEDINprofile184", "access token not null");
                     LISessionManager.getInstance(getActivity().getApplicationContext()).init(linkedInAccessToken);
                 }
             }
 
             @Override
             public void onAuthError(LIAuthError error) {
-                Log.i("LINKEDINprofile162", "Error: " + error.toString());
+                Log.i("LINKEDINprofile191", "Error: " + error.toString());
      //           LISessionManager.getInstance(getActivity().getApplicationContext()).clearSession();
                 linkedInError = true;
             }

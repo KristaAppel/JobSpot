@@ -654,15 +654,18 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         if (resultCode != RESULT_OK){
             Toast.makeText(this, "Could not retrieve LinkedIn data.  Please allow permission.", Toast.LENGTH_SHORT).show();
             ProfileFragment.linkedInError = true;
-            Log.i("LINKEDIN543", "returning from onActivityResult - result not OK");
+            Log.i("LINKEDIN657", "requestCode: " + requestCode);
+            Log.i("LINKEDIN658", "resultCode: " + resultCode);
+            Log.i("LINKEDIN659", "data: " + data.getData());
+            Log.i("LINKEDIN660", "returning from onActivityResult - result not OK");
             return;
         }
-        Log.i("LINKEDIN546", "resultCode: " + resultCode);
+        Log.i("LINKEDIN663", "resultCode: " + resultCode);
         // App returns here after LinkedIn connection is made.  Get data from LinkedIn API:
-        Log.i("LINKEDIN548", "onActivityResult from BottomNavigationActivity");
+        Log.i("LINKEDIN665", "onActivityResult from BottomNavigationActivity");
 
         LISessionManager.getInstance(getApplicationContext()).onActivityResult(this, requestCode, resultCode, data);
-        Log.i("LINKEDIN551", "NOW it's a success");
+        Log.i("LINKEDIN668", "NOW it's a success");
 
         String url = "https://api.linkedin.com/v1/people/~:(formatted-name,email-address,headline,location,industry,summary,picture-url)?format=json"; //:(email-address,formatted-name, phone-numbers, picture-urls::(original))";
         final ProgressDialog progressDialog = new ProgressDialog(this);
@@ -676,9 +679,9 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 String liEmail = "";
                 liIndustry = "";
 
-                Log.i("LINKEDIN565", "response: " + apiResponse);
+                Log.i("LINKEDIN682", "response: " + apiResponse);
                 JSONObject responseObject = apiResponse.getResponseDataAsJson();
-                Log.i("LINKEDIN567", "response as json: " + responseObject);
+                Log.i("LINKEDIN684", "response as json: " + responseObject);
                 try {
                     liName = responseObject.getString("formattedName");
                     liEmail = responseObject.getString("emailAddress");
@@ -706,7 +709,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
 
             @Override
             public void onApiError(LIApiError error) {
-                Log.i("LINKEDIN595", "onApiError");
+                Log.i("LINKEDIN712", "onApiError");
                 error.printStackTrace();
             }
         });
