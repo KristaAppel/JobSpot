@@ -90,7 +90,6 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     private static String liName = "";
     private static String liHeadline = "";
     private static String liLocation = "";
-    private static String liIndustry = "";
     private static String liSummary = "";
     private static Double jobLat;
     private static Double jobLng;
@@ -216,7 +215,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                     // Create and display a ProfileFragment:
                     ProfileFragment profileFrag;
                     if (!liPictureURL.equals("")){
-                        profileFrag = ProfileFragment.newInstance(liName, liPictureURL, liHeadline, liLocation, liIndustry, liSummary);
+                        profileFrag = ProfileFragment.newInstance(liName, liPictureURL, liHeadline, liLocation, liSummary);
                     }else{
                         profileFrag = new ProfileFragment();
                     }
@@ -671,7 +670,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         LISessionManager.getInstance(getApplicationContext()).onActivityResult(this, requestCode, resultCode, data);
         Log.i("LINKEDIN668", "NOW it's a success");
 
-        String url = "https://api.linkedin.com/v1/people/~:(formatted-name,email-address,headline,location,industry,summary,picture-url)?format=json"; //:(email-address,formatted-name, phone-numbers, picture-urls::(original))";
+        String url = "https://api.linkedin.com/v1/people/~:(formatted-name,email-address,headline,location,summary,picture-url)?format=json"; //:(email-address,formatted-name, phone-numbers, picture-urls::(original))";
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Retrieving Data...");
         progressDialog.show();
@@ -681,7 +680,6 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
             @Override
             public void onApiSuccess(ApiResponse apiResponse) {
                 String liEmail = "";
-                liIndustry = "";
 
                 Log.i("LINKEDIN682", "response: " + apiResponse);
                 JSONObject responseObject = apiResponse.getResponseDataAsJson();
@@ -690,7 +688,6 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                     liName = responseObject.getString("formattedName");
                     liEmail = responseObject.getString("emailAddress");
                     liHeadline = responseObject.getString("headline");
-                    liIndustry = responseObject.getString("industry");
                     JSONObject liLocationObject = responseObject.getJSONObject("location");
                     liLocation = liLocationObject.getString("name");
                     liPictureURL = responseObject.getString("pictureUrl");
@@ -703,12 +700,11 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 Log.i("LINKEDIN", "name: " + liName);
                 Log.i("LINKEDIN", "email: " + liEmail);
                 Log.i("LINKEDIN", "headline: " + liHeadline);
-                Log.i("LINKEDIN", "industry: " + liIndustry);
                 Log.i("LINKEDIN", "location: " + liLocation);
                 Log.i("LINKEDIN", "picture url: " + liPictureURL);
                 Log.i("LINKEDIN", "summary: " + liSummary);
 
-                ProfileFragment.displayLinkedInData(BottomNavigationActivity.this, liName, liPictureURL, liHeadline, liLocation, liIndustry, liSummary);
+                ProfileFragment.displayLinkedInData(BottomNavigationActivity.this, liName, liPictureURL, liHeadline, liLocation, liSummary);
 
             }
 

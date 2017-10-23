@@ -53,7 +53,6 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
     private static String liName = "";
     private static String liHeadline = "";
     private static String liLocation = "";
-    private static String liIndustry = "";
     private static String liSummary = "";
     private SharedPreferences sharedPreferences;
     public static boolean linkedInError = false;
@@ -63,14 +62,13 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
         // Required empty public constructor
     }
 
-    public static ProfileFragment newInstance(String lname, String pictureURL, String headline, String location, String industry, String summary) {
+    public static ProfileFragment newInstance(String lname, String pictureURL, String headline, String location, String summary) {
         Bundle args = new Bundle();
 
         liName = lname;
         liPictureUrl = pictureURL;
         liHeadline = headline;
         liLocation = location;
-        liIndustry = industry;
         liSummary = summary;
 
         ProfileFragment fragment = new ProfileFragment();
@@ -107,7 +105,7 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
         // Display LinkedIn profile data, if available:
         if (!linkedInError){
             Log.i("LINKEDINprofile109", "no error");
-            displayLinkedInData(getActivity(), liName, liPictureUrl, liHeadline, liLocation, liIndustry, liSummary);
+            displayLinkedInData(getActivity(), liName, liPictureUrl, liHeadline, liLocation, liSummary);
         }
 
 
@@ -125,7 +123,7 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
             LISessionManager.getInstance(getActivity().getApplicationContext()).init(linkedInAccessToken);
             if (!linkedInError){
                 Log.i("LINKEDINprofile127", "no error & access token not null");
-                displayLinkedInData(getActivity(), liName, liPictureUrl, liHeadline, liLocation, liIndustry, liSummary);
+                displayLinkedInData(getActivity(), liName, liPictureUrl, liHeadline, liLocation, liSummary);
             }
         }
     }
@@ -146,6 +144,9 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
             Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
             loginIntent.putExtra("LogoutExtra", "Logout");
             startActivity(loginIntent);
+        }
+        if (item.getItemId() == R.id.profile_menu_edit){
+            //TODO: allow user to edit profile
         }
         return super.onOptionsItemSelected(item);
     }
@@ -201,7 +202,7 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
         }, true);
     }
 
-    public static void displayLinkedInData(Activity activity, String _liName, String liPictureURL, String liHeadline, String liLocation, String liIndustry, String liSummary) {
+    public static void displayLinkedInData(Activity activity, String _liName, String liPictureURL, String liHeadline, String liLocation, String liSummary) {
         liName = _liName;
 
         // Get views:
@@ -211,7 +212,6 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
         TextView textViewName = (TextView) activity.findViewById(R.id.textView_profile_name);
         TextView textViewHeadline = (TextView) activity.findViewById(R.id.textView_profile_headline);
         TextView textViewLocation = (TextView) activity.findViewById(R.id.textView_profile_location);
-        TextView textViewIndustry = (TextView) activity.findViewById(R.id.textView_profile_industry);
         TextView textViewSummary = (TextView) activity.findViewById(R.id.textView_profile_summary);
         // If we have data from LinkedIn, hide the LinkedIn button and show the data:
         if (!liPictureURL.equals("") && profileImageView != null) {
@@ -222,7 +222,6 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
             textViewName.setText(liName);
             textViewHeadline.setText(liHeadline);
             textViewLocation.setText(liLocation);
-            textViewIndustry.setText(liIndustry);
             textViewSummary.setText(liSummary);
             // Hide 'Sign in with LinkedIn' button:
             linkedInButton.setVisibility(View.INVISIBLE);
