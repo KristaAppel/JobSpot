@@ -24,12 +24,12 @@
         "source": "/Users/kristaappel/.android/build-cache/9ab2d0cb5a981b042474ec142c32c54ff6a6fb98/output/res/drawable-hdpi/abc_spinner_ab_disabled_holo_light.9.png"
     },
     {
-        "merged": "/Users/kristaappel/Documents/OneDrive/Documents/FullSail/1710-IntegratedProductDeployment/JobSpot/sampleapp/build/intermediates/res/merged/debug/drawable-hdpi/abc_textfield_search_right_selected_holo_light.9.png",
-        "source": "/Users/kristaappel/.android/build-cache/9ab2d0cb5a981b042474ec142c32c54ff6a6fb98/output/res/drawable-hdpi/abc_textfield_search_right_selected_holo_light.9.png"
-    },
-    {
         "merged": "/Users/kristaappel/Documents/OneDrive/Documents/FullSail/1710-IntegratedProductDeployment/JobSpot/sampleapp/build/intermediates/res/merged/debug/drawable-hdpi/abc_textfield_search_default_holo_light.9.png",
         "source": "/Users/kristaappel/.android/build-cache/9ab2d0cb5a981b042474ec142c32c54ff6a6fb98/output/res/drawable-hdpi/abc_textfield_search_default_holo_light.9.png"
+    },
+    {
+        "merged": "/Users/kristaappel/Documents/OneDrive/Documents/FullSail/1710-IntegratedProductDeployment/JobSpot/sampleapp/build/intermediates/res/merged/debug/drawable-hdpi/abc_textfield_search_right_selected_holo_light.9.png",
+        "source": "/Users/kristaappel/.android/build-cache/9ab2d0cb5a981b042474ec142c32c54ff6a6fb98/output/res/drawable-hdpi/abc_textfield_search_right_selected_holo_light.9.png"
     },
     {
         "merged": "/Users/kristaappel/Documents/OneDrive/Documents/FullSail/1710-IntegratedProductDeployment/JobSpot/sampleapp/build/intermediates/res/merged/debug/drawable-hdpi/abc_menu_hardkey_panel_holo_light.9.png",

@@ -76,12 +76,12 @@
         "source": "/Users/kristaappel/.android/build-cache/9ab2d0cb5a981b042474ec142c32c54ff6a6fb98/output/res/drawable-xhdpi/abc_ic_menu_share_holo_dark.png"
     },
     {
-        "merged": "/Users/kristaappel/Documents/OneDrive/Documents/FullSail/1710-IntegratedProductDeployment/JobSpot/sampleapp/build/intermediates/res/merged/debug/drawable-xhdpi/abc_ic_clear_search_api_holo_light.png",
-        "source": "/Users/kristaappel/.android/build-cache/9ab2d0cb5a981b042474ec142c32c54ff6a6fb98/output/res/drawable-xhdpi/abc_ic_clear_search_api_holo_light.png"
-    },
-    {
         "merged": "/Users/kristaappel/Documents/OneDrive/Documents/FullSail/1710-IntegratedProductDeployment/JobSpot/sampleapp/build/intermediates/res/merged/debug/drawable-xhdpi/abc_ic_menu_moreoverflow_normal_holo_dark.png",
         "source": "/Users/kristaappel/.android/build-cache/9ab2d0cb5a981b042474ec142c32c54ff6a6fb98/output/res/drawable-xhdpi/abc_ic_menu_moreoverflow_normal_holo_dark.png"
+    },
+    {
+        "merged": "/Users/kristaappel/Documents/OneDrive/Documents/FullSail/1710-IntegratedProductDeployment/JobSpot/sampleapp/build/intermediates/res/merged/debug/drawable-xhdpi/abc_ic_clear_search_api_holo_light.png",
+        "source": "/Users/kristaappel/.android/build-cache/9ab2d0cb5a981b042474ec142c32c54ff6a6fb98/output/res/drawable-xhdpi/abc_ic_clear_search_api_holo_light.png"
     },
     {
         "merged": "/Users/kristaappel/Documents/OneDrive/Documents/FullSail/1710-IntegratedProductDeployment/JobSpot/sampleapp/build/intermediates/res/merged/debug/drawable-xhdpi/abc_list_divider_holo_dark.9.png",

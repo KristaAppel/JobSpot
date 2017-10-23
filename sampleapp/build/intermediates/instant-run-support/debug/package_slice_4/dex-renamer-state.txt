@@ -1,4 +1,0 @@
-#Thu Oct 05 20:03:22 EDT 2017
-base.0=/Users/kristaappel/Documents/OneDrive/Documents/FullSail/1710-IntegratedProductDeployment/JobSpot/sampleapp/build/intermediates/transforms/dex/debug/folders/1000/5/slice_4
-renamed.0=classes.dex
-file.0=/Users/kristaappel/Documents/OneDrive/Documents/FullSail/1710-IntegratedProductDeployment/JobSpot/sampleapp/build/intermediates/transforms/dex/debug/folders/1000/5/slice_4/classes.dex

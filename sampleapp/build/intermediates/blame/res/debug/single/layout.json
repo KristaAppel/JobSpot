@@ -16,12 +16,12 @@
         "source": "/Users/kristaappel/.android/build-cache/9ab2d0cb5a981b042474ec142c32c54ff6a6fb98/output/res/layout/abc_action_bar_home.xml"
     },
     {
-        "merged": "/Users/kristaappel/Documents/OneDrive/Documents/FullSail/1710-IntegratedProductDeployment/JobSpot/sampleapp/build/intermediates/res/merged/debug/layout/activity_api.xml",
-        "source": "/Users/kristaappel/Documents/OneDrive/Documents/FullSail/1710-IntegratedProductDeployment/JobSpot/sampleapp/src/main/res/layout/activity_api.xml"
-    },
-    {
         "merged": "/Users/kristaappel/Documents/OneDrive/Documents/FullSail/1710-IntegratedProductDeployment/JobSpot/sampleapp/build/intermediates/res/merged/debug/layout/abc_list_menu_item_layout.xml",
         "source": "/Users/kristaappel/.android/build-cache/9ab2d0cb5a981b042474ec142c32c54ff6a6fb98/output/res/layout/abc_list_menu_item_layout.xml"
+    },
+    {
+        "merged": "/Users/kristaappel/Documents/OneDrive/Documents/FullSail/1710-IntegratedProductDeployment/JobSpot/sampleapp/build/intermediates/res/merged/debug/layout/activity_api.xml",
+        "source": "/Users/kristaappel/Documents/OneDrive/Documents/FullSail/1710-IntegratedProductDeployment/JobSpot/sampleapp/src/main/res/layout/activity_api.xml"
     },
     {
         "merged": "/Users/kristaappel/Documents/OneDrive/Documents/FullSail/1710-IntegratedProductDeployment/JobSpot/sampleapp/build/intermediates/res/merged/debug/layout/abc_action_bar_view_list_nav_layout.xml",
