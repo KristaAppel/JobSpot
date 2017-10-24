@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.kristaappel.jobspot.BottomNavigationActivity;
@@ -37,8 +38,7 @@ import com.linkedin.platform.AccessToken;
 import com.squareup.picasso.Picasso;
 import java.util.HashMap;
 
-import static android.R.attr.button;
-import static android.R.attr.end;
+import static com.kristaappel.jobspot.BottomNavigationActivity.firebase;
 
 
 public class ProfileFragment extends android.app.Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
@@ -57,11 +57,11 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
     EditText etHeadline;
     EditText etLocation;
     EditText etSummary;
-    TextView tvName;
-    TextView tvEmail;
-    TextView tvHeadline;
-    TextView tvLocation;
-    TextView tvSummary;
+    static TextView tvName;
+    static TextView tvEmail;
+    static TextView tvHeadline;
+    static TextView tvLocation;
+    static TextView tvSummary;
     Button saveButton;
     Button cancelButton;
     ImageButton linkedInButton;
@@ -177,7 +177,7 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         if (firebaseUser != null) {
-            BottomNavigationActivity.firebase.child("users").child(firebaseUser.getUid()).child("userProfile").addChildEventListener(new ChildEventListener() {
+            firebase.child("users").child(firebaseUser.getUid()).child("userProfile").addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     getDataFromSnapshot(dataSnapshot);
@@ -226,7 +226,7 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.profile_menu_logout){
             // Logout:
-            BottomNavigationActivity.firebase.unauth();
+            firebase.unauth();
             linkedInError = true;
             // Go to login screen:
             Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
@@ -234,10 +234,7 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
             startActivity(loginIntent);
         }
         if (item.getItemId() == R.id.profile_menu_edit){
-            //TODO: allow user to edit profile
             startEditMode();
-
-
         }
         return super.onOptionsItemSelected(item);
     }
@@ -280,7 +277,9 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
     private void endEditMode(){
         // Hide keyboard:
         InputMethodManager manager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        manager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+        if (getActivity().getCurrentFocus() != null){
+            manager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+        }
 
         // Hide save & cancel buttons:
         saveButton.setVisibility(View.INVISIBLE);
@@ -334,13 +333,69 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
                 break;
             case R.id.button_profile_save:
                 endEditMode();
-                //TODO: save the profile data to firebase
+                getInputText();
+                saveProfileToFirebase();
                 break;
             case R.id.button_profile_cancel:
                 endEditMode();
                 break;
         }
+    }
 
+    private void getInputText(){
+        liName = etName.getText().toString();
+        liEmail = etNEmail.getText().toString();
+        liHeadline = etHeadline.getText().toString();
+        liLocation = etLocation.getText().toString();
+        //TODO: get a new pictureURL ??
+        liSummary = etSummary.getText().toString();
+    }
+
+    private void saveProfileToFirebase(){
+        // Save profile data to firebase:
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        final FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        firebase.child("users").child(firebaseUser.getUid()).child("userProfile").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChildren()){
+                    String childKey = "";
+                    // Get the child key:
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                        childKey = snapshot.getKey();
+                    }
+
+                    Log.i("childKey: ", childKey);
+
+                    // Save the profile data under the child key:
+                    firebase.child("users").child(firebaseUser.getUid()).child("userProfile").child(childKey).child("fullName").setValue(liName);
+                    firebase.child("users").child(firebaseUser.getUid()).child("userProfile").child(childKey).child("email").setValue(liEmail);
+                    firebase.child("users").child(firebaseUser.getUid()).child("userProfile").child(childKey).child("headline").setValue(liHeadline);
+                    firebase.child("users").child(firebaseUser.getUid()).child("userProfile").child(childKey).child("location").setValue(liLocation);
+                    firebase.child("users").child(firebaseUser.getUid()).child("userProfile").child(childKey).child("picture").setValue(liPictureUrl);
+                    firebase.child("users").child(firebaseUser.getUid()).child("userProfile").child(childKey).child("summary").setValue(liSummary);
+                }else{
+
+                    // Create profile hashmap:
+                    HashMap profileHashmap = new HashMap();
+                    profileHashmap.put("fullName", liName);
+                    profileHashmap.put("email", liEmail);
+                    profileHashmap.put("headline", liHeadline);
+                    profileHashmap.put("location", liLocation);
+                    profileHashmap.put("picture", liPictureUrl);
+                    profileHashmap.put("summary", liSummary);
+
+                    // Push profile hashmap under a new key:
+                    firebase.child("users").child(firebaseUser.getUid()).child("userProfile").push().setValue(profileHashmap);
+                }
+                Toast.makeText(getActivity(), "Profile has been updated.", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Log.i("FirebaseError: ", firebaseError.toString());
+            }
+        });
     }
 //    // Set permissions to retrieve info from LinkedIn:
 //    private static Scope buildScope(){
@@ -375,25 +430,21 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
         liName = _liName;
         liEmail = lEmail;
 
-        // Get views:
         ImageView profileImageView = (ImageView) activity.findViewById(R.id.imageView_profile);
-        TextView textViewName = (TextView) activity.findViewById(R.id.textView_profile_name);
-        TextView textViewEmail = (TextView) activity.findViewById(R.id.textView_profile_email);
-        TextView textViewHeadline = (TextView) activity.findViewById(R.id.textView_profile_headline);
-        TextView textViewLocation = (TextView) activity.findViewById(R.id.textView_profile_location);
-        TextView textViewSummary = (TextView) activity.findViewById(R.id.textView_profile_summary);
-        // If we have data from LinkedIn, hide the LinkedIn button and show the data:
+
+        // Display profile image if we have one:
         if (!liPictureURL.trim().equals("") && profileImageView != null) {
             // display profile image:
                 profileImageView = (ImageView) activity.findViewById(R.id.imageView_profile);
                 Picasso.with(activity).load(liPictureURL).into(profileImageView);
         }
+
         // display text:
-        textViewName.setText(liName);
-        textViewEmail.setText(liEmail);
-        textViewHeadline.setText(liHeadline);
-        textViewLocation.setText(liLocation);
-        textViewSummary.setText(liSummary);
+        tvName.setText(liName);
+        tvEmail.setText(liEmail);
+        tvHeadline.setText(liHeadline);
+        tvLocation.setText(liLocation);
+        tvSummary.setText(liSummary);
     }
 
 

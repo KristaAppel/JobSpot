@@ -1,7 +1,0 @@
-#Tue Oct 24 09:18:33 EDT 2017
-base.0=/Users/kristaappel/Documents/OneDrive/Documents/FullSail/1710-IntegratedProductDeployment/JobSpot/sampleapp/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_9271d15b54770858c415fca0c88b9ba3421bdd66
-renamed.1=classes2.dex
-renamed.0=classes.dex
-file.1=/Users/kristaappel/Documents/OneDrive/Documents/FullSail/1710-IntegratedProductDeployment/JobSpot/sampleapp/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_395ed363f727350d08208ab3dce43ebb83617a72/classes.dex
-base.1=/Users/kristaappel/Documents/OneDrive/Documents/FullSail/1710-IntegratedProductDeployment/JobSpot/sampleapp/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_395ed363f727350d08208ab3dce43ebb83617a72
-file.0=/Users/kristaappel/Documents/OneDrive/Documents/FullSail/1710-IntegratedProductDeployment/JobSpot/sampleapp/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_9271d15b54770858c415fca0c88b9ba3421bdd66/classes.dex
