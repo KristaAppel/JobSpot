@@ -163,8 +163,10 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
                 //et_location.setText(currentAddress.getAddressLine(0)); // This shows full address
                 if (et_location.getText().toString().length()<1){
                     if (jobs==null || jobs.size()<1){
-                        // If there are no searched jobs, show the current location in the location box:
-                        et_location.setText(currentAddress.getPostalCode()); // This shows zip code
+                        if (currentAddress != null && currentAddress.getPostalCode() != null){
+                            // If there are no searched jobs, show the current location in the location box:
+                            et_location.setText(currentAddress.getPostalCode()); // This shows zip code
+                        }
                     }else{
                         // If there are job search results, show the location of the searched jobs in the location box:
                         if (jobs.size()>1){
