@@ -107,12 +107,15 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     private static boolean isTablet = false;
     SortFilterFragment sortFilterFragment;
     public static int maxJobs = 30;
+    public static Firebase firebase;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bottomnavigation);
+
+        firebase = new Firebase("https://jobspot-a0171.firebaseio.com/");
 
         Log.i("BottomNavActivity", "istablet: " + getResources().getBoolean(R.bool.is_tablet));
         if (getResources().getBoolean(R.bool.is_tablet)){
@@ -562,7 +565,6 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
             FileUtil.writeSavedSearch(this, savedSearches);
 
             // Save the search to Firebase:
-            Firebase firebase = new Firebase("https://jobspot-a0171.firebaseio.com/");
             FirebaseAuth mAuth = FirebaseAuth.getInstance();
             FirebaseUser firebaseUser = mAuth.getCurrentUser();
             if (firebaseUser != null) {
@@ -892,6 +894,12 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
 //        });
 //        progressDialog.dismiss();
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        LISessionManager.getInstance(this.getApplicationContext()).clearSession();
     }
 
     @Override

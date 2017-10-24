@@ -37,10 +37,11 @@ import com.squareup.picasso.Picasso;
 import java.sql.Struct;
 import java.util.HashMap;
 
+import static com.kristaappel.jobspot.BottomNavigationActivity.firebase;
+
 
 public class ProfileFragment extends android.app.Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
-    private Firebase firebase;
     public static AccessToken linkedInAccessToken;
     private static String liPictureUrl = "";
     private static String liName = "";
@@ -95,7 +96,6 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
         Switch notificationSwitch = (Switch) view.findViewById(R.id.switch_notifications);
         notificationSwitch.setOnCheckedChangeListener(this);
 
-        firebase = new Firebase("https://jobspot-a0171.firebaseio.com/");
 
 //        // Display LinkedIn profile data, if available:
 //        if (!linkedInError){
@@ -136,10 +136,10 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
     }
 
     private void loadProfileFromFirebase(){
-        //TODO: load profile data from Firebase
+        // Load profile data from Firebase
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
-        firebase.child("users").child(firebaseUser.getUid()).child("userProfile").addChildEventListener(new ChildEventListener() {
+        BottomNavigationActivity.firebase.child("users").child(firebaseUser.getUid()).child("userProfile").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 getDataFromSnapshot(dataSnapshot);
@@ -187,7 +187,7 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.profile_menu_logout){
             // Logout:
-            firebase.unauth();
+            BottomNavigationActivity.firebase.unauth();
             linkedInError = true;
             // Go to login screen:
             Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
