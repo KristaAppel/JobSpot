@@ -34,7 +34,10 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
@@ -79,6 +82,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.kristaappel.jobspot.R.string.search;
 import static com.kristaappel.jobspot.fragments.ProfileFragment.linkedInAccessToken;
 import static com.kristaappel.jobspot.fragments.ProfileFragment.linkedInError;
 
@@ -761,17 +765,53 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 Log.i("LINKEDIN", "picture url: " + liPictureURL);
                 Log.i("LINKEDIN", "summary: " + liSummary);
 
-                //TODO: save profile data to firebase
-//                Firebase firebase = new Firebase("https://jobspot-a0171.firebaseio.com/");
-//                FirebaseAuth mAuth = FirebaseAuth.getInstance();
-//                FirebaseUser firebaseUser = mAuth.getCurrentUser();
-//
-//                if (firebaseUser != null) {
-//                    Map<String, Object> childUpdates = new HashMap<>();
-//                    String key = firebase.child("users").child(firebaseUser.getUid()).child("userProfile").push().getKey();
-//                    Log.i("linkedin", "key: " + key);
-//                    firebase.child("users").child(firebaseUser.getUid()).child("userProfile").push().child("fullName").setValue(liName);
-//                }
+                // Save profile data to firebase:
+                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                final FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                firebase.child("users").child(firebaseUser.getUid()).child("userProfile").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.hasChildren()){
+                            String childKey = "";
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                childKey = snapshot.getKey();
+                            }
+                            
+                            Log.i("childKey: ", childKey);
+                            
+                            firebase.child("users").child(firebaseUser.getUid()).child("userProfile").child(childKey).child("fullName").setValue(liName);
+                            firebase.child("users").child(firebaseUser.getUid()).child("userProfile").child(childKey).child("email").setValue(liEmail);
+                            firebase.child("users").child(firebaseUser.getUid()).child("userProfile").child(childKey).child("headline").setValue(liHeadline);
+                            firebase.child("users").child(firebaseUser.getUid()).child("userProfile").child(childKey).child("location").setValue(liLocation);
+                            firebase.child("users").child(firebaseUser.getUid()).child("userProfile").child(childKey).child("picture").setValue(liPictureURL);
+                            firebase.child("users").child(firebaseUser.getUid()).child("userProfile").child(childKey).child("summary").setValue(liSummary);
+                            
+                        }else{
+                            HashMap profileHashmap = new HashMap();
+                            profileHashmap.put("fullName", liName);
+                            profileHashmap.put("email", liEmail);
+                            profileHashmap.put("headline", liHeadline);
+                            profileHashmap.put("location", liLocation);
+                            profileHashmap.put("picture", liPictureURL);
+                            profileHashmap.put("summary", liSummary);
+                            
+                            firebase.child("users").child(firebaseUser.getUid()).child("userProfile").push().setValue(profileHashmap);
+                        }
+                        Toast.makeText(activity, "Profile has been updated.", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+                //firebase.child("users").child(firebaseUser.getUid()).child("savedsearches").child(search.getDateTime()).setValue(search);
+
+
+
+
+
+
 
                 ProfileFragment.displayProfileData(activity, liName, liEmail, liPictureURL, liHeadline, liLocation, liSummary);
 
