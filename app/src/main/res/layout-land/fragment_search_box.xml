@@ -47,22 +47,40 @@
                             android:tint="@color/colorPrimary"
                             app:srcCompat="@android:drawable/ic_menu_mylocation" />
 
-                        <EditText
-                            android:id="@+id/et_location"
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginStart="8dp"
-                            android:background="@android:color/white"
-                            android:backgroundTint="@color/colorLightGrey"
-                            android:drawableStart="@drawable/ic_place"
-                            android:hint="@string/enter_location"
-                            android:iconifiedByDefault="false"
-                            android:queryHint="Enter Location"
-                            android:singleLine="true"
-                            android:textAppearance="@style/TextAppearance.AppCompat"
-                            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789, "/>
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="10dp"
+                                android:text="Enter Location:"
+                                android:layout_marginEnd="8dp"
+                                android:layout_marginStart="8dp"/>
+
+                            <EditText
+                                android:id="@+id/et_location"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginEnd="8dp"
+                                android:layout_marginStart="8dp"
+                                android:paddingTop="4dp"
+                                android:paddingBottom="4dp"
+                                android:paddingStart="4dp"
+                                android:background="@android:color/white"
+                                android:backgroundTint="@color/colorLightGrey"
+                                android:hint="@string/enter_location"
+                                android:iconifiedByDefault="false"
+                                android:queryHint="Enter Location"
+                                android:singleLine="true"
+                                android:textAppearance="@style/TextAppearance.AppCompat"
+                                android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789, "/>
+
+                        </LinearLayout>
+
 
                     </LinearLayout>
 
@@ -86,23 +104,41 @@
                             android:tint="@color/colorPrimary"
                             app:srcCompat="@android:drawable/ic_menu_sort_by_size" />
 
-                        <EditText
-                            android:id="@+id/et_keywords"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginStart="8dp"
-                            android:layout_weight="1"
-                            android:background="@android:color/white"
-                            android:backgroundTint="@color/colorLightGrey"
-                            android:drawableStart="@drawable/ic_search_original"
-                            android:hint="@string/enter_keyword_s"
-                            android:iconifiedByDefault="false"
-                            android:queryHint="Enter Keyword(s)"
-                            android:singleLine="true"
-                            android:textAppearance="@style/TextAppearance.AppCompat"
-                            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz "/>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="10dp"
+                                android:text="Enter Keywords:"
+                                android:layout_marginEnd="8dp"
+                                android:layout_marginStart="8dp"/>
+
+                            <EditText
+                                android:id="@+id/et_keywords"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginEnd="8dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_weight="1"
+                                android:background="@android:color/white"
+                                android:backgroundTint="@color/colorLightGrey"
+                                android:paddingTop="4dp"
+                                android:paddingBottom="4dp"
+                                android:paddingStart="4dp"
+                                android:hint="@string/enter_keyword_s"
+                                android:iconifiedByDefault="false"
+                                android:queryHint="Enter Keyword(s)"
+                                android:singleLine="true"
+                                android:textAppearance="@style/TextAppearance.AppCompat"
+                                android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz "/>
+
+                        </LinearLayout>
+
 
                         <ImageButton
                         android:id="@+id/recentButton"
@@ -131,8 +167,8 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:gravity="end"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="2dp"
                     android:layout_weight="0.1">
 
                     <ImageButton

@@ -23,7 +23,7 @@
     <string name="powered_bycareeronestop">Powered byCareerOneStop</string>
     <string name="share">share</string>
     <string name="save">save</string>
-    <string name="enter_location">Enter city, state</string>
+    <string name="enter_location">Enter zip code</string>
     <string name="enter_keyword_s">Enter Keyword(s)</string>
     <string name="map">Map</string>
     <string name="list">List</string>
