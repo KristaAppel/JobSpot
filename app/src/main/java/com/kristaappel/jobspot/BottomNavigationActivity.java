@@ -60,8 +60,11 @@ import com.kristaappel.jobspot.objects.VolleySingleton;
 import com.linkedin.platform.APIHelper;
 import com.linkedin.platform.LISessionManager;
 import com.linkedin.platform.errors.LIApiError;
+import com.linkedin.platform.errors.LIAuthError;
 import com.linkedin.platform.listeners.ApiListener;
 import com.linkedin.platform.listeners.ApiResponse;
+import com.linkedin.platform.listeners.AuthListener;
+import com.linkedin.platform.utils.Scope;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -77,6 +80,10 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
+import static com.kristaappel.jobspot.R.string.search;
+import static com.kristaappel.jobspot.fragments.ProfileFragment.linkedInAccessToken;
+import static com.kristaappel.jobspot.fragments.ProfileFragment.linkedInError;
 
 
 public class BottomNavigationActivity extends AppCompatActivity implements SearchBoxFragment.OnSearchBoxFragmentInteractionListener, SortFilterFragment.OnSortFilterInteractionListener, SavedSearchListFragment.OnSavedSearchInteractionListener {
@@ -653,12 +660,55 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
 
     }
 
+    public static void linkedInClicked(Activity activity){
+        loginToLinkedIn(activity);
+    }
+
+    // Set permissions to retrieve info from LinkedIn:
+    private static Scope buildScope(){
+        return Scope.build(Scope.R_BASICPROFILE, Scope.R_EMAILADDRESS);
+    }
+
+    public static void checkLinkedInToken(Activity activity){
+        if (ProfileFragment.linkedInAccessToken != null) {
+            Log.i("LINKEDINprofile124", "access token not null");
+            LISessionManager.getInstance(activity.getApplicationContext()).init(linkedInAccessToken);
+            if (!ProfileFragment.linkedInError){
+                Log.i("LINKEDINprofile127", "no error & access token not null");
+                ProfileFragment.displayLinkedInData(activity, liName, liEmail, liPictureURL, liHeadline, liLocation, liSummary);
+            }
+        }
+    }
+
+    private static void loginToLinkedIn(final Activity activity){
+        LISessionManager.getInstance(activity).init(activity, buildScope(), new AuthListener() {
+            @Override
+            public void onAuthSuccess() {
+                Log.i("LINKEDINprofile185", "onAuthSuccess");
+                linkedInError = false;
+                if (ProfileFragment.linkedInAccessToken == null) {
+                    ProfileFragment.linkedInAccessToken = LISessionManager.getInstance(activity).getSession().getAccessToken();
+                }else{
+                    Log.i("LINKEDINprofile190", "access token not null");
+                    LISessionManager.getInstance(activity).init(ProfileFragment.linkedInAccessToken);
+                }
+            }
+
+            @Override
+            public void onAuthError(LIAuthError error) {
+                Log.i("LINKEDINprofile197", "onAuthError: " + error.toString());
+                //           LISessionManager.getInstance(getActivity().getApplicationContext()).clearSession();
+                linkedInError = true;
+            }
+        }, true);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != RESULT_OK){
             Toast.makeText(this, "Could not retrieve LinkedIn data.  Please allow permission.", Toast.LENGTH_SHORT).show();
-            ProfileFragment.linkedInError = true;
+            linkedInError = true;
             Log.i("LINKEDIN657", "requestCode: " + requestCode);
             Log.i("LINKEDIN658", "resultCode: " + resultCode);
             Log.i("LINKEDIN659", "data: " + data.getData());
@@ -728,6 +778,16 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 Log.i("LINKEDIN", "summary: " + liSummary);
 
                 //TODO: save profile data to firebase
+//                Firebase firebase = new Firebase("https://jobspot-a0171.firebaseio.com/");
+//                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+//                FirebaseUser firebaseUser = mAuth.getCurrentUser();
+//
+//                if (firebaseUser != null) {
+//                    Map<String, Object> childUpdates = new HashMap<>();
+//                    String key = firebase.child("users").child(firebaseUser.getUid()).child("userProfile").push().getKey();
+//                    Log.i("linkedin", "key: " + key);
+//                    firebase.child("users").child(firebaseUser.getUid()).child("userProfile").push().child("fullName").setValue(liName);
+//                }
 
                 ProfileFragment.displayLinkedInData(BottomNavigationActivity.this, liName, liEmail, liPictureURL, liHeadline, liLocation, liSummary);
 
