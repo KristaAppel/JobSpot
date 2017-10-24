@@ -57,11 +57,12 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
     EditText etHeadline;
     EditText etLocation;
     EditText etSummary;
-    static TextView tvName;
-    static TextView tvEmail;
-    static TextView tvHeadline;
-    static TextView tvLocation;
-    static TextView tvSummary;
+    private static TextView tvName;
+    private static TextView tvEmail;
+    private static TextView tvHeadline;
+    private static TextView tvLocation;
+    private static TextView tvSummary;
+    private static ImageView profileImageView;
     Button saveButton;
     Button cancelButton;
     ImageButton linkedInButton;
@@ -138,6 +139,8 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
 //                displayProfileData(getActivity(), liName, liEmail, liPictureUrl, liHeadline, liLocation, liSummary);
 //            }
 //        }
+
+        profileImageView = (ImageView) getActivity().findViewById(R.id.imageView_profile);
 
         etName = (EditText) getActivity().findViewById(R.id.et_profile_name);
         etNEmail = (EditText) getActivity().findViewById(R.id.et_profile_email);
@@ -355,47 +358,49 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
         // Save profile data to firebase:
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         final FirebaseUser firebaseUser = mAuth.getCurrentUser();
-        firebase.child("users").child(firebaseUser.getUid()).child("userProfile").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChildren()){
-                    String childKey = "";
-                    // Get the child key:
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                        childKey = snapshot.getKey();
+        if (firebaseUser != null) {
+            firebase.child("users").child(firebaseUser.getUid()).child("userProfile").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.hasChildren()){
+                        String childKey = "";
+                        // Get the child key:
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                            childKey = snapshot.getKey();
+                        }
+
+                        Log.i("childKey: ", childKey);
+
+                        // Save the profile data under the child key:
+                        firebase.child("users").child(firebaseUser.getUid()).child("userProfile").child(childKey).child("fullName").setValue(liName);
+                        firebase.child("users").child(firebaseUser.getUid()).child("userProfile").child(childKey).child("email").setValue(liEmail);
+                        firebase.child("users").child(firebaseUser.getUid()).child("userProfile").child(childKey).child("headline").setValue(liHeadline);
+                        firebase.child("users").child(firebaseUser.getUid()).child("userProfile").child(childKey).child("location").setValue(liLocation);
+                        firebase.child("users").child(firebaseUser.getUid()).child("userProfile").child(childKey).child("picture").setValue(liPictureUrl);
+                        firebase.child("users").child(firebaseUser.getUid()).child("userProfile").child(childKey).child("summary").setValue(liSummary);
+                    }else{
+
+                        // Create profile hashmap:
+                        HashMap<String, String> profileHashmap = new HashMap<>();
+                        profileHashmap.put("fullName", liName);
+                        profileHashmap.put("email", liEmail);
+                        profileHashmap.put("headline", liHeadline);
+                        profileHashmap.put("location", liLocation);
+                        profileHashmap.put("picture", liPictureUrl);
+                        profileHashmap.put("summary", liSummary);
+
+                        // Push profile hashmap under a new key:
+                        firebase.child("users").child(firebaseUser.getUid()).child("userProfile").push().setValue(profileHashmap);
                     }
-
-                    Log.i("childKey: ", childKey);
-
-                    // Save the profile data under the child key:
-                    firebase.child("users").child(firebaseUser.getUid()).child("userProfile").child(childKey).child("fullName").setValue(liName);
-                    firebase.child("users").child(firebaseUser.getUid()).child("userProfile").child(childKey).child("email").setValue(liEmail);
-                    firebase.child("users").child(firebaseUser.getUid()).child("userProfile").child(childKey).child("headline").setValue(liHeadline);
-                    firebase.child("users").child(firebaseUser.getUid()).child("userProfile").child(childKey).child("location").setValue(liLocation);
-                    firebase.child("users").child(firebaseUser.getUid()).child("userProfile").child(childKey).child("picture").setValue(liPictureUrl);
-                    firebase.child("users").child(firebaseUser.getUid()).child("userProfile").child(childKey).child("summary").setValue(liSummary);
-                }else{
-
-                    // Create profile hashmap:
-                    HashMap profileHashmap = new HashMap();
-                    profileHashmap.put("fullName", liName);
-                    profileHashmap.put("email", liEmail);
-                    profileHashmap.put("headline", liHeadline);
-                    profileHashmap.put("location", liLocation);
-                    profileHashmap.put("picture", liPictureUrl);
-                    profileHashmap.put("summary", liSummary);
-
-                    // Push profile hashmap under a new key:
-                    firebase.child("users").child(firebaseUser.getUid()).child("userProfile").push().setValue(profileHashmap);
+                    Toast.makeText(getActivity(), "Profile has been updated.", Toast.LENGTH_SHORT).show();
                 }
-                Toast.makeText(getActivity(), "Profile has been updated.", Toast.LENGTH_SHORT).show();
-            }
 
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                Log.i("FirebaseError: ", firebaseError.toString());
-            }
-        });
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+                    Log.i("FirebaseError: ", firebaseError.toString());
+                }
+            });
+        }
     }
 //    // Set permissions to retrieve info from LinkedIn:
 //    private static Scope buildScope(){
@@ -426,17 +431,19 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
 //        }, true);
 //    }
 
-    public static void displayProfileData(Activity activity, String _liName, String lEmail, String liPictureURL, String liHeadline, String liLocation, String liSummary) {
-        liName = _liName;
+    public static void displayProfileData(Activity activity, String _lName, String lEmail, String lipictureURL, String liheadline, String lilocation, String lisummary) {
+        liName = _lName;
         liEmail = lEmail;
-
-        ImageView profileImageView = (ImageView) activity.findViewById(R.id.imageView_profile);
+        liPictureUrl = lipictureURL;
+        liHeadline = liheadline;
+        liLocation = lilocation;
+        liSummary = lisummary;
 
         // Display profile image if we have one:
-        if (!liPictureURL.trim().equals("") && profileImageView != null) {
+        if (!liPictureUrl.trim().equals("") && profileImageView != null) {
             // display profile image:
                 profileImageView = (ImageView) activity.findViewById(R.id.imageView_profile);
-                Picasso.with(activity).load(liPictureURL).into(profileImageView);
+                Picasso.with(activity).load(liPictureUrl).into(profileImageView);
         }
 
         // display text:
