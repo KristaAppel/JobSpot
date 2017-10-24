@@ -236,7 +236,10 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
                 }
             }else{
                 // Get current location:
-                zoomToLatLong = new LatLng(currentAddress.getLatitude(), currentAddress.getLongitude());
+                if (currentAddress != null){
+                    zoomToLatLong = new LatLng(currentAddress.getLatitude(), currentAddress.getLongitude());
+                }
+
             }
 
             // Zoom:
