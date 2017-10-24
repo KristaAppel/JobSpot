@@ -130,7 +130,7 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
             notificationSwitch.setChecked(false);
         }
 
-        BottomNavigationActivity.checkLinkedInToken(getActivity()); ////////////////////////////////////////////////////////
+     //   BottomNavigationActivity.checkLinkedInToken(getActivity()); ////////////////////////////////////////////////////////
 //        if (linkedInAccessToken != null) {
 //            Log.i("LINKEDINprofile124", "access token not null");
 //            LISessionManager.getInstance(getActivity().getApplicationContext()).init(linkedInAccessToken);

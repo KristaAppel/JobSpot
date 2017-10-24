@@ -685,6 +685,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     }
 
     private static void loginToLinkedIn(final Activity activity){
+        checkLinkedInToken(activity);
         LISessionManager.getInstance(activity).init(activity, buildScope(), new AuthListener() {
             @Override
             public void onAuthSuccess() {
