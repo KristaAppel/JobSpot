@@ -164,7 +164,7 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
                 if (et_location.getText().toString().length()<1){
                     if (jobs==null || jobs.size()<1){
                         // If there are no searched jobs, show the current location in the location box:
-                        et_location.setText(currentAddress.getLocality() + ", " + currentAddress.getAdminArea()); // This shows city, state
+                        et_location.setText(currentAddress.getPostalCode()); // This shows zip code
                     }else{
                         // If there are job search results, show the location of the searched jobs in the location box:
                         if (jobs.size()>1){

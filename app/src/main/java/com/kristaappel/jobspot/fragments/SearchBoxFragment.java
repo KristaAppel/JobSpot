@@ -58,8 +58,8 @@ public class SearchBoxFragment extends android.app.Fragment implements View.OnCl
         ImageButton filtersButton = (ImageButton) view.findViewById(R.id.filterButton);
         filtersButton.setOnClickListener(this);
 
-        ImageButton recentButton = (ImageButton) view.findViewById(R.id.recentButton);
-        recentButton.setOnClickListener(this);
+//        ImageButton recentButton = (ImageButton) view.findViewById(R.id.recentButton);
+//        recentButton.setOnClickListener(this);
 
         ImageButton searchButton = (ImageButton) view.findViewById(R.id.searchButton);
         searchButton.setOnClickListener(this);

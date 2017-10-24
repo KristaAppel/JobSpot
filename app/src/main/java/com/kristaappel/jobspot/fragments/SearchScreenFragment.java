@@ -4,6 +4,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -22,6 +25,7 @@ public class SearchScreenFragment extends android.app.Fragment {
     public static String locationText;
     public static String keywordsText;
     private boolean isTablet = false;
+    private OnSearchMenuInteractionListener mListener;
 
 
     public SearchScreenFragment() {
@@ -46,6 +50,7 @@ public class SearchScreenFragment extends android.app.Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 
         isTablet = getResources().getBoolean(R.bool.is_tablet);
 
@@ -136,12 +141,35 @@ public class SearchScreenFragment extends android.app.Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        if (context instanceof OnSearchMenuInteractionListener){
+            mListener = (OnSearchMenuInteractionListener) context;
+        }
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.search_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId()==R.id.search_menu_history){
+            mListener.onSearchMenuInteraction();
+   //         onSearchBoxFragmentInteraction(R.id.recentButton);
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public void onDetach() {
         super.onDetach();
+        mListener = null;
+    }
+
+    public interface OnSearchMenuInteractionListener {
+        // Send the menu button input back:
+        void onSearchMenuInteraction();
     }
 
 }

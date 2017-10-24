@@ -22,6 +22,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -86,7 +87,7 @@ import static com.kristaappel.jobspot.fragments.ProfileFragment.linkedInAccessTo
 import static com.kristaappel.jobspot.fragments.ProfileFragment.linkedInError;
 
 
-public class BottomNavigationActivity extends AppCompatActivity implements SearchBoxFragment.OnSearchBoxFragmentInteractionListener, SortFilterFragment.OnSortFilterInteractionListener, SavedSearchListFragment.OnSavedSearchInteractionListener {
+public class BottomNavigationActivity extends AppCompatActivity implements SearchBoxFragment.OnSearchBoxFragmentInteractionListener, SearchScreenFragment.OnSearchMenuInteractionListener, SortFilterFragment.OnSortFilterInteractionListener, SavedSearchListFragment.OnSavedSearchInteractionListener {
 
     private ActionBar actionBar;
     public static String keywords;
@@ -131,9 +132,8 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
 
         actionBar = getSupportActionBar();
 
-        // Hide actionbar:
         if (actionBar != null){
-            actionBar.hide();
+            actionBar.show();
         }
 
         MobileAds.initialize(this, "ca-app-pub-3536941884869320~4191396929");
@@ -191,9 +191,10 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                         searchScreenFrag = new SearchScreenFragment();
                     }
                     getFragmentManager().beginTransaction().replace(R.id.content, searchScreenFrag).commit();
-                    // Hide actionbar:
-                    if (actionBar != null){
-                        actionBar.hide();
+                    // Show actionbar:
+                    if (actionBar!= null){
+                        actionBar.show();
+                        actionBar.setTitle("Job Search");
                     }
                     adView.setVisibility(View.GONE);
                     return true;
@@ -243,7 +244,6 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     };
 
 
-
     @Override
     public void onSearchBoxFragmentInteraction(int id) {
         EditText et_keywords = (EditText) findViewById(R.id.et_keywords);
@@ -282,7 +282,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 Location currentLocation = LocationHelper.getCurrentLocation(getApplicationContext(), new MapFragment());
                 if (currentLocation != null){
                     Address currentAddress = LocationHelper.getCurrentAddressFromLocation(currentLocation, getApplicationContext());
-                    et_location.setText(currentAddress.getLocality() + ", " + currentAddress.getAdminArea()); // This shows city, state
+                    et_location.setText(currentAddress.getPostalCode() ); // This shows current zip code
                 }else{
                     Toast.makeText(this, "Location not found.  Please make sure location services are enabled.", Toast.LENGTH_SHORT).show();
                 }
@@ -391,10 +391,10 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
             Collections.sort(jobs, new Comparator<Job>() {
                 @Override
                 public int compare(Job job1, Job job2) {
-                    if (sortBy.equals("location")){
+                    if (sortBy.equals("location") && job1.getDistance(activity, job1) != null && job2.getDistance(activity, job2) != null){
                         // Sort by distance:
                         return job1.getDistance(activity, job1).compareTo(job2.getDistance(activity, job2));
-                    }else if (sortBy.equals("accquisitiondate")){
+                    }else if (sortBy.equals("accquisitiondate") && job2.getDatePosted() != null && job1.getDatePosted() != null){
                         // Sort by date:
                         return job2.getDatePosted().compareToIgnoreCase(job1.getDatePosted());
                     }
@@ -508,6 +508,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         //Get the search radius, sort type, & number of days from user and put it into the job search url:
         String maxJobsString = String.valueOf(maxJobs);
         String url = "https://api.careeronestop.org/v1/jobsearch/TZ1zgEyKTNm69nF/"+_keywords+"/"+_location+"/"+radius+"/"+sortBy+"/desc/0/"+maxJobsString+"/"+posted;
+        Log.i("radius", radius);
         // Get jobs from API:
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
@@ -625,6 +626,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         }
 
     }
+
 
     @Override
     public void onSortFilterInteraction(String _radius, String _posted, String _sortBy) {
@@ -803,4 +805,8 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
 
     }
 
+    @Override
+    public void onSearchMenuInteraction() {
+        onSearchBoxFragmentInteraction(R.id.recentButton);
+    }
 }
