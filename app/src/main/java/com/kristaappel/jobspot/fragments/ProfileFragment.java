@@ -19,7 +19,13 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.kristaappel.jobspot.BottomNavigationActivity;
 import com.kristaappel.jobspot.LoginActivity;
 import com.kristaappel.jobspot.R;
@@ -27,6 +33,9 @@ import com.kristaappel.jobspot.objects.NetworkMonitor;
 import com.kristaappel.jobspot.objects.NotificationBroadcastReceiver;
 import com.linkedin.platform.AccessToken;
 import com.squareup.picasso.Picasso;
+
+import java.sql.Struct;
+import java.util.HashMap;
 
 
 public class ProfileFragment extends android.app.Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
@@ -91,10 +100,10 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
 //        // Display LinkedIn profile data, if available:
 //        if (!linkedInError){
 //            Log.i("LINKEDINprofile109", "no error");
-//            displayLinkedInData(getActivity(), liName, liEmail, liPictureUrl, liHeadline, liLocation, liSummary);
+//            displayProfileData(getActivity(), liName, liEmail, liPictureUrl, liHeadline, liLocation, liSummary);
 //        }
 
-        //TODO: load profile data from Firebase
+        loadProfileFromFirebase();
 
         sharedPreferences = getActivity().getSharedPreferences("com.kristaappel.jobspot.preferences", Context.MODE_PRIVATE);
 
@@ -111,9 +120,61 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
 //            LISessionManager.getInstance(getActivity().getApplicationContext()).init(linkedInAccessToken);
 //            if (!linkedInError){
 //                Log.i("LINKEDINprofile127", "no error & access token not null");
-//                displayLinkedInData(getActivity(), liName, liEmail, liPictureUrl, liHeadline, liLocation, liSummary);
+//                displayProfileData(getActivity(), liName, liEmail, liPictureUrl, liHeadline, liLocation, liSummary);
 //            }
 //        }
+    }
+
+    private void getDataFromSnapshot(DataSnapshot dataSnapshot){
+        HashMap snapshotHashMap = (HashMap) dataSnapshot.getValue();
+        liName = snapshotHashMap.get("fullName").toString();
+        liEmail = snapshotHashMap.get("email").toString();
+        liPictureUrl = snapshotHashMap.get("picture").toString();
+        liHeadline = snapshotHashMap.get("headline").toString();
+        liLocation = snapshotHashMap.get("location").toString();
+        liSummary = snapshotHashMap.get("summary").toString();
+    }
+
+    private void loadProfileFromFirebase(){
+        //TODO: load profile data from Firebase
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        firebase.child("users").child(firebaseUser.getUid()).child("userProfile").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                getDataFromSnapshot(dataSnapshot);
+                displayProfileData(getActivity(), liName, liEmail, liPictureUrl, liHeadline, liLocation, liSummary);
+                Log.i("PROFILEonChildADded", "snapshot: " + dataSnapshot.getKey() + " " + dataSnapshot.getValue());
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                getDataFromSnapshot(dataSnapshot);
+                displayProfileData(getActivity(), liName, liEmail, liPictureUrl, liHeadline, liLocation, liSummary);
+                Log.i("PROFILEonChildChanged", "snapshot: " + dataSnapshot.getKey() + " " + dataSnapshot.getValue());
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                getDataFromSnapshot(dataSnapshot);
+                displayProfileData(getActivity(), liName, liEmail, liPictureUrl, liHeadline, liLocation, liSummary);
+                Log.i("PROFILEonChildRemoved", "snapshot: " + dataSnapshot.getKey() + " " + dataSnapshot.getValue());
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                getDataFromSnapshot(dataSnapshot);
+                displayProfileData(getActivity(), liName, liEmail, liPictureUrl, liHeadline, liLocation, liSummary);
+                Log.i("PROFILEonChildMoved", "snapshot: " + dataSnapshot.getKey() + " " + dataSnapshot.getValue());
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Log.i("PROFILEonCancelled", "Failed to read value:" + firebaseError.getMessage().toString());
+            }
+        });
+
     }
 
     @Override
@@ -191,7 +252,7 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
 //        }, true);
 //    }
 
-    public static void displayLinkedInData(Activity activity, String _liName, String lEmail, String liPictureURL, String liHeadline, String liLocation, String liSummary) {
+    public static void displayProfileData(Activity activity, String _liName, String lEmail, String liPictureURL, String liHeadline, String liLocation, String liSummary) {
         liName = _liName;
         liEmail = lEmail;
 
@@ -205,7 +266,7 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
         TextView textViewLocation = (TextView) activity.findViewById(R.id.textView_profile_location);
         TextView textViewSummary = (TextView) activity.findViewById(R.id.textView_profile_summary);
         // If we have data from LinkedIn, hide the LinkedIn button and show the data:
-        if (!liPictureURL.equals("") && profileImageView != null) {
+        if (!liPictureURL.trim().equals("") && profileImageView != null) {
             // display profile image:
                 profileImageView = (ImageView) activity.findViewById(R.id.imageView_profile);
                 Picasso.with(activity).load(liPictureURL).into(profileImageView);
@@ -218,8 +279,8 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
         textViewSummary.setText(liSummary);
 
         // Hide 'Sign in with LinkedIn' button:
-        linkedInButton.setVisibility(View.INVISIBLE);
-        textViewExplanation.setVisibility(View.INVISIBLE);
+//        linkedInButton.setVisibility(View.INVISIBLE);
+//        textViewExplanation.setVisibility(View.INVISIBLE);
     }
 
 

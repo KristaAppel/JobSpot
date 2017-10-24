@@ -25,7 +25,9 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -671,7 +673,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
             LISessionManager.getInstance(activity.getApplicationContext()).init(linkedInAccessToken);
             if (!ProfileFragment.linkedInError){
                 Log.i("LINKEDINprofile127", "no error & access token not null");
-                ProfileFragment.displayLinkedInData(activity, liName, liEmail, liPictureURL, liHeadline, liLocation, liSummary);
+                ProfileFragment.displayProfileData(activity, liName, liEmail, liPictureURL, liHeadline, liLocation, liSummary);
             }
         }
     }
@@ -769,8 +771,16 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
 //                    firebase.child("users").child(firebaseUser.getUid()).child("userProfile").push().child("fullName").setValue(liName);
 //                }
 
-                ProfileFragment.displayLinkedInData(activity, liName, liEmail, liPictureURL, liHeadline, liLocation, liSummary);
+                ProfileFragment.displayProfileData(activity, liName, liEmail, liPictureURL, liHeadline, liLocation, liSummary);
 
+                ImageButton linkedInButton = (ImageButton) activity.findViewById(R.id.linkedin_signin_button);
+                TextView textViewExplanation = (TextView) activity.findViewById(R.id.textView_profile_explanation);
+                if (linkedInButton != null){
+                    linkedInButton.setVisibility(View.INVISIBLE);
+                }
+                if (textViewExplanation != null){
+                    textViewExplanation.setVisibility(View.INVISIBLE);
+                }
             }
 
             @Override
@@ -870,7 +880,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
 ////                    firebase.child("users").child(firebaseUser.getUid()).child("userProfile").push().child("fullName").setValue(liName);
 ////                }
 //
-//                ProfileFragment.displayLinkedInData(BottomNavigationActivity.this, liName, liEmail, liPictureURL, liHeadline, liLocation, liSummary);
+//                ProfileFragment.displayProfileData(BottomNavigationActivity.this, liName, liEmail, liPictureURL, liHeadline, liLocation, liSummary);
 //
 //            }
 //
