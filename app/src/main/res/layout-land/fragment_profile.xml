@@ -49,14 +49,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/imageView_profile"
-                    android:layout_marginStart="@dimen/activity_horizontal_margin"
                     android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
                     android:layout_marginTop="8dp"
-                    android:text="Name: "
+                    android:text="Name:       "
                     android:textAlignment="viewStart"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp"
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/textView_profile_name"
@@ -66,8 +65,22 @@
                     android:layout_marginTop="8dp"
                     android:layout_toRightOf="@id/textView_profile_name_label"
                     android:textAlignment="viewStart"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="24sp" />
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/et_profile_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorLightGrey"
+                    android:layout_below="@+id/imageView_profile"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                    android:layout_toRightOf="@id/textView_profile_name_label"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:paddingStart="2dp"
+                    android:singleLine="true"
+                    android:visibility="invisible"/>
 
                 <TextView
                     android:id="@+id/textView_profile_email_label"
@@ -76,9 +89,11 @@
                     android:layout_below="@+id/textView_profile_name_label"
                     android:layout_marginEnd="@dimen/activity_horizontal_margin"
                     android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
                     android:text="Email:        "
                     android:textAlignment="textStart"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textView_profile_email"
@@ -86,8 +101,24 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textView_profile_name_label"
                     android:layout_toRightOf="@+id/textView_profile_email_label"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
                     android:textAlignment="textStart"
                     android:textSize="16sp"/>
+
+                <EditText
+                    android:id="@+id/et_profile_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorLightGrey"
+                    android:layout_below="@+id/textView_profile_name_label"
+                    android:layout_toRightOf="@+id/textView_profile_email_label"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:paddingStart="2dp"
+                    android:singleLine="true"
+                    android:visibility="invisible"/>
 
                 <TextView
                     android:id="@+id/textView_profile_headline_label"
@@ -96,9 +127,11 @@
                     android:layout_below="@+id/textView_profile_email_label"
                     android:layout_marginEnd="@dimen/activity_horizontal_margin"
                     android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
                     android:text="Headline:  "
                     android:textAlignment="textStart"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textView_profile_headline"
@@ -106,8 +139,24 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textView_profile_email_label"
                     android:layout_toRightOf="@id/textView_profile_headline_label"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
                     android:textAlignment="textStart"
                     android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/et_profile_headline"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorLightGrey"
+                    android:layout_below="@+id/textView_profile_email_label"
+                    android:layout_toRightOf="@id/textView_profile_headline_label"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:paddingStart="2dp"
+                    android:singleLine="true"
+                    android:visibility="invisible"/>
 
                 <TextView
                     android:id="@+id/textView_profile_location_label"
@@ -116,9 +165,11 @@
                     android:layout_below="@+id/textView_profile_headline_label"
                     android:layout_marginEnd="@dimen/activity_horizontal_margin"
                     android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
                     android:text="Location:  "
                     android:textAlignment="textStart"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textView_profile_location"
@@ -126,19 +177,37 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textView_profile_headline_label"
                     android:layout_toRightOf="@id/textView_profile_location_label"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
                     android:textAlignment="textStart"
                     android:textSize="16sp"/>
+
+                <EditText
+                    android:id="@+id/et_profile_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorLightGrey"
+                    android:layout_below="@+id/textView_profile_headline_label"
+                    android:layout_toRightOf="@id/textView_profile_location_label"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:paddingStart="2dp"
+                    android:singleLine="true"
+                    android:visibility="invisible"/>
 
                 <TextView
                     android:id="@+id/textView_profile_summary_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textView_profile_location_label"
-                    android:layout_marginStart="@dimen/activity_horizontal_margin"
                     android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
                     android:text="Summary: "
                     android:textAlignment="textStart"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textView_profile_summary"
@@ -148,16 +217,51 @@
                     android:layout_toRightOf="@id/textView_profile_summary_label"
                     android:layout_marginEnd="@dimen/activity_horizontal_margin"
                     android:layout_marginBottom="24dp"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
                     android:textAlignment="textStart"
                     android:textSize="16sp"/>
+
+                <EditText
+                    android:id="@+id/et_profile_summary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorLightGrey"
+                    android:layout_below="@+id/textView_profile_location_label"
+                    android:layout_toRightOf="@id/textView_profile_summary_label"
+                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                    android:layout_marginBottom="24dp"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:paddingStart="2dp"
+                    android:visibility="invisible"/>
 
             </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_gravity="center">
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/button_profile_save"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Save"
+                    android:textColor="@color/colorWhite"
+                    android:background="@color/colorPrimary"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:visibility="invisible"/>
+
+                <Button
+                    android:id="@+id/button_profile_cancel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Cancel"
+                    android:textColor="@color/colorPrimary"
+                    android:background="@color/colorLightGrey"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:visibility="invisible"/>
 
                 <TextView
                     android:id="@+id/textView_profile_explanation"

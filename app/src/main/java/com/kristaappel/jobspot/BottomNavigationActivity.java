@@ -773,12 +773,14 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.hasChildren()){
                             String childKey = "";
+                            // Get the child key:
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                                 childKey = snapshot.getKey();
                             }
                             
                             Log.i("childKey: ", childKey);
-                            
+
+                            // Save the profile data under the child key:
                             firebase.child("users").child(firebaseUser.getUid()).child("userProfile").child(childKey).child("fullName").setValue(liName);
                             firebase.child("users").child(firebaseUser.getUid()).child("userProfile").child(childKey).child("email").setValue(liEmail);
                             firebase.child("users").child(firebaseUser.getUid()).child("userProfile").child(childKey).child("headline").setValue(liHeadline);
@@ -787,6 +789,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                             firebase.child("users").child(firebaseUser.getUid()).child("userProfile").child(childKey).child("summary").setValue(liSummary);
                             
                         }else{
+                            // Create profile hashmap:
                             HashMap profileHashmap = new HashMap();
                             profileHashmap.put("fullName", liName);
                             profileHashmap.put("email", liEmail);
@@ -794,7 +797,8 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                             profileHashmap.put("location", liLocation);
                             profileHashmap.put("picture", liPictureURL);
                             profileHashmap.put("summary", liSummary);
-                            
+
+                            // Push profile hashmap under a new key:
                             firebase.child("users").child(firebaseUser.getUid()).child("userProfile").push().setValue(profileHashmap);
                         }
                         Toast.makeText(activity, "Profile has been updated.", Toast.LENGTH_SHORT).show();
@@ -802,19 +806,13 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
 
                     @Override
                     public void onCancelled(FirebaseError firebaseError) {
-
+                        Log.i("FirebaseError: ", firebaseError.toString());
                     }
                 });
-                //firebase.child("users").child(firebaseUser.getUid()).child("savedsearches").child(search.getDateTime()).setValue(search);
-
-
-
-
-
-
 
                 ProfileFragment.displayProfileData(activity, liName, liEmail, liPictureURL, liHeadline, liLocation, liSummary);
 
+                // Hide LinkedIn Login Button & Text:
                 ImageButton linkedInButton = (ImageButton) activity.findViewById(R.id.linkedin_signin_button);
                 TextView textViewExplanation = (TextView) activity.findViewById(R.id.textView_profile_explanation);
                 if (linkedInButton != null){
@@ -831,7 +829,6 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 error.printStackTrace();
             }
         });
-
         progressDialog.dismiss();
     }
 
@@ -910,7 +907,6 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
 //                Log.i("LINKEDIN", "picture url: " + liPictureURL);
 //                Log.i("LINKEDIN", "summary: " + liSummary);
 //
-//                //TODO: save profile data to firebase
 ////                Firebase firebase = new Firebase("https://jobspot-a0171.firebaseio.com/");
 ////                FirebaseAuth mAuth = FirebaseAuth.getInstance();
 ////                FirebaseUser firebaseUser = mAuth.getCurrentUser();
