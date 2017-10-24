@@ -2,7 +2,6 @@ package com.kristaappel.jobspot.objects;
 
 
 import android.content.Context;
-import android.util.Log;
 
 import com.firebase.client.Firebase;
 import com.google.firebase.auth.FirebaseAuth;

@@ -7,9 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.location.Address;
 import android.location.Location;
 import android.os.Bundle;
@@ -20,9 +18,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -71,7 +67,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.security.MessageDigest;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -82,7 +77,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import static com.kristaappel.jobspot.R.string.search;
 import static com.kristaappel.jobspot.fragments.ProfileFragment.linkedInAccessToken;
 import static com.kristaappel.jobspot.fragments.ProfileFragment.linkedInError;
 
@@ -686,14 +680,15 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         LISessionManager.getInstance(activity).init(activity, buildScope(), new AuthListener() {
             @Override
             public void onAuthSuccess() {
-                Log.i("LINKEDINprofile185", "onAuthSuccess");
-                linkedInError = false;
-                if (ProfileFragment.linkedInAccessToken == null) {
-                    ProfileFragment.linkedInAccessToken = LISessionManager.getInstance(activity).getSession().getAccessToken();
-                }else{
-                    Log.i("LINKEDINprofile190", "access token not null");
-                    LISessionManager.getInstance(activity).init(ProfileFragment.linkedInAccessToken);
-                }
+                fetchLinkedInProfileInfo(activity);
+//                Log.i("LINKEDINprofile185", "onAuthSuccess");
+//                linkedInError = false;
+//                if (ProfileFragment.linkedInAccessToken == null) {
+//                    ProfileFragment.linkedInAccessToken = LISessionManager.getInstance(activity).getSession().getAccessToken();
+//                }else{
+//                    Log.i("LINKEDINprofile190", "access token not null");
+//                    LISessionManager.getInstance(activity).init(ProfileFragment.linkedInAccessToken);
+//                }
             }
 
             @Override
@@ -705,32 +700,15 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         }, true);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != RESULT_OK){
-            Toast.makeText(this, "Could not retrieve LinkedIn data.  Please allow permission.", Toast.LENGTH_SHORT).show();
-            linkedInError = true;
-            Log.i("LINKEDIN657", "requestCode: " + requestCode);
-            Log.i("LINKEDIN658", "resultCode: " + resultCode);
-            Log.i("LINKEDIN659", "data: " + data.getData());
-            Log.i("LINKEDIN660", "returning from onActivityResult - result not OK");
-            return;
-        }
-        Log.i("LINKEDIN663", "resultCode: " + resultCode);
-        // App returns here after LinkedIn connection is made.  Get data from LinkedIn API:
-        Log.i("LINKEDIN665", "onActivityResult from BottomNavigationActivity");
-
-        LISessionManager.getInstance(getApplicationContext()).onActivityResult(this, requestCode, resultCode, data);
-        Log.i("LINKEDIN668", "NOW it's a success");
-
+    private static void fetchLinkedInProfileInfo(final Activity activity){
         String url = "https://api.linkedin.com/v1/people/~:(formatted-name,email-address,headline,location,summary,picture-url)?format=json"; //:(email-address,formatted-name, phone-numbers, picture-urls::(original))";
-        final ProgressDialog progressDialog = new ProgressDialog(this);
+
+        final ProgressDialog progressDialog = new ProgressDialog(activity);
         progressDialog.setMessage("Retrieving Data...");
         progressDialog.show();
 
-        APIHelper apiHelper = APIHelper.getInstance(getApplicationContext());
-        apiHelper.getRequest(this, url, new ApiListener() {
+        APIHelper apiHelper = APIHelper.getInstance(activity);
+        apiHelper.getRequest(activity, url, new ApiListener() {
             @Override
             public void onApiSuccess(ApiResponse apiResponse) {
 
@@ -770,7 +748,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Log.i("LINKEDIN719", "JSONException in onApiSuccess: " + e.toString());
-                    Toast.makeText(BottomNavigationActivity.this, "Error retrieving data", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "Error retrieving data", Toast.LENGTH_SHORT).show();
                 }
                 Log.i("LINKEDIN", "name: " + liName);
                 Log.i("LINKEDIN", "email: " + liEmail);
@@ -791,7 +769,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
 //                    firebase.child("users").child(firebaseUser.getUid()).child("userProfile").push().child("fullName").setValue(liName);
 //                }
 
-                ProfileFragment.displayLinkedInData(BottomNavigationActivity.this, liName, liEmail, liPictureURL, liHeadline, liLocation, liSummary);
+                ProfileFragment.displayLinkedInData(activity, liName, liEmail, liPictureURL, liHeadline, liLocation, liSummary);
 
             }
 
@@ -801,7 +779,108 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
                 error.printStackTrace();
             }
         });
+
         progressDialog.dismiss();
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+   //     super.onActivityResult(requestCode, resultCode, data);
+   //     if (resultCode != RESULT_OK){
+   //         Toast.makeText(this, "Could not retrieve LinkedIn data.  Please allow permission.", Toast.LENGTH_SHORT).show();
+   //         linkedInError = true;
+   //         Log.i("LINKEDIN657", "requestCode: " + requestCode);
+   //         Log.i("LINKEDIN658", "resultCode: " + resultCode);
+   //         Log.i("LINKEDIN659", "data: " + data.getData());
+   //         Log.i("LINKEDIN660", "returning from onActivityResult - result not OK");
+   //         return;
+   //     }
+   //     Log.i("LINKEDIN663", "resultCode: " + resultCode);
+   //     // App returns here after LinkedIn connection is made.  Get data from LinkedIn API:
+   //     Log.i("LINKEDIN665", "onActivityResult from BottomNavigationActivity");
+
+        LISessionManager.getInstance(getApplicationContext()).onActivityResult(this, requestCode, resultCode, data);
+  //      Log.i("LINKEDIN668", "NOW it's a success");
+
+//        String url = "https://api.linkedin.com/v1/people/~:(formatted-name,email-address,headline,location,summary,picture-url)?format=json"; //:(email-address,formatted-name, phone-numbers, picture-urls::(original))";
+//        final ProgressDialog progressDialog = new ProgressDialog(this);
+//        progressDialog.setMessage("Retrieving Data...");
+//        progressDialog.show();
+
+//        APIHelper apiHelper = APIHelper.getInstance(getApplicationContext());
+//        apiHelper.getRequest(this, url, new ApiListener() {
+//            @Override
+//            public void onApiSuccess(ApiResponse apiResponse) {
+//
+//                Log.i("LINKEDIN684", "response: " + apiResponse);
+//                JSONObject responseObject = apiResponse.getResponseDataAsJson();
+//                Log.i("LINKEDIN686", "response as json: " + responseObject);
+//                try {
+//                    if (responseObject.has("formattedName")){
+//                        liName = responseObject.getString("formattedName");
+//                    }
+//
+//                    if (responseObject.has("emailAddress")){
+//                        liEmail = responseObject.getString("emailAddress");
+//                    }
+//
+//                    if (responseObject.has("headline")){
+//                        liHeadline = responseObject.getString("headline");
+//                    }
+//
+//                    JSONObject liLocationObject = null;
+//                    if (responseObject.has("location")){
+//                        liLocationObject = responseObject.getJSONObject("location");
+//                    }
+//
+//                    if (liLocationObject != null && liLocationObject.has("name")){
+//                        liLocation = liLocationObject.getString("name");
+//                    }
+//
+//                    if (responseObject.has("pictureUrl")){
+//                        liPictureURL = responseObject.getString("pictureUrl");
+//                    }
+//
+//                    if (responseObject.has("summary")){
+//                        liSummary = responseObject.getString("summary");
+//                    }
+//
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                    Log.i("LINKEDIN719", "JSONException in onApiSuccess: " + e.toString());
+//                    Toast.makeText(BottomNavigationActivity.this, "Error retrieving data", Toast.LENGTH_SHORT).show();
+//                }
+//                Log.i("LINKEDIN", "name: " + liName);
+//                Log.i("LINKEDIN", "email: " + liEmail);
+//                Log.i("LINKEDIN", "headline: " + liHeadline);
+//                Log.i("LINKEDIN", "location: " + liLocation);
+//                Log.i("LINKEDIN", "picture url: " + liPictureURL);
+//                Log.i("LINKEDIN", "summary: " + liSummary);
+//
+//                //TODO: save profile data to firebase
+////                Firebase firebase = new Firebase("https://jobspot-a0171.firebaseio.com/");
+////                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+////                FirebaseUser firebaseUser = mAuth.getCurrentUser();
+////
+////                if (firebaseUser != null) {
+////                    Map<String, Object> childUpdates = new HashMap<>();
+////                    String key = firebase.child("users").child(firebaseUser.getUid()).child("userProfile").push().getKey();
+////                    Log.i("linkedin", "key: " + key);
+////                    firebase.child("users").child(firebaseUser.getUid()).child("userProfile").push().child("fullName").setValue(liName);
+////                }
+//
+//                ProfileFragment.displayLinkedInData(BottomNavigationActivity.this, liName, liEmail, liPictureURL, liHeadline, liLocation, liSummary);
+//
+//            }
+//
+//            @Override
+//            public void onApiError(LIApiError error) {
+//                Log.i("LINKEDIN735", "onApiError");
+//                error.printStackTrace();
+//            }
+//        });
+//        progressDialog.dismiss();
 
     }
 

@@ -1,6 +1,5 @@
 package com.kristaappel.jobspot;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.support.annotation.NonNull;
@@ -10,7 +9,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -22,8 +20,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.kristaappel.jobspot.objects.NetworkMonitor;
-
-import static com.kristaappel.jobspot.R.id.et_keywords;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 

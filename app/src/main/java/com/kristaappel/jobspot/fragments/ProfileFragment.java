@@ -4,15 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,7 +13,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -34,16 +26,7 @@ import com.kristaappel.jobspot.R;
 import com.kristaappel.jobspot.objects.NetworkMonitor;
 import com.kristaappel.jobspot.objects.NotificationBroadcastReceiver;
 import com.linkedin.platform.AccessToken;
-import com.linkedin.platform.LISessionManager;
-import com.linkedin.platform.errors.LIAuthError;
-import com.linkedin.platform.listeners.AuthListener;
-import com.linkedin.platform.utils.Scope;
 import com.squareup.picasso.Picasso;
-
-import java.security.MessageDigest;
-
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
-import static android.support.v7.widget.AppCompatDrawableManager.get;
 
 
 public class ProfileFragment extends android.app.Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
@@ -105,12 +88,13 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
 
         firebase = new Firebase("https://jobspot-a0171.firebaseio.com/");
 
-        // Display LinkedIn profile data, if available:
+//        // Display LinkedIn profile data, if available:
 //        if (!linkedInError){
 //            Log.i("LINKEDINprofile109", "no error");
-//            displayLinkedInData(getActivity(), liName, liPictureUrl, liHeadline, liLocation, liSummary);
+//            displayLinkedInData(getActivity(), liName, liEmail, liPictureUrl, liHeadline, liLocation, liSummary);
 //        }
 
+        //TODO: load profile data from Firebase
 
         sharedPreferences = getActivity().getSharedPreferences("com.kristaappel.jobspot.preferences", Context.MODE_PRIVATE);
 

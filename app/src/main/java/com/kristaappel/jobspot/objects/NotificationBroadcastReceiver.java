@@ -7,14 +7,12 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -29,8 +27,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,10 +35,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import static android.R.attr.radius;
 import static android.content.Context.NOTIFICATION_SERVICE;
-import static com.kristaappel.jobspot.BottomNavigationActivity.sortBy;
-import static com.kristaappel.jobspot.objects.FileUtil.readMostRecentSearch;
 
 public class NotificationBroadcastReceiver extends WakefulBroadcastReceiver {
 

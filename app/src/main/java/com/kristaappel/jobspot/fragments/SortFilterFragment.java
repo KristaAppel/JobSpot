@@ -3,7 +3,6 @@ package com.kristaappel.jobspot.fragments;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -18,11 +17,6 @@ import com.kristaappel.jobspot.BottomNavigationActivity;
 import com.kristaappel.jobspot.R;
 import com.kristaappel.jobspot.objects.FileUtil;
 import com.kristaappel.jobspot.objects.SavedSearch;
-
-import java.io.File;
-
-import static com.kristaappel.jobspot.R.string.search;
-import static com.kristaappel.jobspot.R.string.share;
 
 
 public class SortFilterFragment extends android.app.Fragment implements RadioGroup.OnCheckedChangeListener, View.OnClickListener {

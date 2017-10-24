@@ -1,0 +1,16 @@
+#Tue Oct 24 09:18:32 EDT 2017
+renamed.4=classes3.dex
+renamed.3=classes2.dex
+renamed.2=classes5.dex
+renamed.1=classes4.dex
+base.4=/Users/kristaappel/Documents/OneDrive/Documents/FullSail/1710-IntegratedProductDeployment/JobSpot/sampleapp/build/intermediates/transforms/dex/debug/folders/1000/10/classes_d90bd59910afee901c5ed89681ab7bc57045a124
+renamed.0=classes.dex
+base.3=/Users/kristaappel/Documents/OneDrive/Documents/FullSail/1710-IntegratedProductDeployment/JobSpot/sampleapp/build/intermediates/transforms/dex/debug/folders/1000/10/classes_d291dc3204cc69516f4142e112988adc60886f62
+base.2=/Users/kristaappel/Documents/OneDrive/Documents/FullSail/1710-IntegratedProductDeployment/JobSpot/sampleapp/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-21.0.3_0028d8616e9527fdf7b12bc13829aa4549820d1d
+base.1=/Users/kristaappel/Documents/OneDrive/Documents/FullSail/1710-IntegratedProductDeployment/JobSpot/sampleapp/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-21.0.3_c54167304b3b294426bad89c5aceb063efa5ccb3
+base.0=/Users/kristaappel/Documents/OneDrive/Documents/FullSail/1710-IntegratedProductDeployment/JobSpot/sampleapp/build/intermediates/transforms/dex/debug/folders/1000/10/classes_476b2a40b80c1deb6d8298aafd325d9fe8ad6dd2
+file.4=/Users/kristaappel/Documents/OneDrive/Documents/FullSail/1710-IntegratedProductDeployment/JobSpot/sampleapp/build/intermediates/transforms/dex/debug/folders/1000/10/classes_d90bd59910afee901c5ed89681ab7bc57045a124/classes.dex
+file.3=/Users/kristaappel/Documents/OneDrive/Documents/FullSail/1710-IntegratedProductDeployment/JobSpot/sampleapp/build/intermediates/transforms/dex/debug/folders/1000/10/classes_d291dc3204cc69516f4142e112988adc60886f62/classes.dex
+file.2=/Users/kristaappel/Documents/OneDrive/Documents/FullSail/1710-IntegratedProductDeployment/JobSpot/sampleapp/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-21.0.3_0028d8616e9527fdf7b12bc13829aa4549820d1d/classes.dex
+file.1=/Users/kristaappel/Documents/OneDrive/Documents/FullSail/1710-IntegratedProductDeployment/JobSpot/sampleapp/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-21.0.3_c54167304b3b294426bad89c5aceb063efa5ccb3/classes.dex
+file.0=/Users/kristaappel/Documents/OneDrive/Documents/FullSail/1710-IntegratedProductDeployment/JobSpot/sampleapp/build/intermediates/transforms/dex/debug/folders/1000/10/classes_476b2a40b80c1deb6d8298aafd325d9fe8ad6dd2/classes.dex

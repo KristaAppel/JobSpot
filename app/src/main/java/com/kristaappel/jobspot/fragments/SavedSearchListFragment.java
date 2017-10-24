@@ -24,8 +24,6 @@ import com.kristaappel.jobspot.objects.FileUtil;
 import com.kristaappel.jobspot.objects.NetworkMonitor;
 import com.kristaappel.jobspot.objects.SavedSearch;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
