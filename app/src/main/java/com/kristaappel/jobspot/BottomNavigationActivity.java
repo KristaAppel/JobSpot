@@ -118,7 +118,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bottomnavigation);
-
+        firebase.setAndroidContext(this);
         firebase = new Firebase("https://jobspot-a0171.firebaseio.com/");
 
         Log.i("BottomNavActivity", "istablet: " + getResources().getBoolean(R.bool.is_tablet));

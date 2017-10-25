@@ -85,7 +85,7 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
 
-        if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 0x01001);
 
         }
