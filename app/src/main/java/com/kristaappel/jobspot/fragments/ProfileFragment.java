@@ -4,7 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,7 +17,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -27,8 +30,13 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.kristaappel.jobspot.BottomNavigationActivity;
 import com.kristaappel.jobspot.LoginActivity;
 import com.kristaappel.jobspot.R;
@@ -38,6 +46,7 @@ import com.linkedin.platform.AccessToken;
 import com.squareup.picasso.Picasso;
 import java.util.HashMap;
 
+import static android.app.Activity.RESULT_OK;
 import static com.kristaappel.jobspot.BottomNavigationActivity.firebase;
 
 
@@ -63,10 +72,15 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
     private static TextView tvLocation;
     private static TextView tvSummary;
     private static ImageView profileImageView;
+    public static Uri imageFilePath;
+    public static int PICK_IMAGE_REQUEST_CODE = 111;
+    Button uploadNewPhotoButton;
     Button saveButton;
     Button cancelButton;
     ImageButton linkedInButton;
     TextView textViewExplanation;
+    Bitmap newProfileImage;
+    private StorageReference mStorageRef;
 
 
     public ProfileFragment() {
@@ -106,6 +120,10 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+
+
         // Set button click listeners:
         ImageButton linkedInSignInButton = (ImageButton) view.findViewById(R.id.linkedin_signin_button);
         linkedInSignInButton.setOnClickListener(this);
@@ -159,7 +177,8 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
 
         cancelButton = (Button) getActivity().findViewById(R.id.button_profile_cancel);
         cancelButton.setOnClickListener(this);
-
+        uploadNewPhotoButton = (Button) getActivity().findViewById(R.id.button_profile_upload_photo);
+        uploadNewPhotoButton.setOnClickListener(this);
         linkedInButton = (ImageButton) getActivity().findViewById(R.id.linkedin_signin_button);
         textViewExplanation = (TextView) getActivity().findViewById(R.id.textView_profile_explanation);
 
@@ -243,7 +262,8 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
     }
 
     private void startEditMode(){
-        // Show save & cancel buttons:
+        // Show buttons:
+        uploadNewPhotoButton.setVisibility(View.VISIBLE);
         saveButton.setVisibility(View.VISIBLE);
         cancelButton.setVisibility(View.VISIBLE);
 
@@ -284,7 +304,8 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
             manager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
         }
 
-        // Hide save & cancel buttons:
+        // Hide buttons:
+        uploadNewPhotoButton.setVisibility(View.INVISIBLE);
         saveButton.setVisibility(View.INVISIBLE);
         cancelButton.setVisibility(View.INVISIBLE);
 
@@ -334,14 +355,38 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
                     Toast.makeText(getActivity(), "No connection.", Toast.LENGTH_SHORT).show();
                 }
                 break;
+            case R.id.button_profile_upload_photo:
+                // Open image gallery:
+                Intent imageIntent = new Intent();
+                imageIntent.setType("image/*");
+                imageIntent.setAction(Intent.ACTION_PICK);
+                startActivityForResult(Intent.createChooser(imageIntent, "Select Image"), PICK_IMAGE_REQUEST_CODE);
+                break;
             case R.id.button_profile_save:
                 endEditMode();
                 getInputText();
-                saveProfileToFirebase();
+               savePhoto(); // saveProfileToFirebase();
                 break;
             case R.id.button_profile_cancel:
                 endEditMode();
                 break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ProfileFragment.PICK_IMAGE_REQUEST_CODE && resultCode == RESULT_OK && data != null && data.getData() != null){
+            // Returning from choosing new photo:
+            ProfileFragment.imageFilePath = data.getData();
+            try{
+                // Display the new image:
+                newProfileImage = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), ProfileFragment.imageFilePath);
+                ImageView profileImageView = (ImageView) getActivity().findViewById(R.id.imageView_profile);
+                profileImageView.setImageBitmap(newProfileImage);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
         }
     }
 
@@ -350,15 +395,47 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
         liEmail = etNEmail.getText().toString();
         liHeadline = etHeadline.getText().toString();
         liLocation = etLocation.getText().toString();
-        //TODO: get a new pictureURL ??
         liSummary = etSummary.getText().toString();
     }
 
+    private void savePhoto(){
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        final FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        if (firebaseUser != null){
+            // Save new picture to firebase storage:
+            if (imageFilePath != null){
+                UploadTask uploadTask = mStorageRef.child(firebaseUser.getUid()).child("userPhoto").putFile(imageFilePath);
+                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Log.i("profile", "image upload success");
+                        Uri imageStorageUrl = taskSnapshot.getDownloadUrl();
+                        String imageUrlString = "";
+                        if (imageStorageUrl != null) {
+                            imageUrlString = imageStorageUrl.toString();
+                            liPictureUrl = imageUrlString;
+                        }
+                        Log.i("imageStorageUrl: ", imageUrlString);
+
+                        saveProfileToFirebase();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getActivity(), "Failure uploading image.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+            saveProfileToFirebase();
+        }
+    }
+
     private void saveProfileToFirebase(){
-        // Save profile data to firebase:
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         final FirebaseUser firebaseUser = mAuth.getCurrentUser();
         if (firebaseUser != null) {
+            
+            // Save profile data to firebase:
             firebase.child("users").child(firebaseUser.getUid()).child("userProfile").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {

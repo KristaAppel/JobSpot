@@ -7,10 +7,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.Signature;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Location;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -18,6 +22,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +31,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +47,7 @@ import com.firebase.client.ValueEventListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.formats.NativeAd;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.kristaappel.jobspot.fragments.AppliedJobsFragment;
@@ -72,6 +79,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.MessageDigest;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -82,7 +90,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import static com.kristaappel.jobspot.R.string.search;
+import static com.kristaappel.jobspot.fragments.ProfileFragment.displayProfileData;
+import static com.kristaappel.jobspot.fragments.ProfileFragment.imageFilePath;
 import static com.kristaappel.jobspot.fragments.ProfileFragment.linkedInAccessToken;
 import static com.kristaappel.jobspot.fragments.ProfileFragment.linkedInError;
 
@@ -118,7 +127,7 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bottomnavigation);
-        firebase.setAndroidContext(this);
+        Firebase.setAndroidContext(this);
         firebase = new Firebase("https://jobspot-a0171.firebaseio.com/");
 
         Log.i("BottomNavActivity", "istablet: " + getResources().getBoolean(R.bool.is_tablet));
@@ -664,7 +673,21 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
 
     }
 
+    private static void generateHashKey(Activity activity){
+        try{
+            PackageInfo info = activity.getPackageManager().getPackageInfo("com.kristaappel.jobspot", PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures){
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.i("HASHKEY: ", ""+Base64.encodeToString(md.digest(), Base64.NO_WRAP));
+            }
+        }catch (Exception e){
+            Log.i("HASHKEY: ", "error: " + e.getMessage());
+        }
+    }
+
     public static void linkedInClicked(Activity activity){
+        generateHashKey(activity);
         loginToLinkedIn(activity);
     }
 
@@ -856,7 +879,10 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
    //     // App returns here after LinkedIn connection is made.  Get data from LinkedIn API:
    //     Log.i("LINKEDIN665", "onActivityResult from BottomNavigationActivity");
 
-        LISessionManager.getInstance(getApplicationContext()).onActivityResult(this, requestCode, resultCode, data);
+            // Returning from LinkedIn:
+            LISessionManager.getInstance(getApplicationContext()).onActivityResult(this, requestCode, resultCode, data);
+
+
   //      Log.i("LINKEDIN668", "NOW it's a success");
 
 //        String url = "https://api.linkedin.com/v1/people/~:(formatted-name,email-address,headline,location,summary,picture-url)?format=json"; //:(email-address,formatted-name, phone-numbers, picture-urls::(original))";
