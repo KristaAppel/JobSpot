@@ -178,7 +178,9 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
         cancelButton = (Button) getActivity().findViewById(R.id.button_profile_cancel);
         cancelButton.setOnClickListener(this);
         uploadNewPhotoButton = (Button) getActivity().findViewById(R.id.button_profile_upload_photo);
-        uploadNewPhotoButton.setOnClickListener(this);
+        if (uploadNewPhotoButton != null) {
+            uploadNewPhotoButton.setOnClickListener(this);
+        }
         linkedInButton = (ImageButton) getActivity().findViewById(R.id.linkedin_signin_button);
         textViewExplanation = (TextView) getActivity().findViewById(R.id.textView_profile_explanation);
 
@@ -263,7 +265,10 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
 
     private void startEditMode(){
         // Show buttons:
-        uploadNewPhotoButton.setVisibility(View.VISIBLE);
+        if (uploadNewPhotoButton != null){
+            uploadNewPhotoButton.setVisibility(View.VISIBLE);
+        }
+
         saveButton.setVisibility(View.VISIBLE);
         cancelButton.setVisibility(View.VISIBLE);
 
@@ -305,7 +310,9 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
         }
 
         // Hide buttons:
-        uploadNewPhotoButton.setVisibility(View.INVISIBLE);
+        if (uploadNewPhotoButton != null){
+            uploadNewPhotoButton.setVisibility(View.INVISIBLE);
+        }
         saveButton.setVisibility(View.INVISIBLE);
         cancelButton.setVisibility(View.INVISIBLE);
 
@@ -434,7 +441,7 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         final FirebaseUser firebaseUser = mAuth.getCurrentUser();
         if (firebaseUser != null) {
-            
+
             // Save profile data to firebase:
             firebase.child("users").child(firebaseUser.getUid()).child("userProfile").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
