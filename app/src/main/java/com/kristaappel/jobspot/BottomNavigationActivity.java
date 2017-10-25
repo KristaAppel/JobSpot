@@ -673,22 +673,28 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
         return Scope.build(Scope.R_BASICPROFILE, Scope.R_EMAILADDRESS);
     }
 
-    public static void checkLinkedInToken(Activity activity){
+    public static boolean checkLinkedInToken(Activity activity){
         if (ProfileFragment.linkedInAccessToken != null) {
             Log.i("LINKEDINprofile124", "access token not null");
             LISessionManager.getInstance(activity.getApplicationContext()).init(linkedInAccessToken);
             if (!ProfileFragment.linkedInError){
                 Log.i("LINKEDINprofile127", "no error & access token not null");
-                ProfileFragment.displayProfileData(activity, liName, liEmail, liPictureURL, liHeadline, liLocation, liSummary);
+                fetchLinkedInProfileInfo(activity);
+               // ProfileFragment.displayProfileData(activity, liName, liEmail, liPictureURL, liHeadline, liLocation, liSummary);
+                return true;
             }
         }
+            return false;
     }
 
     private static void loginToLinkedIn(final Activity activity){
-        checkLinkedInToken(activity);
+        if (checkLinkedInToken(activity)){
+            return;
+        }
         LISessionManager.getInstance(activity).init(activity, buildScope(), new AuthListener() {
             @Override
             public void onAuthSuccess() {
+                ProfileFragment.linkedInAccessToken = LISessionManager.getInstance(activity).getSession().getAccessToken();
                 fetchLinkedInProfileInfo(activity);
 //                Log.i("LINKEDINprofile185", "onAuthSuccess");
 //                linkedInError = false;

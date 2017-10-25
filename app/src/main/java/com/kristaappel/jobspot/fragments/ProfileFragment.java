@@ -130,7 +130,7 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
             notificationSwitch.setChecked(false);
         }
 
-     //   BottomNavigationActivity.checkLinkedInToken(getActivity()); ////////////////////////////////////////////////////////
+       // BottomNavigationActivity.checkLinkedInToken(getActivity()); ////////////////////////////////////////////////////////
 //        if (linkedInAccessToken != null) {
 //            Log.i("LINKEDINprofile124", "access token not null");
 //            LISessionManager.getInstance(getActivity().getApplicationContext()).init(linkedInAccessToken);
@@ -442,7 +442,6 @@ public class ProfileFragment extends android.app.Fragment implements View.OnClic
         // Display profile image if we have one:
         if (!liPictureUrl.trim().equals("") && profileImageView != null) {
             // display profile image:
-                profileImageView = (ImageView) activity.findViewById(R.id.imageView_profile);
                 Picasso.with(activity).load(liPictureUrl).into(profileImageView);
         }
 
