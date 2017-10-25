@@ -129,7 +129,7 @@ public class SearchResultListFragment extends ListFragment {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             if (convertView == null){
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.searchresult_list_item, parent, false);
+                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.searchresult_list_item, parent, false);
             }
 
             // Get TextViews:
@@ -154,7 +154,7 @@ public class SearchResultListFragment extends ListFragment {
             favoriteButton.setTag(R.drawable.ic_star_unsaved);
 
             // Find out if job is saved:
-            ArrayList<Job> savedJobs = FileUtil.readSavedJobs(getContext());
+            ArrayList<Job> savedJobs = FileUtil.readSavedJobs(getActivity());
             for (Job savedJob : savedJobs){
                 if (savedJob.getJobID().equals(jobs.get(position).getJobID())){
                     // The job is saved, so display filled star:

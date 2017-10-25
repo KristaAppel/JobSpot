@@ -117,7 +117,7 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
     @Override
     public void onStop() {
         super.onStop();
-        LocationHelper.stopRequestingLocationUpdates(getContext(), this);
+        LocationHelper.stopRequestingLocationUpdates(getActivity(), this);
     }
 
 
@@ -136,7 +136,7 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
 
         googleMap.setOnInfoWindowClickListener(this);
 
-        if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             googleMap.setMyLocationEnabled(true);
         }
         if (displayLocation != null){
@@ -151,13 +151,13 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
             googleMap.clear();
             addMapMarkers();
         }else{
-            currentLocation = LocationHelper.getCurrentLocation(getContext(), this);
+            currentLocation = LocationHelper.getCurrentLocation(getActivity(), this);
             if (currentLocation == null){
                 // No last known location.  Begin requesting location updates:
-                LocationHelper.requestLocationUpdates(getContext(), this);
+                LocationHelper.requestLocationUpdates(getActivity(), this);
             }else{
                 // Get current address:
-                currentAddress = LocationHelper.getCurrentAddressFromLocation(currentLocation, getContext());
+                currentAddress = LocationHelper.getCurrentAddressFromLocation(currentLocation, getActivity());
                 // Display current address in the location box:
                 EditText et_location = (EditText) getActivity().findViewById(R.id.et_location);
                 //et_location.setText(currentAddress.getAddressLine(0)); // This shows full address
@@ -195,17 +195,17 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
             @Override
             public View getInfoContents(Marker marker) {
                 // Create custom layout for Info Window so we can have a multiline snippet:
-                LinearLayout linearLayout = new LinearLayout(getContext());
+                LinearLayout linearLayout = new LinearLayout(getActivity());
                 linearLayout.setOrientation(LinearLayout.VERTICAL);
 
-                TextView title = new TextView(getContext());
+                TextView title = new TextView(getActivity());
                 title.setTextColor(getResources().getColor(R.color.colorBlack));
                 title.setGravity(Gravity.CENTER);
                 title.setTypeface(null, Typeface.BOLD);
                 title.setTextSize(18);
                 title.setText(marker.getTitle());
 
-                TextView snippet = new TextView(getContext());
+                TextView snippet = new TextView(getActivity());
                 snippet.setTextColor(Color.GRAY);
                 snippet.setGravity(Gravity.CENTER);
                 snippet.setText(marker.getSnippet());
@@ -226,7 +226,7 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
             enteredLocation = et_location.getText().toString();
             if (!enteredLocation.equals("")){
                 // Get entered location:
-                Geocoder gc = new Geocoder(getContext());
+                Geocoder gc = new Geocoder(getActivity());
                 try {
                     List<Address> address = gc.getFromLocationName(enteredLocation, 1);
                     Address place = address.get(0);
@@ -259,7 +259,7 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
                 for (Job job : jobs){
                     if (job.getJobLat() != 0 && job.getJobLng() != 0 && job.getCompanyName() != null && job.getJobTitle() != null){
                         LatLng jobPosition = new LatLng(job.getJobLat(), job.getJobLng());
-                        googleMap.addMarker(new MarkerOptions().position(jobPosition).title(job.getJobTitle()).snippet(job.getCompanyName() + "\n" + job.getDistance(getContext(), job) + " miles away\n" + "Posted on: " + job.getDatePosted()));
+                        googleMap.addMarker(new MarkerOptions().position(jobPosition).title(job.getJobTitle()).snippet(job.getCompanyName() + "\n" + job.getDistance(getActivity(), job) + " miles away\n" + "Posted on: " + job.getDatePosted()));
                     }
                 }
     }
@@ -292,7 +292,7 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
     @Override
     public void onLocationChanged(Location location) {
         currentLocation = location;
-        currentAddress = LocationHelper.getCurrentAddressFromLocation(location, getContext());
+        currentAddress = LocationHelper.getCurrentAddressFromLocation(location, getActivity());
         Log.i("MapFragment", "onLocationChanged: " + currentAddress);
         // Display current address in the location box:
         EditText et_location = (EditText) getActivity().findViewById(R.id.et_location);
@@ -300,7 +300,7 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
         //et_location.setText(currentAddress.getLocality() + ", " + currentAddress.getAdminArea()); // This shows city, state
 
         zoomInCamera();
-        LocationHelper.stopRequestingLocationUpdates(getContext(), this);
+        LocationHelper.stopRequestingLocationUpdates(getActivity(), this);
     }
 
     @Override

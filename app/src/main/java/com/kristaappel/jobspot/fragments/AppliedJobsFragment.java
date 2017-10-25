@@ -139,7 +139,7 @@ public class AppliedJobsFragment extends ListFragment {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             if (convertView == null){
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.applied_list_item, parent, false);
+                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.applied_list_item, parent, false);
             }
 
             // Sort jobs by apply date:
