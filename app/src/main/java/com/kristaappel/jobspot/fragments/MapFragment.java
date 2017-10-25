@@ -229,8 +229,10 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
                 Geocoder gc = new Geocoder(getActivity());
                 try {
                     List<Address> address = gc.getFromLocationName(enteredLocation, 1);
-                    Address place = address.get(0);
-                    zoomToLatLong = new LatLng(place.getLatitude(), place.getLongitude());
+                    if (address.size() >0){
+                        Address place = address.get(0);
+                        zoomToLatLong = new LatLng(place.getLatitude(), place.getLongitude());
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
