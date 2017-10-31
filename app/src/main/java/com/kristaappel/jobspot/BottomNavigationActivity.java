@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.graphics.Bitmap;
 import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -31,7 +32,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,7 +47,6 @@ import com.firebase.client.ValueEventListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.formats.NativeAd;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.kristaappel.jobspot.fragments.AppliedJobsFragment;
@@ -89,9 +88,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
-import static com.kristaappel.jobspot.fragments.ProfileFragment.displayProfileData;
-import static com.kristaappel.jobspot.fragments.ProfileFragment.imageFilePath;
 import static com.kristaappel.jobspot.fragments.ProfileFragment.linkedInAccessToken;
 import static com.kristaappel.jobspot.fragments.ProfileFragment.linkedInError;
 
@@ -357,9 +355,16 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
 
     public static void getCoordsForCompany(final Activity activity, String response, Job foundJob){
         try {
+            Log.i("coordsResponse", response);
             // Parse JSON results from company look-up to get coordinates:
             JSONObject responseObject = new JSONObject(response);
             JSONArray resultArray = responseObject.getJSONArray("results");
+
+            String statusString = responseObject.getString("status");
+            Log.i("statusString", statusString);
+            if (Objects.equals(statusString, "OVER_QUERY_LIMIT")){
+                Toast.makeText(activity, "Could not retrieve job locations.  API limit reached.", Toast.LENGTH_SHORT).show();
+            }
             if (resultArray.length()>0){
                 JSONObject resultObj = resultArray.getJSONObject(0);
                 JSONObject geometryObject = resultObj.getJSONObject("geometry");
@@ -381,7 +386,6 @@ public class BottomNavigationActivity extends AppCompatActivity implements Searc
             }else if (foundJob.getJobLat() == 0 || foundJob.getJobLng() == 0){
                 Log.i("BottomNav:357", "lat or lng is null!!!!!!!!!!");
                 newJob = new Job(foundJob.getJobID(), foundJob.getJobTitle(), foundJob.getCompanyName(), foundJob.getDatePosted(), foundJob.getJobURL(), foundJob.getJobCityState(), 0, 0, "");
-                Toast.makeText(activity, "Could not retrieve job locations.  API limit reached.", Toast.LENGTH_SHORT).show();
             }
 
         }
